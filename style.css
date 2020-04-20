@@ -1,0 +1,8 @@
+#main {
+	display: flex;
+}
+
+#main div div {
+	font-family: "Lucida Console", Courier, monospace;
+	font-size: 18px;
+}

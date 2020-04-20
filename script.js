@@ -1,16 +1,16 @@
 // ### startup... render the page
 const mainDiv = document.getElementById("main");
 
-const grid = [
-	[".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-	[".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-	[".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-	[".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-	[".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-	[".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-	[".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-	[".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-];
+// generate a n by m grid of .'s
+const grid = [];
+// columns by rows
+for (let m = 0; m < 10; m++) {
+	const row = [];
+	for (let n = 0; n < 20; n++) {
+		row.push(".");
+	}
+	grid.push(row);
+}
 
 const numOfColumns = grid[0].length;
 const numOfRows = grid.length;
@@ -32,22 +32,24 @@ for (let j = 0; j < numOfColumns; j++) {
 	}
 }
 
-console.log(getLocationByCoordinates(9, 0));
-
-// ### populate the grid of divs with ascii
-for (let i = 0; i < numOfColumns; i++) {
-	for (let j = 0; j < numOfRows; j++) {
-		const targetDiv = getLocationByCoordinates(i, j);
-
-		console.log(targetDiv);
-		targetDiv.innerHTML = grid[i][j];
-	}
-}
-
 function getLocationByCoordinates(x, y) {
 	// NOTES: Remember the columns and rows are Zero Indexed! Cols 0 through 9 and Rows 0 through 7 in the draft version
 	const getMainDiv = document.getElementById("main");
 	const column = getMainDiv.children[x];
 	const target = column.children[y];
 	return target;
+}
+
+console.log(getLocationByCoordinates(10, 0));
+
+// ### populate the grid of divs with ascii
+console.log(numOfColumns, numOfRows);
+
+for (let i = 0; i < numOfColumns; i++) {
+	for (let j = 0; j < numOfRows; j++) {
+		const targetDiv = getLocationByCoordinates(i, j);
+
+		console.log(grid[i][j]);
+		// targetDiv.innerHTML = grid[i][j];
+	}
 }

@@ -1,5 +1,17 @@
+#jumbotron {
+	width: 100%;
+	padding: 30px;
+	display: flex;
+	justify-content: center;
+}
+
 #main {
 	display: flex;
+}
+
+#main div {
+	height: 20px;
+	width: 20px;
 }
 
 #main div div {

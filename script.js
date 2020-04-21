@@ -7,6 +7,7 @@ const mainDiv = document.getElementById("main");
 const START_NODE = "*";
 const EMPTY_SPACE = ".";
 const WALL_SEGMENT = "#";
+const TARGET_NODE = "X";
 
 // generate a n by m grid of .'s
 const grid = [];
@@ -51,15 +52,19 @@ for (let i = 0; i < numOfRows; i++) {
 // ### Add event listeners so user can click to add a wall segment.
 resetEventListeners();
 
-// ### Let user pick an Origin point for the algorithm
-const moveOriginBtn = document.getElementById("moveStartBtn");
-moveOriginBtn.addEventListener("click", () => {
-	nextClickMovesOrigin();
+// ### Let user pick a Start point for the algorithm
+const moveStartBtn = document.getElementById("moveStartBtn");
+moveStartBtn.addEventListener("click", () => {
+	nextClickMovesStart();
 });
 
 // ### Let user add a Target
+const moveTargetBtn = document.getElementById("moveTargetBtn");
+moveTargetBtn.addEventListener("click", () => {
+	nextClickMovesTarget();
+});
 
-// ### Let user switch between moving the target, adding a wall, moving the Origin point.
+// *** FUNCTIONS ***
 
 function getLocationByCoordinates(x, y) {
 	// NOTES: Remember the columns and rows are Zero Indexed! Cols 0 through 9 and Rows 0 through 7 in the draft version
@@ -86,7 +91,7 @@ function rerenderGrid() {
 	}
 }
 
-function nextClickMovesOrigin() {
+function nextClickMovesStart() {
 	// function allows the user to move the Start Node around on the grid.
 	// First all event listeners are removed so there isn't conflict between "add wall" and "add start node".
 	// Then each spot on the grid gets an addStartNode event listener.
@@ -114,6 +119,38 @@ function nextClickMovesOrigin() {
 function addStartNode(x, y) {
 	// NOTE: Grid coordinates are y, x not x, y like you'd expect
 	grid[y][x] = START_NODE;
+	rerenderGrid();
+	resetEventListeners();
+}
+
+function nextClickMovesTarget() {
+	// function allows the user to move the Target Node around on the grid.
+	// First all event listeners are removed so there isn't conflict between "add wall" and "add target node".
+	// Then each spot on the grid gets an addTargetNode event listener.
+	// The "addTargetNode" function will take care of replacing all spots on the grid with "add wall" event listeners when finished.
+
+	const columnDivs = mainDiv.children;
+	for (let x = 0; x < numOfColumns; x++) {
+		// iterate through the columns, getting a list of their children
+		const targetColumnRows = columnDivs[x].children;
+		for (let y = 0; y < numOfRows; y++) {
+			// iterate through the row divs in the columns.
+			// To remove all event listeners, clone the node, and replace it with the clone.
+			const oldElement = targetColumnRows[y];
+			const newElement = oldElement.cloneNode(true);
+			oldElement.parentNode.replaceChild(newElement, oldElement);
+		}
+		for (let y = 0; y < numOfRows; y++) {
+			targetColumnRows[y].addEventListener("click", () => {
+				addTargetNode(x, y);
+			});
+		}
+	}
+}
+
+function addTargetNode(x, y) {
+	// NOTE: Grid coordinates are y, x not x, y like you'd expect
+	grid[y][x] = TARGET_NODE;
 	rerenderGrid();
 	resetEventListeners();
 }

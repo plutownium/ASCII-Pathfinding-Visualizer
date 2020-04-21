@@ -68,11 +68,20 @@ moveTargetBtn.addEventListener("click", () => {
 // ### Let user add a Bomb
 const moveBombBtn = document.getElementById("moveBombBtn");
 moveBombBtn.addEventListener("click", () => {
-	nestClickMovesBomb();
+	nextClickMovesBomb();
 });
 
-// todo: redo nextClickMovesStart() & nextClickMovesTarget;
-// both need to REMOVE other start / target nodes before adding a new 1
+// todo: add nextClickMovesBomb
+// todo: add Dijkstra's algorithm and test it
+// todo: make each space used by Dijkstra's turn into a +, one by one (one space every .3 seconds or something)
+// todo: make Dijkstra's find its way to the bomb first if there is a bomb
+// todo: make Dijkstra's path from the bomb to the target
+// todo: visualize all the spaces "searched" by Dijkstra's. o's and O's
+// todo: Add 3-4 other algorithms
+// todo: Add "Clear Board" button
+// todo: Add "Clear walls & weights" button
+// todo: Add "Speed" selector
+// todo: Add "Mazes & Patterns" selector & generators (how?)
 
 // *** ********* *** ********* *** ********* *** ********* *** ********* *** ********* ***
 // *** FUNCTIONS *** FUNCTIONS *** FUNCTIONS *** FUNCTIONS *** FUNCTIONS *** FUNCTIONS ***
@@ -185,6 +194,49 @@ function addTargetNode(x, y) {
 	}
 	// Step 2: Set the new Target Node
 	grid[y][x] = TARGET_NODE;
+	rerenderGrid();
+	resetEventListeners();
+}
+
+function nextClickMovesBomb() {
+	// function allows the user to move the Bomb Node around on the grid.
+	// First all event listeners are removed so there isn't conflict between "add wall" and "add bomb node".
+	// Then each spot on the grid gets an addBombNode event listener.
+	// The "addBombNode" function will take care of replacing all spots on the grid with "add wall" event listeners when finished.
+
+	const columnDivs = mainDiv.children;
+	for (let x = 0; x < numOfColumns; x++) {
+		// iterate through the columns, getting a list of their children
+		const targetColumnRows = columnDivs[x].children;
+		for (let y = 0; y < numOfRows; y++) {
+			// iterate through the row divs in the columns.
+			// To remove all event listeners, clone the node, and replace it with the clone.
+			const oldElement = targetColumnRows[y];
+			const newElement = oldElement.cloneNode(true);
+			oldElement.parentNode.replaceChild(newElement, oldElement);
+		}
+		for (let y = 0; y < numOfRows; y++) {
+			targetColumnRows[y].addEventListener("click", () => {
+				addBombNode(x, y);
+			});
+		}
+	}
+}
+
+function addBombNode(x, y) {
+	// NOTE: Grid coordinates are y, x not x, y like you'd expect
+	// Step 1: Remove old Target node if it exists
+	const columnDivs = mainDiv.children;
+	for (let xCoord = 0; xCoord < numOfColumns; xCoord++) {
+		const targetColumnRows = columnDivs[xCoord].children;
+		for (let yCoord = 0; yCoord < numOfRows; yCoord++) {
+			if (grid[yCoord][xCoord] === BOMB_NODE) {
+				grid[yCoord][xCoord] = EMPTY_SPACE;
+			}
+		}
+	}
+	// Step 2: Set the new Target Node
+	grid[y][x] = BOMB_NODE;
 	rerenderGrid();
 	resetEventListeners();
 }

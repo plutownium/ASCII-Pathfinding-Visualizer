@@ -133,14 +133,13 @@ function addStartNode(x, y) {
 	// Step 1: Remove old start node if it exists
 	const columnDivs = mainDiv.children;
 	for (let xCoord = 0; xCoord < numOfColumns; xCoord++) {
-		// iterate through the columns, getting a list of their children
 		const targetColumnRows = columnDivs[xCoord].children;
 		for (let yCoord = 0; yCoord < numOfRows; yCoord++) {
 			if (grid[yCoord][xCoord] === START_NODE) {
-				grid[yCoord][xCoord] 
+				grid[yCoord][xCoord] = EMPTY_SPACE;
 			}
 		}
-
+	}
 	// Step 2: Set the new Start Node
 	grid[y][x] = START_NODE;
 	rerenderGrid();
@@ -180,10 +179,10 @@ function addTargetNode(x, y) {
 		const targetColumnRows = columnDivs[xCoord].children;
 		for (let yCoord = 0; yCoord < numOfRows; yCoord++) {
 			if (grid[yCoord][xCoord] === TARGET_NODE) {
-				grid[yCoord][xCoord]
+				grid[yCoord][xCoord] = EMPTY_SPACE;
 			}
 		}
-
+	}
 	// Step 2: Set the new Target Node
 	grid[y][x] = TARGET_NODE;
 	rerenderGrid();

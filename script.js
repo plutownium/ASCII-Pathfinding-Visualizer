@@ -7,6 +7,7 @@ const mainDiv = document.getElementById("main");
 const START_NODE = "*";
 const EMPTY_SPACE = ".";
 const WALL_SEGMENT = "#";
+const BOMB_NODE = "%";
 const TARGET_NODE = "X";
 
 // generate a n by m grid of .'s
@@ -64,7 +65,18 @@ moveTargetBtn.addEventListener("click", () => {
 	nextClickMovesTarget();
 });
 
-// *** FUNCTIONS ***
+// ### Let user add a Bomb
+const moveBombBtn = document.getElementById("moveBombBtn");
+moveBombBtn.addEventListener("click", () => {
+	nestClickMovesBomb();
+});
+
+// todo: redo nextClickMovesStart() & nextClickMovesTarget;
+// both need to REMOVE other start / target nodes before adding a new 1
+
+// *** ********* *** ********* *** ********* *** ********* *** ********* *** ********* ***
+// *** FUNCTIONS *** FUNCTIONS *** FUNCTIONS *** FUNCTIONS *** FUNCTIONS *** FUNCTIONS ***
+// *** ********* *** ********* *** ********* *** ********* *** ********* *** ********* ***
 
 function getLocationByCoordinates(x, y) {
 	// NOTES: Remember the columns and rows are Zero Indexed! Cols 0 through 9 and Rows 0 through 7 in the draft version
@@ -118,6 +130,18 @@ function nextClickMovesStart() {
 
 function addStartNode(x, y) {
 	// NOTE: Grid coordinates are y, x not x, y like you'd expect
+	// Step 1: Remove old start node if it exists
+	const columnDivs = mainDiv.children;
+	for (let xCoord = 0; xCoord < numOfColumns; xCoord++) {
+		// iterate through the columns, getting a list of their children
+		const targetColumnRows = columnDivs[xCoord].children;
+		for (let yCoord = 0; yCoord < numOfRows; yCoord++) {
+			if (grid[yCoord][xCoord] === START_NODE) {
+				grid[yCoord][xCoord] 
+			}
+		}
+
+	// Step 2: Set the new Start Node
 	grid[y][x] = START_NODE;
 	rerenderGrid();
 	resetEventListeners();
@@ -150,6 +174,17 @@ function nextClickMovesTarget() {
 
 function addTargetNode(x, y) {
 	// NOTE: Grid coordinates are y, x not x, y like you'd expect
+	// Step 1: Remove old Target node if it exists
+	const columnDivs = mainDiv.children;
+	for (let xCoord = 0; xCoord < numOfColumns; xCoord++) {
+		const targetColumnRows = columnDivs[xCoord].children;
+		for (let yCoord = 0; yCoord < numOfRows; yCoord++) {
+			if (grid[yCoord][xCoord] === TARGET_NODE) {
+				grid[yCoord][xCoord]
+			}
+		}
+
+	// Step 2: Set the new Target Node
 	grid[y][x] = TARGET_NODE;
 	rerenderGrid();
 	resetEventListeners();

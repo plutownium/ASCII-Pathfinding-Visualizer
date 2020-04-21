@@ -8,8 +8,35 @@
 		<script src="script.js" defer></script>
 	</head>
 	<body>
+		<div id="dropdown-main">
+			<!-- Algorithms Selector -->
+			<ul></ul>
+			<!-- Mazes & Patterns Selector -->
+			<ul></ul>
+			<!-- Add/remove Bomb Selector -->
+			<ul></ul>
+			<!-- Visualize! Button -->
+			<ul></ul>
+			<!-- Clear Board -->
+			<ul></ul>
+			<!-- Clear Path -->
+			<ul></ul>
+			<!-- Speed Selector -->
+			<ul></ul>
+		</div>
+		<div>
+			<span>* Start Node (Origin)</span>
+			<span>X Target Node</span>
+			<span>% Bomb Node</span>
+			<span>. Unvisited Node</span>
+			<span>o O Visited Nodes</span>
+			<span>+ Shortest Path Node</span>
+			<span># Wall Node</span>
+		</div>
+		<button id="moveStartBtn">Move Start Node</button>
 		<div id="jumbotron">
 			<div id="main"></div>
 		</div>
+		<button id="printGrid">Print Grid</button>
 	</body>
 </html>

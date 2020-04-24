@@ -71,7 +71,6 @@ moveBombBtn.addEventListener("click", () => {
 	nextClickMovesBomb();
 });
 
-// todo: add nextClickMovesBomb
 // todo: add Dijkstra's algorithm and test it
 // todo: make each space used by Dijkstra's turn into a +, one by one (one space every .3 seconds or something)
 // todo: make Dijkstra's find its way to the bomb first if there is a bomb
@@ -271,6 +270,11 @@ testButton.addEventListener("click", () => {
 	for (i = 0; i < 4; i++) {
 		console.log(grid[i]);
 	}
+});
+
+const inspect = document.getElementById("inspect");
+inspect.addEventListener("click", () => {
+	dijkstras(grid);
 });
 
 // <^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^>

@@ -43,7 +43,7 @@ function dijkstras(finishedGrid) {
 	let adjacentNode = grid[nextYCoord][nextXCoord]
 
 	// "if the adjacent node is neither a wall segment nor already contained in the visitedNodes array..."
-	if (adjacentNode != WALL_SEGMENT && !visitedNodes.includes([nextXCoord, nextYCoord])) {
+	if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
 		// assign nodeContent the value of adjacentNode so the while loop can check its condition...
 		nodeContent = adjacentNode;
 
@@ -52,7 +52,7 @@ function dijkstras(finishedGrid) {
 
 		// push the node we're starting our search from to the list of visitedNodes if it isn't already there
 
-		if (!visitedNodes.includes([startValueX, startValueY])) {
+		if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
 			console.log("pushing...")
 			visitedNodes.push([startValueX, startValueY])
 		}
@@ -66,7 +66,7 @@ function dijkstras(finishedGrid) {
 	adjacentNode = grid[nextYCoord][nextXCoord]
 
 	// "if the adjacent node is neither a wall segment nor already contained in the visitedNodes array..."
-	if (adjacentNode != WALL_SEGMENT && !visitedNodes.includes([nextXCoord, nextYCoord])) {
+	if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
 		// assign nodeContent the value of adjacentNode so the while loop can check its condition...
 		nodeContent = adjacentNode;
 
@@ -74,7 +74,9 @@ function dijkstras(finishedGrid) {
 		// ??? what to do for that???
 
 		// push the node we're starting our search from to the list of visitedNodes if it isn't already there
-		if (!visitedNodes.includes([startValueX, startValueY])) {
+		if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
+			console.log("VALUE:" + visitedNodes.includes([startValueX, startValueY]));
+			console.log("Pushing...!");
 			visitedNodes.push([startValueX, startValueY])
 		}
 
@@ -87,7 +89,7 @@ function dijkstras(finishedGrid) {
 	adjacentNode = grid[nextYCoord][nextXCoord]
 
 	// "if the adjacent node is neither a wall segment nor already contained in the visitedNodes array..."
-	if (adjacentNode != WALL_SEGMENT && !visitedNodes.includes([nextXCoord, nextYCoord])) {
+	if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
 		// assign nodeContent the value of adjacentNode so the while loop can check its condition...
 		nodeContent = adjacentNode;
 
@@ -95,7 +97,7 @@ function dijkstras(finishedGrid) {
 		// ??? what to do for that???
 
 		// push the node we're starting our search from to the list of visitedNodes if it isn't already there
-		if (!visitedNodes.includes([startValueX, startValueY])) {
+		if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
 			visitedNodes.push([startValueX, startValueY])
 		}
 
@@ -108,7 +110,7 @@ function dijkstras(finishedGrid) {
 	adjacentNode = grid[nextYCoord][nextXCoord]
 
 	// "if the adjacent node is neither a wall segment nor already contained in the visitedNodes array..."
-	if (adjacentNode != WALL_SEGMENT && !visitedNodes.includes([nextXCoord, nextYCoord])) {
+	if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
 		// assign nodeContent the value of adjacentNode so the while loop can check its condition...
 		nodeContent = adjacentNode;
 
@@ -116,7 +118,7 @@ function dijkstras(finishedGrid) {
 		// ??? what to do for that???
 
 		// push the node we're starting our search from to the list of visitedNodes if it isn't already there
-		if (!visitedNodes.includes([startValueX, startValueY])) {
+		if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
 			visitedNodes.push([startValueX, startValueY])
 		}
 
@@ -124,10 +126,10 @@ function dijkstras(finishedGrid) {
 		// push the node onto the list of nodes to cycle into this process
 		nextNodes.push([nextXCoord, nextYCoord])
 	}
-	console.log("Origin:");
-	console.log(startCoords);
-	console.log("Next Nodes:");
-	console.log(nextNodes);
+	// console.log("Origin:" + startCoords);
+
+	// console.log("Next Nodes:");
+	// console.log(nextNodes);
 	console.log("visited Nodes:");
 	console.log(visitedNodes);
 
@@ -135,4 +137,14 @@ function dijkstras(finishedGrid) {
 
 	// }
 
+}
+
+// https://stackoverflow.com/questions/41661287/how-to-check-if-an-array-contains-another-array
+function isArrayInArray(arr, item) {
+	var item_as_string = JSON.stringify(item);
+
+	var contains = arr.some(function (ele) {
+		return JSON.stringify(ele) === item_as_string;
+	});
+	return contains;
 }

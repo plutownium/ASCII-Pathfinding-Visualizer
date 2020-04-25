@@ -126,12 +126,8 @@ function dijkstras(finishedGrid) {
 		// push the node onto the list of nodes to cycle into this process
 		nextNodes.push([nextXCoord, nextYCoord])
 	}
-	// console.log("Origin:" + startCoords);
-
-	// console.log("Next Nodes:");
-	// console.log(nextNodes);
-	console.log("visited Nodes:");
-	console.log(visitedNodes);
+	// ### Cycle complete. Next step is to REPEAT the cycle with a new startCoords, found from the nextNodes array.
+	startCoords = nextNodes[0]
 
 	// while (nodeContent != TARGET_NODE) {
 

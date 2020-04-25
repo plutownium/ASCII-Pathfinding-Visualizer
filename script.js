@@ -86,6 +86,7 @@ moveBombBtn.addEventListener("click", () => {
 // *** FUNCTIONS *** FUNCTIONS *** FUNCTIONS *** FUNCTIONS *** FUNCTIONS *** FUNCTIONS ***
 // *** ********* *** ********* *** ********* *** ********* *** ********* *** ********* ***
 
+
 function getLocationByCoordinates(x, y) {
 	// NOTES: Remember the columns and rows are Zero Indexed! Cols 0 through 9 and Rows 0 through 7 in the draft version
 	const getMainDiv = document.getElementById("main");

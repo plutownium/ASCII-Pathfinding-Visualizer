@@ -9,6 +9,8 @@ const EMPTY_SPACE = ".";
 const WALL_SEGMENT = "#";
 const BOMB_NODE = "%";
 const TARGET_NODE = "X";
+const VISITED_NODE = "o";
+const VISITED_AFTER_BOMB = "O";
 
 // generate a n by m grid of .'s
 const grid = [];

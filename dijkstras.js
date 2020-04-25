@@ -477,23 +477,16 @@ function dijkstras(finishedGrid) {
 
 	// "if the adjacent node is neither a wall segment nor already contained in the visitedNodes array..."
 	if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-		// assign nodeContent the value of adjacentNode so the while loop can check its condition...
 		nodeContent = adjacentNode;
 
-		// calculate how far it is to this node from the origin
-		// ??? what to do for that???
-
-		// push the node we're starting our search from to the list of visitedNodes if it isn't already there
 		if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
 			visitedNodes.push([startValueX, startValueY])
 		}
 
-		// push the node onto the list of nodes to cycle into this process (unless it's already there)
 		if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
 			nextNodes.push([nextXCoord, nextYCoord])
 		}
 
-		// finally, replace the node's visual appearance: convert . to o
 		if (grid[startValueY][startValueX] === ".") {
 			replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
 		}
@@ -503,26 +496,17 @@ function dijkstras(finishedGrid) {
 	nextYCoord = startValueY - 1
 	adjacentNode = grid[nextYCoord][nextXCoord]
 
-	// "if the adjacent node is neither a wall segment nor already contained in the visitedNodes array..."
 	if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-		// assign nodeContent the value of adjacentNode so the while loop can check its condition...
 		nodeContent = adjacentNode;
 
-		// calculate how far it is to this node from the origin
-		// ??? what to do for that???
-
-		// push the node we're starting our search from to the list of visitedNodes if it isn't already there
 		if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
 			visitedNodes.push([startValueX, startValueY])
 		}
 
-
-		// push the node onto the list of nodes to cycle into this process (unless it's already there)
 		if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
 			nextNodes.push([nextXCoord, nextYCoord])
 		}
 
-		// finally, replace the node's visual appearance: convert . to o
 		if (grid[startValueY][startValueX] === ".") {
 			replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
 		}
@@ -551,3 +535,5 @@ function replaceEmptySpaceWithVisitedMarker(emptyXCoord, emptyYCoord) {
 	grid[emptyYCoord][emptyXCoord] = VISITED_NODE;
 	rerenderGrid();
 }
+
+// todo: collapse the repetive if/if/if/if statement block with function calls or a while loop

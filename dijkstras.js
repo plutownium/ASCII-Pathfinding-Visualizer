@@ -70,26 +70,17 @@ function dijkstras(finishedGrid) {
 	nextYCoord = startValueY
 	adjacentNode = grid[nextYCoord][nextXCoord]
 
-	// "if the adjacent node is neither a wall segment nor already contained in the visitedNodes array..."
 	if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-		// assign nodeContent the value of adjacentNode so the while loop can check its condition...
 		nodeContent = adjacentNode;
 
-		// calculate how far it is to this node from the origin
-		// ??? what to do for that???
-
-		// push the node we're starting our search from to the list of visitedNodes if it isn't already there
 		if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
-
 			visitedNodes.push([startValueX, startValueY])
 		}
 
-		// push the node onto the list of nodes to cycle into this process (unless it's already there)
 		if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
 			nextNodes.push([nextXCoord, nextYCoord])
 		}
 
-		// finally, replace the node's visual appearance: convert . to o
 		if (grid[startValueY][startValueX] === ".") {
 			replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
 		}
@@ -99,25 +90,17 @@ function dijkstras(finishedGrid) {
 	nextYCoord = startValueY + 1
 	adjacentNode = grid[nextYCoord][nextXCoord]
 
-	// "if the adjacent node is neither a wall segment nor already contained in the visitedNodes array..."
 	if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-		// assign nodeContent the value of adjacentNode so the while loop can check its condition...
 		nodeContent = adjacentNode;
 
-		// calculate how far it is to this node from the origin
-		// ??? what to do for that???
-
-		// push the node we're starting our search from to the list of visitedNodes if it isn't already there
 		if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
 			visitedNodes.push([startValueX, startValueY])
 		}
 
-		// push the node onto the list of nodes to cycle into this process (unless it's already there)
 		if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
 			nextNodes.push([nextXCoord, nextYCoord])
 		}
 
-		// finally, replace the node's visual appearance: convert . to o
 		if (grid[startValueY][startValueX] === ".") {
 			replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
 		}
@@ -127,26 +110,17 @@ function dijkstras(finishedGrid) {
 	nextYCoord = startValueY - 1
 	adjacentNode = grid[nextYCoord][nextXCoord]
 
-	// "if the adjacent node is neither a wall segment nor already contained in the visitedNodes array..."
 	if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-		// assign nodeContent the value of adjacentNode so the while loop can check its condition...
 		nodeContent = adjacentNode;
 
-		// calculate how far it is to this node from the origin
-		// ??? what to do for that???
-
-		// push the node we're starting our search from to the list of visitedNodes if it isn't already there
 		if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
 			visitedNodes.push([startValueX, startValueY])
 		}
 
-
-		// push the node onto the list of nodes to cycle into this process (unless it's already there)
 		if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
 			nextNodes.push([nextXCoord, nextYCoord])
 		}
 
-		// finally, replace the node's visual appearance: convert . to o
 		if (grid[startValueY][startValueX] === ".") {
 			replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
 		}
@@ -166,27 +140,17 @@ function dijkstras(finishedGrid) {
 	nextYCoord = startValueY
 	adjacentNode = grid[nextYCoord][nextXCoord]
 
-	// "if the adjacent node is neither a wall segment nor already contained in the visitedNodes array..."
 	if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-		// assign nodeContent the value of adjacentNode so the while loop can check its condition...
 		nodeContent = adjacentNode;
 
-		// calculate how far it is to this node from the origin
-		// ??? what to do for that???
-
-		// push the node we're starting our search from to the list of visitedNodes if it isn't already there
-
 		if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
-			console.log("pushing...")
 			visitedNodes.push([startValueX, startValueY])
 		}
 
-		// push the node onto the list of nodes to cycle into this process (unless it's already there)
 		if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
 			nextNodes.push([nextXCoord, nextYCoord])
 		}
 
-		// finally, replace the node's visual appearance: convert . to o
 		if (grid[startValueY][startValueX] === ".") {
 			replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
 		}
@@ -196,25 +160,17 @@ function dijkstras(finishedGrid) {
 	nextYCoord = startValueY
 	adjacentNode = grid[nextYCoord][nextXCoord]
 
-	// "if the adjacent node is neither a wall segment nor already contained in the visitedNodes array..."
 	if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-		// assign nodeContent the value of adjacentNode so the while loop can check its condition...
 		nodeContent = adjacentNode;
 
-		// calculate how far it is to this node from the origin
-		// ??? what to do for that???
-
-		// push the node we're starting our search from to the list of visitedNodes if it isn't already there
 		if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
 			visitedNodes.push([startValueX, startValueY])
 		}
 
-		// push the node onto the list of nodes to cycle into this process (unless it's already there)
 		if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
 			nextNodes.push([nextXCoord, nextYCoord])
 		}
 
-		// finally, replace the node's visual appearance: convert . to o
 		if (grid[startValueY][startValueX] === ".") {
 			replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
 		}
@@ -224,25 +180,17 @@ function dijkstras(finishedGrid) {
 	nextYCoord = startValueY + 1
 	adjacentNode = grid[nextYCoord][nextXCoord]
 
-	// "if the adjacent node is neither a wall segment nor already contained in the visitedNodes array..."
 	if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-		// assign nodeContent the value of adjacentNode so the while loop can check its condition...
 		nodeContent = adjacentNode;
 
-		// calculate how far it is to this node from the origin
-		// ??? what to do for that???
-
-		// push the node we're starting our search from to the list of visitedNodes if it isn't already there
 		if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
 			visitedNodes.push([startValueX, startValueY])
 		}
 
-		// push the node onto the list of nodes to cycle into this process (unless it's already there)
 		if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
 			nextNodes.push([nextXCoord, nextYCoord])
 		}
 
-		// finally, replace the node's visual appearance: convert . to o
 		if (grid[startValueY][startValueX] === ".") {
 			replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
 		}
@@ -252,26 +200,17 @@ function dijkstras(finishedGrid) {
 	nextYCoord = startValueY - 1
 	adjacentNode = grid[nextYCoord][nextXCoord]
 
-	// "if the adjacent node is neither a wall segment nor already contained in the visitedNodes array..."
 	if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-		// assign nodeContent the value of adjacentNode so the while loop can check its condition...
 		nodeContent = adjacentNode;
 
-		// calculate how far it is to this node from the origin
-		// ??? what to do for that???
-
-		// push the node we're starting our search from to the list of visitedNodes if it isn't already there
 		if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
 			visitedNodes.push([startValueX, startValueY])
 		}
 
-
-		// push the node onto the list of nodes to cycle into this process (unless it's already there)
 		if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
 			nextNodes.push([nextXCoord, nextYCoord])
 		}
 
-		// finally, replace the node's visual appearance: convert . to o
 		if (grid[startValueY][startValueX] === ".") {
 			replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
 		}
@@ -293,25 +232,17 @@ function dijkstras(finishedGrid) {
 	nextYCoord = startValueY
 	adjacentNode = grid[nextYCoord][nextXCoord]
 
-	// "if the adjacent node is neither a wall segment nor already contained in the visitedNodes array..."
 	if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-		// assign nodeContent the value of adjacentNode so the while loop can check its condition...
 		nodeContent = adjacentNode;
 
-		// calculate how far it is to this node from the origin
-		// ??? what to do for that???
-
-		// push the node we're starting our search from to the list of visitedNodes if it isn't already there
 		if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
 			visitedNodes.push([startValueX, startValueY])
 		}
 
-		// push the node onto the list of nodes to cycle into this process (unless it's already there)
 		if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
 			nextNodes.push([nextXCoord, nextYCoord])
 		}
 
-		// finally, replace the node's visual appearance: convert . to o
 		if (grid[startValueY][startValueX] === ".") {
 			replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
 		}
@@ -321,25 +252,17 @@ function dijkstras(finishedGrid) {
 	nextYCoord = startValueY
 	adjacentNode = grid[nextYCoord][nextXCoord]
 
-	// "if the adjacent node is neither a wall segment nor already contained in the visitedNodes array..."
 	if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-		// assign nodeContent the value of adjacentNode so the while loop can check its condition...
 		nodeContent = adjacentNode;
 
-		// calculate how far it is to this node from the origin
-		// ??? what to do for that???
-
-		// push the node we're starting our search from to the list of visitedNodes if it isn't already there
 		if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
 			visitedNodes.push([startValueX, startValueY])
 		}
 
-		// push the node onto the list of nodes to cycle into this process (unless it's already there)
 		if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
 			nextNodes.push([nextXCoord, nextYCoord])
 		}
 
-		// finally, replace the node's visual appearance: convert . to o
 		if (grid[startValueY][startValueX] === ".") {
 			replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
 		}
@@ -349,25 +272,17 @@ function dijkstras(finishedGrid) {
 	nextYCoord = startValueY + 1
 	adjacentNode = grid[nextYCoord][nextXCoord]
 
-	// "if the adjacent node is neither a wall segment nor already contained in the visitedNodes array..."
 	if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-		// assign nodeContent the value of adjacentNode so the while loop can check its condition...
 		nodeContent = adjacentNode;
 
-		// calculate how far it is to this node from the origin
-		// ??? what to do for that???
-
-		// push the node we're starting our search from to the list of visitedNodes if it isn't already there
 		if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
 			visitedNodes.push([startValueX, startValueY])
 		}
 
-		// push the node onto the list of nodes to cycle into this process (unless it's already there)
 		if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
 			nextNodes.push([nextXCoord, nextYCoord])
 		}
 
-		// finally, replace the node's visual appearance: convert . to o
 		if (grid[startValueY][startValueX] === ".") {
 			replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
 		}
@@ -377,26 +292,17 @@ function dijkstras(finishedGrid) {
 	nextYCoord = startValueY - 1
 	adjacentNode = grid[nextYCoord][nextXCoord]
 
-	// "if the adjacent node is neither a wall segment nor already contained in the visitedNodes array..."
 	if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-		// assign nodeContent the value of adjacentNode so the while loop can check its condition...
 		nodeContent = adjacentNode;
 
-		// calculate how far it is to this node from the origin
-		// ??? what to do for that???
-
-		// push the node we're starting our search from to the list of visitedNodes if it isn't already there
 		if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
 			visitedNodes.push([startValueX, startValueY])
 		}
 
-
-		// push the node onto the list of nodes to cycle into this process (unless it's already there)
 		if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
 			nextNodes.push([nextXCoord, nextYCoord])
 		}
 
-		// finally, replace the node's visual appearance: convert . to o
 		if (grid[startValueY][startValueX] === ".") {
 			replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
 		}
@@ -419,101 +325,32 @@ function dijkstras(finishedGrid) {
 	nextYCoord = startValueY
 	adjacentNode = grid[nextYCoord][nextXCoord]
 
-	// "if the adjacent node is neither a wall segment nor already contained in the visitedNodes array..."
-	if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-		// assign nodeContent the value of adjacentNode so the while loop can check its condition...
-		nodeContent = adjacentNode;
+	nodeLoop(adjacentNode, nextXCoord, nextYCoord)
 
-		// calculate how far it is to this node from the origin
-		// ??? what to do for that???
-
-		// push the node we're starting our search from to the list of visitedNodes if it isn't already there
-		if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
-			visitedNodes.push([startValueX, startValueY])
-		}
-
-		// push the node onto the list of nodes to cycle into this process (unless it's already there)
-		if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
-			nextNodes.push([nextXCoord, nextYCoord])
-		}
-
-		// finally, replace the node's visual appearance: convert . to o
-		if (grid[startValueY][startValueX] === ".") {
-			replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
-		}
-	}
 	// ### get the node directly to the left
 	nextXCoord = startValueX - 1
 	nextYCoord = startValueY
 	adjacentNode = grid[nextYCoord][nextXCoord]
 
-	// "if the adjacent node is neither a wall segment nor already contained in the visitedNodes array..."
-	if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-		// assign nodeContent the value of adjacentNode so the while loop can check its condition...
-		nodeContent = adjacentNode;
+	nodeLoop(adjacentNode, nextXCoord, nextYCoord)
 
-		// calculate how far it is to this node from the origin
-		// ??? what to do for that???
-
-		// push the node we're starting our search from to the list of visitedNodes if it isn't already there
-		if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
-			visitedNodes.push([startValueX, startValueY])
-		}
-
-		// push the node onto the list of nodes to cycle into this process (unless it's already there)
-		if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
-			nextNodes.push([nextXCoord, nextYCoord])
-		}
-
-		// finally, replace the node's visual appearance: convert . to o
-		if (grid[startValueY][startValueX] === ".") {
-			replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
-		}
-	}
 	// ### get the node directly above
 	nextXCoord = startValueX
 	nextYCoord = startValueY + 1
 	adjacentNode = grid[nextYCoord][nextXCoord]
 
-	// "if the adjacent node is neither a wall segment nor already contained in the visitedNodes array..."
-	if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-		nodeContent = adjacentNode;
+	nodeLoop(adjacentNode, nextXCoord, nextYCoord);
 
-		if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
-			visitedNodes.push([startValueX, startValueY])
-		}
-
-		if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
-			nextNodes.push([nextXCoord, nextYCoord])
-		}
-
-		if (grid[startValueY][startValueX] === ".") {
-			replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
-		}
-	}
 	// ### get the node directly below
 	nextXCoord = startValueX
 	nextYCoord = startValueY - 1
 	adjacentNode = grid[nextYCoord][nextXCoord]
 
-	if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-		nodeContent = adjacentNode;
-
-		if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
-			visitedNodes.push([startValueX, startValueY])
-		}
-
-		if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
-			nextNodes.push([nextXCoord, nextYCoord])
-		}
-
-		if (grid[startValueY][startValueX] === ".") {
-			replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
-		}
-	}
+	nodeLoop(adjacentNode, nextXCoord, nextYCoord);
 
 	console.log("nextNodes:");
 	console.log(nextNodes)
+	console.log(visitedNodes)
 
 	// while (nodeContent != TARGET_NODE) {
 
@@ -537,3 +374,48 @@ function replaceEmptySpaceWithVisitedMarker(emptyXCoord, emptyYCoord) {
 }
 
 // todo: collapse the repetive if/if/if/if statement block with function calls or a while loop
+
+function nodeLoop(adjacentNode, nextXCoord, nextYCoord) {
+	// function so called because it "loops" over a node in the grid.
+
+	// todo: check if nodeLoop() will push to the visitedNodes and nextNodes arrays despite scope differences...
+	if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
+		nodeContent = adjacentNode;
+
+		if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
+			visitedNodes.push([startValueX, startValueY])
+		}
+
+		if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
+			nextNodes.push([nextXCoord, nextYCoord])
+		}
+
+		if (grid[startValueY][startValueX] === ".") {
+			replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
+		}
+	}
+}
+
+// (11) [Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2)]
+// 0: (2)[2, 1]
+// 1: (2)[0, 1]
+// 2: (2)[1, 2]
+// 3: (2)[1, 0]
+// 4: (2)[3, 1]
+// 5: (2)[2, 2]
+// 6: (2)[2, 0]
+// 7: (2)[-1, 1]
+// 8: (2)[0, 2]
+// 9: (2)[0, 0]
+// 10: (2)[1, 3]
+// length: 11
+// should be output if func works
+
+// & visitedNodes output:
+// (4)[Array(2), Array(2), Array(2), Array(2)]
+// 0: (2)[1, 1]
+// 1: (2)[2, 1]
+// 2: (2)[0, 1]
+// 3: (2)[1, 2]
+// length: 4
+// __proto__: Array(0)

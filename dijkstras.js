@@ -47,7 +47,7 @@ function dijkstras(finishedGrid) {
 	while (nodeContent != TARGET_NODE) {
 		// FIXME: e.g. Uncaught TypeError: Cannot read property '2' of undefined when running algo. suspicious its
 		// from the algo trying to find e.g. grid[-1][2] which obviously does not exist as there is no negative index of the grid
-
+		// FIXME: while loop runs past TARGET_NODE without stopping
 		// TODO: Implement a way to assign "distance" to a node.
 
 		if (x == 0) {
@@ -66,38 +66,41 @@ function dijkstras(finishedGrid) {
 		console.log(nextYCoord, nextXCoord);
 		if (nextYCoord < 0 || nextXCoord < 0) {
 			adjacentNode = undefined;
+			console.log("UNDEFINED!")
 		} else {
 			adjacentNode = grid[nextYCoord][nextXCoord]
 		}
 
-		if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-			// assign nodeContent the value of adjacentNode so the while loop can check its condition...
-			nodeContent = adjacentNode;
+		nodeLoop(adjacentNode, nextXCoord, nextYCoord);
+		// if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
+		// 	// assign nodeContent the value of adjacentNode so the while loop can check its condition...
+		// 	nodeContent = adjacentNode;
 
-			// calculate how far it is to this node from the origin
-			// ??? what to do for that???
+		// 	// calculate how far it is to this node from the origin
+		// 	// ??? what to do for that???
 
-			// push the node we're starting our search from to the list of visitedNodes if it isn't already there
-			if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
-				visitedNodes.push([startValueX, startValueY])
-			}
+		// 	// push the node we're starting our search from to the list of visitedNodes if it isn't already there
+		// 	if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
+		// 		visitedNodes.push([startValueX, startValueY])
+		// 	}
 
-			// push the node onto the list of nodes to cycle into this process (unless it's already there)
-			if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord]) && (adjacentNode != undefined)) {
-				nextNodes.push([nextXCoord, nextYCoord])
-			}
+		// 	// push the node onto the list of nodes to cycle into this process (unless it's already there)
+		// 	if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord]) && (adjacentNode != undefined)) {
+		// 		nextNodes.push([nextXCoord, nextYCoord])
+		// 	}
 
-			// finally, replace the node's visual appearance: convert . to o
-			if (grid[startValueY][startValueX] === ".") {
-				replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
-			}
-		}
+		// 	// finally, replace the node's visual appearance: convert . to o
+		// 	if (grid[startValueY][startValueX] === ".") {
+		// 		replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
+		// 	}
+		// }
 		// ### get the node directly to the left
 		nextXCoord = startValueX - 1
 		nextYCoord = startValueY
 		console.log(nextYCoord, nextXCoord);
 		if (nextYCoord < 0 || nextXCoord < 0) {
 			adjacentNode = undefined;
+			console.log("UNDEFINED!")
 		} else {
 			adjacentNode = grid[nextYCoord][nextXCoord]
 		}
@@ -123,6 +126,7 @@ function dijkstras(finishedGrid) {
 		console.log(nextYCoord, nextXCoord);
 		if (nextYCoord < 0 || nextXCoord < 0) {
 			adjacentNode = undefined;
+			console.log("UNDEFINED!")
 		} else {
 			adjacentNode = grid[nextYCoord][nextXCoord]
 		}
@@ -149,6 +153,7 @@ function dijkstras(finishedGrid) {
 		console.log(nextYCoord, nextXCoord);
 		if (nextYCoord < 0 || nextXCoord < 0) {
 			adjacentNode = undefined;
+			console.log("UNDEFINED!")
 		} else {
 			adjacentNode = grid[nextYCoord][nextXCoord]
 		}
@@ -189,25 +194,29 @@ function replaceEmptySpaceWithVisitedMarker(emptyXCoord, emptyYCoord) {
 	rerenderGrid();
 }
 
-// todo: collapse the repetive if/if/if/if statement block with function calls or a while loop
 
-function nodeLoop(adjacentNode, nextXCoord, nextYCoord) {
+function nodeLoop(adjacentNode, nextXCoord, nextYCoord, visitedArray, nextArray) {
 	// function so called because it "loops" over a node in the grid.
 
-	// todo: check if nodeLoop() will push to the visitedNodes and nextNodes arrays despite scope differences...
-	if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
+	if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedArray, [nextXCoord, nextYCoord])) {
 		nodeContent = adjacentNode;
 
-		if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
-			visitedNodes.push([startValueX, startValueY])
+		if (!isArrayInArray(visitedArray, [startValueX, startValueY])) {
+			visitedArray.push([startValueX, startValueY])
 		}
 
-		if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
-			nextNodes.push([nextXCoord, nextYCoord])
+		if (!isArrayInArray(nextArray, [nextXCoord, nextYCoord]) && (adjacentNode != undefined)) {
+			nextArray.push([nextXCoord, nextYCoord])
 		}
 
+		// do i also have to pass the grid array so it can be accessed within the function? it seemed to work when i did
+		// grid[y][x] = VISITED_NODE; up on the first line of the replaceEmptySpaceWithVisitedMarker...
 		if (grid[startValueY][startValueX] === ".") {
 			replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
 		}
 	}
+
+	// had to pass arrays into the func to push to them, so i also have to return them out of the func 
+	// to assign the value of the modified array to the original variable containing said array. A scope problem.
+	return [visitedArray, nextArray, nodeContent]
 }

@@ -47,25 +47,28 @@ function dijkstras(finishedGrid) {
 	while (nodeContent != TARGET_NODE) {
 		// FIXME: e.g. Uncaught TypeError: Cannot read property '2' of undefined when running algo. suspicious its
 		// from the algo trying to find e.g. grid[-1][2] which obviously does not exist as there is no negative index of the grid
-		// FIXME: algo will skip certain nodes that are clearly in the perimeter of the seearch area.
+
+		// TODO: Implement a way to assign "distance" to a node.
 
 		if (x == 0) {
+			// do nothing because startValueX and startValueY were already given values up on 
+			// the previous lines for the first iteration.
 		} else {
-			startCoords = nextNodes[x]
+			startCoords = nextNodes[x - 1]
 		}
 
 		startValueX = startCoords[0]
 		startValueY = startCoords[1]
 
 		// ### get the node directly to the right
-
 		nextXCoord = startValueX + 1
 		nextYCoord = startValueY
 		console.log(nextYCoord, nextXCoord);
 		if (nextYCoord < 0 || nextXCoord < 0) {
-			console.log(grid[nextYCoord][nextXCoord])
+			adjacentNode = undefined;
+		} else {
+			adjacentNode = grid[nextYCoord][nextXCoord]
 		}
-		adjacentNode = grid[nextYCoord][nextXCoord]
 
 		if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
 			nodeContent = adjacentNode;
@@ -74,7 +77,7 @@ function dijkstras(finishedGrid) {
 				visitedNodes.push([startValueX, startValueY])
 			}
 
-			if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
+			if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord]) && (adjacentNode != undefined)) {
 				nextNodes.push([nextXCoord, nextYCoord])
 			}
 
@@ -87,10 +90,10 @@ function dijkstras(finishedGrid) {
 		nextYCoord = startValueY
 		console.log(nextYCoord, nextXCoord);
 		if (nextYCoord < 0 || nextXCoord < 0) {
-			console.log(grid[nextYCoord][nextXCoord])
+			adjacentNode = undefined;
+		} else {
+			adjacentNode = grid[nextYCoord][nextXCoord]
 		}
-
-		adjacentNode = grid[nextYCoord][nextXCoord]
 
 		if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
 			nodeContent = adjacentNode;
@@ -99,7 +102,7 @@ function dijkstras(finishedGrid) {
 				visitedNodes.push([startValueX, startValueY])
 			}
 
-			if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
+			if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord]) && (adjacentNode != undefined)) {
 				nextNodes.push([nextXCoord, nextYCoord])
 			}
 
@@ -112,10 +115,10 @@ function dijkstras(finishedGrid) {
 		nextYCoord = startValueY + 1
 		console.log(nextYCoord, nextXCoord);
 		if (nextYCoord < 0 || nextXCoord < 0) {
-			console.log(grid[nextYCoord][nextXCoord])
+			adjacentNode = undefined;
+		} else {
+			adjacentNode = grid[nextYCoord][nextXCoord]
 		}
-
-		adjacentNode = grid[nextYCoord][nextXCoord]
 
 		if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
 			nodeContent = adjacentNode;
@@ -124,7 +127,7 @@ function dijkstras(finishedGrid) {
 				visitedNodes.push([startValueX, startValueY])
 			}
 
-			if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
+			if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord]) && (adjacentNode != undefined)) {
 				nextNodes.push([nextXCoord, nextYCoord])
 			}
 
@@ -138,10 +141,10 @@ function dijkstras(finishedGrid) {
 		nextYCoord = startValueY - 1
 		console.log(nextYCoord, nextXCoord);
 		if (nextYCoord < 0 || nextXCoord < 0) {
-			console.log(grid[nextYCoord][nextXCoord])
+			adjacentNode = undefined;
+		} else {
+			adjacentNode = grid[nextYCoord][nextXCoord]
 		}
-
-		adjacentNode = grid[nextYCoord][nextXCoord]
 
 		if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
 			nodeContent = adjacentNode;
@@ -150,7 +153,7 @@ function dijkstras(finishedGrid) {
 				visitedNodes.push([startValueX, startValueY])
 			}
 
-			if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
+			if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord]) && (adjacentNode != undefined)) {
 				nextNodes.push([nextXCoord, nextYCoord])
 			}
 

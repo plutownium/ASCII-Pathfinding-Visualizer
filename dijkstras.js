@@ -42,385 +42,30 @@ function dijkstras(finishedGrid) {
 	let nextYCoord = startValueY
 	let adjacentNode = grid[nextYCoord][nextXCoord]
 
-	// // "if the adjacent node is neither a wall segment nor already contained in the visitedNodes array..."
-	// if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-	// 	// assign nodeContent the value of adjacentNode so the while loop can check its condition...
-	// 	nodeContent = adjacentNode;
-
-	// 	// calculate how far it is to this node from the origin
-	// 	// ??? what to do for that???
-
-	// 	// push the node we're starting our search from to the list of visitedNodes if it isn't already there
-	// 	if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
-	// 		visitedNodes.push([startValueX, startValueY])
-	// 	}
-
-	// 	// push the node onto the list of nodes to cycle into this process (unless it's already there)
-	// 	if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
-	// 		nextNodes.push([nextXCoord, nextYCoord])
-	// 	}
-
-	// 	// finally, replace the node's visual appearance: convert . to o
-	// 	if (grid[startValueY][startValueX] === ".") {
-	// 		replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
-	// 	}
-	// }
-	// // ### get the node directly to the left
-	// nextXCoord = startValueX - 1
-	// nextYCoord = startValueY
-	// adjacentNode = grid[nextYCoord][nextXCoord]
-
-	// if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-	// 	nodeContent = adjacentNode;
-
-	// 	if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
-	// 		visitedNodes.push([startValueX, startValueY])
-	// 	}
-
-	// 	if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
-	// 		nextNodes.push([nextXCoord, nextYCoord])
-	// 	}
-
-	// 	if (grid[startValueY][startValueX] === ".") {
-	// 		replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
-	// 	}
-	// }
-	// // ### get the node directly above
-	// nextXCoord = startValueX
-	// nextYCoord = startValueY + 1
-	// adjacentNode = grid[nextYCoord][nextXCoord]
-
-	// if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-	// 	nodeContent = adjacentNode;
-
-	// 	if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
-	// 		visitedNodes.push([startValueX, startValueY])
-	// 	}
-
-	// 	if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
-	// 		nextNodes.push([nextXCoord, nextYCoord])
-	// 	}
-
-	// 	if (grid[startValueY][startValueX] === ".") {
-	// 		replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
-	// 	}
-	// }
-	// // ### get the node directly below
-	// nextXCoord = startValueX
-	// nextYCoord = startValueY - 1
-	// adjacentNode = grid[nextYCoord][nextXCoord]
-
-	// if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-	// 	nodeContent = adjacentNode;
-
-	// 	if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
-	// 		visitedNodes.push([startValueX, startValueY])
-	// 	}
-
-	// 	if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
-	// 		nextNodes.push([nextXCoord, nextYCoord])
-	// 	}
-
-	// 	if (grid[startValueY][startValueX] === ".") {
-	// 		replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
-	// 	}
-	// }
-
-	// console.log("origin:" + startCoords);
-
-	// // ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### 
-	// // ### Cycle complete. Next step is to REPEAT the cycle with a new startCoords, found from the nextNodes array.
-	// startCoords = nextNodes[0]
-
-	// startValueX = startCoords[0]
-	// startValueY = startCoords[1]
-
-	// // ### get the node directly to the right
-	// nextXCoord = startValueX + 1
-	// nextYCoord = startValueY
-	// adjacentNode = grid[nextYCoord][nextXCoord]
-
-	// if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-	// 	nodeContent = adjacentNode;
-
-	// 	if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
-	// 		visitedNodes.push([startValueX, startValueY])
-	// 	}
-
-	// 	if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
-	// 		nextNodes.push([nextXCoord, nextYCoord])
-	// 	}
-
-	// 	if (grid[startValueY][startValueX] === ".") {
-	// 		replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
-	// 	}
-	// }
-	// // ### get the node directly to the left
-	// nextXCoord = startValueX - 1
-	// nextYCoord = startValueY
-	// adjacentNode = grid[nextYCoord][nextXCoord]
-
-	// if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-	// 	nodeContent = adjacentNode;
-
-	// 	if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
-	// 		visitedNodes.push([startValueX, startValueY])
-	// 	}
-
-	// 	if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
-	// 		nextNodes.push([nextXCoord, nextYCoord])
-	// 	}
-
-	// 	if (grid[startValueY][startValueX] === ".") {
-	// 		replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
-	// 	}
-	// }
-	// // ### get the node directly above
-	// nextXCoord = startValueX
-	// nextYCoord = startValueY + 1
-	// adjacentNode = grid[nextYCoord][nextXCoord]
-
-	// if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-	// 	nodeContent = adjacentNode;
-
-	// 	if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
-	// 		visitedNodes.push([startValueX, startValueY])
-	// 	}
-
-	// 	if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
-	// 		nextNodes.push([nextXCoord, nextYCoord])
-	// 	}
-
-	// 	if (grid[startValueY][startValueX] === ".") {
-	// 		replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
-	// 	}
-	// }
-	// // ### get the node directly below
-	// nextXCoord = startValueX
-	// nextYCoord = startValueY - 1
-	// adjacentNode = grid[nextYCoord][nextXCoord]
-
-	// if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-	// 	nodeContent = adjacentNode;
-
-	// 	if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
-	// 		visitedNodes.push([startValueX, startValueY])
-	// 	}
-
-	// 	if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
-	// 		nextNodes.push([nextXCoord, nextYCoord])
-	// 	}
-
-	// 	if (grid[startValueY][startValueX] === ".") {
-	// 		replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
-	// 	}
-	// }
-
-	// console.log("New home node:" + startCoords)
-	// console.log("nextNodes:")
-	// console.log(nextNodes);
-
-	// // ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### 
-	// // ### Cycle complete. 
-	// startCoords = nextNodes[1]
-
-	// startValueX = startCoords[0]
-	// startValueY = startCoords[1]
-
-	// // ### get the node directly to the right
-	// nextXCoord = startValueX + 1
-	// nextYCoord = startValueY
-	// adjacentNode = grid[nextYCoord][nextXCoord]
-
-	// if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-	// 	nodeContent = adjacentNode;
-
-	// 	if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
-	// 		visitedNodes.push([startValueX, startValueY])
-	// 	}
-
-	// 	if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
-	// 		nextNodes.push([nextXCoord, nextYCoord])
-	// 	}
-
-	// 	if (grid[startValueY][startValueX] === ".") {
-	// 		replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
-	// 	}
-	// }
-	// // ### get the node directly to the left
-	// nextXCoord = startValueX - 1
-	// nextYCoord = startValueY
-	// adjacentNode = grid[nextYCoord][nextXCoord]
-
-	// if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-	// 	nodeContent = adjacentNode;
-
-	// 	if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
-	// 		visitedNodes.push([startValueX, startValueY])
-	// 	}
-
-	// 	if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
-	// 		nextNodes.push([nextXCoord, nextYCoord])
-	// 	}
-
-	// 	if (grid[startValueY][startValueX] === ".") {
-	// 		replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
-	// 	}
-	// }
-	// // ### get the node directly above
-	// nextXCoord = startValueX
-	// nextYCoord = startValueY + 1
-	// adjacentNode = grid[nextYCoord][nextXCoord]
-
-	// if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-	// 	nodeContent = adjacentNode;
-
-	// 	if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
-	// 		visitedNodes.push([startValueX, startValueY])
-	// 	}
-
-	// 	if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
-	// 		nextNodes.push([nextXCoord, nextYCoord])
-	// 	}
-
-	// 	if (grid[startValueY][startValueX] === ".") {
-	// 		replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
-	// 	}
-	// }
-	// // ### get the node directly below
-	// nextXCoord = startValueX
-	// nextYCoord = startValueY - 1
-	// adjacentNode = grid[nextYCoord][nextXCoord]
-
-	// if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-	// 	nodeContent = adjacentNode;
-
-	// 	if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
-	// 		visitedNodes.push([startValueX, startValueY])
-	// 	}
-
-	// 	if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
-	// 		nextNodes.push([nextXCoord, nextYCoord])
-	// 	}
-
-	// 	if (grid[startValueY][startValueX] === ".") {
-	// 		replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
-	// 	}
-	// }
-
-	// console.log("New home node:" + startCoords)
-	// console.log("nextNodes:");
-	// console.log(nextNodes)
-
-	// // ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### 
-	// // ### Cycle complete. 
-	// startCoords = nextNodes[2]
-
-	// startValueX = startCoords[0]
-	// startValueY = startCoords[1]
-	// console.log("New home node:" + startCoords)
-
-	// // ### get the node directly to the right
-	// nextXCoord = startValueX + 1
-	// nextYCoord = startValueY
-	// adjacentNode = grid[nextYCoord][nextXCoord]
-
-	// if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-	// 	nodeContent = adjacentNode;
-
-	// 	if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
-	// 		visitedNodes.push([startValueX, startValueY])
-	// 	}
-
-	// 	if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
-	// 		nextNodes.push([nextXCoord, nextYCoord])
-	// 	}
-
-	// 	if (grid[startValueY][startValueX] === ".") {
-	// 		replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
-	// 	}
-	// }
-
-	// // ### get the node directly to the left
-	// nextXCoord = startValueX - 1
-	// nextYCoord = startValueY
-	// adjacentNode = grid[nextYCoord][nextXCoord]
-
-	// if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-	// 	nodeContent = adjacentNode;
-
-	// 	if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
-	// 		visitedNodes.push([startValueX, startValueY])
-	// 	}
-
-	// 	if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
-	// 		nextNodes.push([nextXCoord, nextYCoord])
-	// 	}
-
-	// 	if (grid[startValueY][startValueX] === ".") {
-	// 		replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
-	// 	}
-	// }
-
-	// // ### get the node directly above
-	// nextXCoord = startValueX
-	// nextYCoord = startValueY + 1
-	// adjacentNode = grid[nextYCoord][nextXCoord]
-
-	// if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-	// 	nodeContent = adjacentNode;
-
-	// 	if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
-	// 		visitedNodes.push([startValueX, startValueY])
-	// 	}
-
-	// 	if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
-	// 		nextNodes.push([nextXCoord, nextYCoord])
-	// 	}
-
-	// 	if (grid[startValueY][startValueX] === ".") {
-	// 		replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
-	// 	}
-	// }
-
-	// // ### get the node directly below
-	// nextXCoord = startValueX
-	// nextYCoord = startValueY - 1
-	// adjacentNode = grid[nextYCoord][nextXCoord]
-
-	// if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-	// 	nodeContent = adjacentNode;
-
-	// 	if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
-	// 		visitedNodes.push([startValueX, startValueY])
-	// 	}
-
-	// 	if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord])) {
-	// 		nextNodes.push([nextXCoord, nextYCoord])
-	// 	}
-
-	// 	if (grid[startValueY][startValueX] === ".") {
-	// 		replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
-	// 	}
-	// }
-
-	// console.log("nextNodes:");
-	// console.log(nextNodes)
-	// console.log(visitedNodes)
 	let x = 0;
 
-	// while (nodeContent != TARGET_NODE) {
-	while (x < 20) {
-		startCoords = nextNodes[x]
+	while (nodeContent != TARGET_NODE) {
+		// FIXME: e.g. Uncaught TypeError: Cannot read property '2' of undefined when running algo. suspicious its
+		// from the algo trying to find e.g. grid[-1][2] which obviously does not exist as there is no negative index of the grid
+		// FIXME: algo will skip certain nodes that are clearly in the perimeter of the seearch area.
+
+		if (x == 0) {
+		} else {
+			startCoords = nextNodes[x]
+		}
 
 		startValueX = startCoords[0]
 		startValueY = startCoords[1]
 
 		// ### get the node directly to the right
+
 		nextXCoord = startValueX + 1
 		nextYCoord = startValueY
+		console.log(nextYCoord, nextXCoord);
+		if (nextYCoord < 0 || nextXCoord < 0) {
+			console.log(grid[nextYCoord][nextXCoord])
+		}
 		adjacentNode = grid[nextYCoord][nextXCoord]
-
 
 		if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
 			nodeContent = adjacentNode;
@@ -440,6 +85,11 @@ function dijkstras(finishedGrid) {
 		// ### get the node directly to the left
 		nextXCoord = startValueX - 1
 		nextYCoord = startValueY
+		console.log(nextYCoord, nextXCoord);
+		if (nextYCoord < 0 || nextXCoord < 0) {
+			console.log(grid[nextYCoord][nextXCoord])
+		}
+
 		adjacentNode = grid[nextYCoord][nextXCoord]
 
 		if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
@@ -460,6 +110,11 @@ function dijkstras(finishedGrid) {
 		// ### get the node directly above
 		nextXCoord = startValueX
 		nextYCoord = startValueY + 1
+		console.log(nextYCoord, nextXCoord);
+		if (nextYCoord < 0 || nextXCoord < 0) {
+			console.log(grid[nextYCoord][nextXCoord])
+		}
+
 		adjacentNode = grid[nextYCoord][nextXCoord]
 
 		if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
@@ -477,9 +132,15 @@ function dijkstras(finishedGrid) {
 				replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
 			}
 		}
+
 		// ### get the node directly below
 		nextXCoord = startValueX
 		nextYCoord = startValueY - 1
+		console.log(nextYCoord, nextXCoord);
+		if (nextYCoord < 0 || nextXCoord < 0) {
+			console.log(grid[nextYCoord][nextXCoord])
+		}
+
 		adjacentNode = grid[nextYCoord][nextXCoord]
 
 		if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
@@ -497,7 +158,6 @@ function dijkstras(finishedGrid) {
 				replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
 			}
 		}
-
 
 		x = x + 1;
 	}
@@ -541,27 +201,3 @@ function nodeLoop(adjacentNode, nextXCoord, nextYCoord) {
 		}
 	}
 }
-
-// (11) [Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2)]
-// 0: (2)[2, 1]
-// 1: (2)[0, 1]
-// 2: (2)[1, 2]
-// 3: (2)[1, 0]
-// 4: (2)[3, 1]
-// 5: (2)[2, 2]
-// 6: (2)[2, 0]
-// 7: (2)[-1, 1]
-// 8: (2)[0, 2]
-// 9: (2)[0, 0]
-// 10: (2)[1, 3]
-// length: 11
-// should be output if func works
-
-// & visitedNodes output:
-// (4)[Array(2), Array(2), Array(2), Array(2)]
-// 0: (2)[1, 1]
-// 1: (2)[2, 1]
-// 2: (2)[0, 1]
-// 3: (2)[1, 2]
-// length: 4
-// __proto__: Array(0)

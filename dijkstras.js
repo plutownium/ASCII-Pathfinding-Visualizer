@@ -71,16 +71,23 @@ function dijkstras(finishedGrid) {
 		}
 
 		if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
+			// assign nodeContent the value of adjacentNode so the while loop can check its condition...
 			nodeContent = adjacentNode;
 
+			// calculate how far it is to this node from the origin
+			// ??? what to do for that???
+
+			// push the node we're starting our search from to the list of visitedNodes if it isn't already there
 			if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
 				visitedNodes.push([startValueX, startValueY])
 			}
 
+			// push the node onto the list of nodes to cycle into this process (unless it's already there)
 			if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord]) && (adjacentNode != undefined)) {
 				nextNodes.push([nextXCoord, nextYCoord])
 			}
 
+			// finally, replace the node's visual appearance: convert . to o
 			if (grid[startValueY][startValueX] === ".") {
 				replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
 			}

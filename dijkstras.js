@@ -33,17 +33,15 @@ function dijkstras(finishedGrid) {
 	// make a list of nodes to visit next...
 	let nextNodes = [];
 
-	// ### CYCLE start
-	// start cycling through adjacent nodes
+	// [cycle start] start cycling through adjacent nodes
 	let startValueX = startCoords[0]
 	let startValueY = startCoords[1]
 
-	// // ### get the node directly to the right
-	// let nextXCoord = startValueX + 1
-	// let nextYCoord = startValueY
-	// let adjacentNode = finishedGrid[nextYCoord][nextXCoord]
+	let nextXCoord;
+	let nextYCoord;
+	let adjacentNode; // = finishedGrid[nextYCoord][nextXCoord]
 
-	let k = 0;
+	let iteration = 0;
 	let loopContent;
 
 	let maxXValue = finishedGrid[0].length - 1;
@@ -61,11 +59,11 @@ function dijkstras(finishedGrid) {
 		// one of the paths encounters the TARGET_NODE. The *first* one to encounter TARGET_NODE should be the one selected
 		// for highlighting by + signs (the path indicator). This should work...
 
-		if (k == 0) {
+		if (iteration == 0) {
 			// do nothing because startValueX and startValueY were already given values up on 
 			// the previous lines for the first iteration.
 		} else {
-			const index = k - 1;
+			const index = iteration - 1;
 			startCoords = nextNodes[index]
 			console.log(nextNodes)
 			console.log("index value: " + index);
@@ -75,15 +73,15 @@ function dijkstras(finishedGrid) {
 		startValueX = startCoords[0]
 		startValueY = startCoords[1]
 
-		if (k % 4 == 0) {
+		if (iteration % 4 == 0) {
 			// ### get the node directly to the right
 			nextXCoord = startValueX + 1
 			nextYCoord = startValueY
-		} else if (k % 4 == 1) {
+		} else if (iteration % 4 == 1) {
 			// ### get the node directly to the left
 			nextXCoord = startValueX - 1
 			nextYCoord = startValueY
-		} else if (k % 4 == 2) {
+		} else if (iteration % 4 == 2) {
 			// ### get the node directly above
 			nextXCoord = startValueX
 			nextYCoord = startValueY + 1
@@ -93,7 +91,8 @@ function dijkstras(finishedGrid) {
 			nextYCoord = startValueY - 1
 		}
 
-		if (nextYCoord < 0 || nextXCoord < 0 || nextYCoord > maxYValue || nextXCoord > maxXValue) {
+		const coordsAreOnTheGrid = nextYCoord < 0 && nextXCoord < 0 && nextYCoord > maxYValue && nextXCoord > maxXValue;
+		if (coordsAreOnTheGrid) {
 			adjacentNode = undefined;
 			console.log(nextYCoord, nextXCoord);
 			console.log("UNDEFINED!")
@@ -101,13 +100,13 @@ function dijkstras(finishedGrid) {
 			adjacentNode = finishedGrid[nextYCoord][nextXCoord]
 		}
 
-		loopContent = nodeLoop(adjacentNode, nextXCoord, nextYCoord, startValueX, startValueY, visitedNodes, nextNodes);
+		loopContent = nodeLoop(adjacentNode, [nextXCoord, nextYCoord], [startValueX, startValueY], visitedNodes, nextNodes);
 		visitedNodes = loopContent[0];
 		nextNodes = loopContent[1];
 		nodeContent = loopContent[2];
 
 
-		k = k + 1;
+		iteration = iteration + 1;
 	}
 	// finally, rerender the board based on the grid
 	rerenderGrid();
@@ -130,27 +129,27 @@ function replaceEmptySpaceWithVisitedMarker(emptyXCoord, emptyYCoord) {
 }
 
 // TODO: Refactor !isArrayInArray() to remove the irritating ! flip
-function nodeLoop(adjacentNode, nextXCoord, nextYCoord, initValX, initValY, visitedArray, nextArray) {
+function nodeLoop(adjacentNode, nextNode, startNode, visitedArray, nextArray) {
 	// function is called "nodeLoop" because it "loops" over a node in the grid.
 	let funcNodeContent;
 
 	// "if the adjacent node isn't EITHER: (a) a wall segment or (b) already contained in the visitedNodes array..."
 	// (because you don't want to visit the same node twice)
-	const nextNodeHasntBeenVisitedYet = !isArrayInArray(visitedArray, [nextXCoord, nextYCoord])
+	const nextNodeHasntBeenVisitedYet = !isArrayInArray(visitedArray, nextNode)
 	if (adjacentNode != WALL_SEGMENT && nextNodeHasntBeenVisitedYet) {
 		funcNodeContent = adjacentNode;
 
 		// push the node we're starting our search from to the list of visitedNodes if it isn't already there
-		const currentNodeHasntBeenVisitedYet = !isArrayInArray(visitedArray, [initValX, initValY])
+		const currentNodeHasntBeenVisitedYet = !isArrayInArray(visitedArray, startNode)
 		if (currentNodeHasntBeenVisitedYet) {
-			visitedArray.push([initValX, initValY])
+			visitedArray.push(startNode)
 		}
 
 		// push the node onto the list of nodes to cycle into this process (unless it's already there)
-		const notPlanningToVisitNextNodeYet = !isArrayInArray(nextArray, [nextXCoord, nextYCoord])
+		const notPlanningToVisitNextNodeYet = !isArrayInArray(nextArray, nextNode)
 		if (notPlanningToVisitNextNodeYet && (adjacentNode != undefined)) {
 			console.log("Pushing to nextArray!")
-			nextArray.push([nextXCoord, nextYCoord])
+			nextArray.push(nextNode)
 		}
 
 		// do i also have to pass the grid array so it can be accessed within the function? it seemed to work when i did

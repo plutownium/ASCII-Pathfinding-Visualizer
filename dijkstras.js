@@ -48,7 +48,7 @@ function dijkstras(finishedGrid) {
 	let maxXValue = finishedGrid[0].length - 1;
 	let maxYValue = finishedGrid.length - 1;
 
-	while (nodeContent !== TARGET_NODE) {
+	while (nodeContent !== TARGET_NODE || x > 10) {
 		// FIXME: e.g. Uncaught TypeError: Cannot read property '2' of undefined when running algo. suspicious its
 		// from the algo trying to find e.g. grid[-1][2] which obviously does not exist as there is no negative index of the grid
 		// FIXME: while loop runs past TARGET_NODE without stopping
@@ -79,8 +79,8 @@ function dijkstras(finishedGrid) {
 
 		if (nextYCoord < 0 || nextXCoord < 0 || nextYCoord > maxYValue || nextXCoord > maxXValue) {
 			adjacentNode = undefined;
-			// console.log(nextYCoord, nextXCoord);
-			// console.log("UNDEFINED!")
+			console.log(nextYCoord, nextXCoord);
+			console.log("UNDEFINED!")
 		} else {
 			adjacentNode = grid[nextYCoord][nextXCoord]
 		}
@@ -101,8 +101,8 @@ function dijkstras(finishedGrid) {
 
 		if (nextYCoord < 0 || nextXCoord < 0 || nextYCoord > maxYValue || nextXCoord > maxXValue) {
 			adjacentNode = undefined;
-			// console.log(nextYCoord, nextXCoord);
-			// console.log("UNDEFINED!")
+			console.log(nextYCoord, nextXCoord);
+			console.log("UNDEFINED!")
 		} else {
 			adjacentNode = grid[nextYCoord][nextXCoord]
 		}
@@ -124,8 +124,8 @@ function dijkstras(finishedGrid) {
 		// FIXME: Condition should also include, "if nextYCoord or NextXCoord > max width or height of grid"
 		if (nextYCoord < 0 || nextXCoord < 0 || nextYCoord > maxYValue || nextXCoord > maxXValue) {
 			adjacentNode = undefined;
-			// console.log(nextYCoord, nextXCoord);
-			// console.log("UNDEFINED!")
+			console.log(nextYCoord, nextXCoord);
+			console.log("UNDEFINED!")
 		} else {
 			adjacentNode = grid[nextYCoord][nextXCoord]
 		}
@@ -146,8 +146,8 @@ function dijkstras(finishedGrid) {
 
 		if (nextYCoord < 0 || nextXCoord < 0 || nextYCoord > maxYValue || nextXCoord > maxXValue) {
 			adjacentNode = undefined;
-			// console.log(nextYCoord, nextXCoord);
-			// console.log("UNDEFINED!")
+			console.log(nextYCoord, nextXCoord);
+			console.log("UNDEFINED!")
 		} else {
 			adjacentNode = grid[nextYCoord][nextXCoord]
 		}
@@ -162,6 +162,11 @@ function dijkstras(finishedGrid) {
 
 		x = x + 1;
 	}
+
+	// finally, rerender the board based on the grid
+	rerenderGrid();
+
+	console.log("Done!")
 
 	// rerenderGridSlowly();
 
@@ -179,7 +184,7 @@ function isArrayInArray(arr, item) {
 
 function replaceEmptySpaceWithVisitedMarker(emptyXCoord, emptyYCoord) {
 	grid[emptyYCoord][emptyXCoord] = VISITED_NODE;
-	rerenderGrid();
+	// rerenderGrid();
 }
 
 
@@ -204,6 +209,7 @@ function nodeLoop(adjacentNode, nextXCoord, nextYCoord, initValX, initValY, visi
 
 		// do i also have to pass the grid array so it can be accessed within the function? it seemed to work when i did
 		// grid[y][x] = VISITED_NODE; up on the first line of the replaceEmptySpaceWithVisitedMarker...
+		console.log(grid)
 		if (grid[initValY][initValX] === ".") {
 			replaceEmptySpaceWithVisitedMarker(initValX, initValY);
 			// TODO: Figure out how to animate the change in the board .... sloooowly...

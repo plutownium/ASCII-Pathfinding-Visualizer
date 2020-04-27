@@ -1,3 +1,12 @@
+// dijkstras() works with a grid that looks like...
+const exampleGrid = [
+	[".", ".", ".", ".", ".", ".", ".", "."],
+	[".", "*", ".", ".", ".", ".", ".", "."],
+	[".", ".", ".", ".", ".", ".", ".", "."],
+	[".", "X", ".", ".", ".", ".", ".", "."],
+	[".", ".", ".", ".", ".", ".", ".", "."]
+]
+
 function dijkstras(finishedGrid) {
 	// step 1: confirm there is both a Start Node and a Target Node & get start coordinates
 	let startNodeExists = false;
@@ -47,123 +56,121 @@ function dijkstras(finishedGrid) {
 	let maxXValue = finishedGrid[0].length - 1;
 	let maxYValue = finishedGrid.length - 1;
 
+	// FIXME: e.g. Uncaught TypeError: Cannot read property '2' of undefined when running algo. suspicious its
+	// from the algo trying to find e.g. grid[-1][2] which obviously does not exist as there is no negative index of the grid
+	// FIXME: while loop runs past TARGET_NODE without stopping
+	// TODO: Implement a way to assign "distance" to a node.
+
+	// TODO: Add a way for user to REMOVE a wall segment and return it to "." status
+
+	// TODO: Build an array that fills up with potential paths through the Grid, each one expanding node by node, until
+	// one of the paths encounters the TARGET_NODE. The *first* one to encounter TARGET_NODE should be the one selected
+	// for highlighting by + signs (the path indicator). This should work...
 	while (nodeContent !== TARGET_NODE || x > 10) {
-		// FIXME: e.g. Uncaught TypeError: Cannot read property '2' of undefined when running algo. suspicious its
-		// from the algo trying to find e.g. grid[-1][2] which obviously does not exist as there is no negative index of the grid
-		// FIXME: while loop runs past TARGET_NODE without stopping
-		// TODO: Implement a way to assign "distance" to a node.
-
-		// TODO: Add a way for user to REMOVE a wall segment and return it to "." status
-
-		// TODO: Build an array that fills up with potential paths through the Grid, each one expanding node by node, until
-		// one of the paths encounters the TARGET_NODE. The *first* one to encounter TARGET_NODE should be the one selected
-		// for highlighting by + signs (the path indicator). This should work...
-
-		if (iteration == 0) {
-			// do nothing because startValueX and startValueY were already given values up on 
-			// the previous lines for the first iteration.
-		} else {
+		// do nothing for "iteration == 0" because startValueX and startValueY were already given values up on 
+		// the previous lines for the first iteration.
+		if (iteration > 0) {
 			const index = iteration - 1;
 			startCoords = nextNodes[index]
 			console.log(nextNodes)
 			console.log("index value: " + index);
 			console.log("START COORDS: " + startCoords);
+
+			startValueX = startCoords[0]
+			startValueY = startCoords[1]
+
+			if (iteration % 4 == 0) {
+				// ### get the node directly to the right
+				nextXCoord = startValueX + 1
+				nextYCoord = startValueY
+			} else if (iteration % 4 == 1) {
+				// ### get the node directly to the left
+				nextXCoord = startValueX - 1
+				nextYCoord = startValueY
+			} else if (iteration % 4 == 2) {
+				// ### get the node directly above
+				nextXCoord = startValueX
+				nextYCoord = startValueY + 1
+			} else {
+				// ### get the node directly below
+				nextXCoord = startValueX
+				nextYCoord = startValueY - 1
+			}
+
+			const coordsAreOnTheGrid = nextYCoord < 0 && nextXCoord < 0 && nextYCoord > maxYValue && nextXCoord > maxXValue;
+			if (coordsAreOnTheGrid) {
+				adjacentNode = undefined;
+				console.log(nextYCoord, nextXCoord);
+				console.log("UNDEFINED!")
+			} else {
+				adjacentNode = finishedGrid[nextYCoord][nextXCoord]
+			}
+
+			loopContent = nodeLoop(adjacentNode, [nextXCoord, nextYCoord], [startValueX, startValueY], visitedNodes, nextNodes);
+			visitedNodes = loopContent[0];
+			nextNodes = loopContent[1];
+			nodeContent = loopContent[2];
+
+
+			iteration = iteration + 1;
 		}
-
-		startValueX = startCoords[0]
-		startValueY = startCoords[1]
-
-		if (iteration % 4 == 0) {
-			// ### get the node directly to the right
-			nextXCoord = startValueX + 1
-			nextYCoord = startValueY
-		} else if (iteration % 4 == 1) {
-			// ### get the node directly to the left
-			nextXCoord = startValueX - 1
-			nextYCoord = startValueY
-		} else if (iteration % 4 == 2) {
-			// ### get the node directly above
-			nextXCoord = startValueX
-			nextYCoord = startValueY + 1
-		} else {
-			// ### get the node directly below
-			nextXCoord = startValueX
-			nextYCoord = startValueY - 1
-		}
-
-		const coordsAreOnTheGrid = nextYCoord < 0 && nextXCoord < 0 && nextYCoord > maxYValue && nextXCoord > maxXValue;
-		if (coordsAreOnTheGrid) {
-			adjacentNode = undefined;
-			console.log(nextYCoord, nextXCoord);
-			console.log("UNDEFINED!")
-		} else {
-			adjacentNode = finishedGrid[nextYCoord][nextXCoord]
-		}
-
-		loopContent = nodeLoop(adjacentNode, [nextXCoord, nextYCoord], [startValueX, startValueY], visitedNodes, nextNodes);
-		visitedNodes = loopContent[0];
-		nextNodes = loopContent[1];
-		nodeContent = loopContent[2];
-
-
-		iteration = iteration + 1;
-	}
-	// finally, rerender the board based on the grid
-	rerenderGrid();
-	// rerenderGridSlowly(); // work in progress...
-}
-
-// https://stackoverflow.com/questions/41661287/how-to-check-if-an-array-contains-another-array
-function isArrayInArray(arr, item) {
-	var item_as_string = JSON.stringify(item);
-
-	var contains = arr.some(function (ele) {
-		return JSON.stringify(ele) === item_as_string;
-	});
-	return contains;
-}
-
-function replaceEmptySpaceWithVisitedMarker(emptyXCoord, emptyYCoord) {
-	grid[emptyYCoord][emptyXCoord] = VISITED_NODE;
-	// rerenderGrid();
-}
-
-// TODO: Refactor !isArrayInArray() to remove the irritating ! flip
-function nodeLoop(adjacentNode, nextNode, startNode, visitedArray, nextArray) {
-	// function is called "nodeLoop" because it "loops" over a node in the grid.
-	let funcNodeContent;
-
-	// "if the adjacent node isn't EITHER: (a) a wall segment or (b) already contained in the visitedNodes array..."
-	// (because you don't want to visit the same node twice)
-	const nextNodeHasntBeenVisitedYet = !isArrayInArray(visitedArray, nextNode)
-	if (adjacentNode != WALL_SEGMENT && nextNodeHasntBeenVisitedYet) {
-		funcNodeContent = adjacentNode;
-
-		// push the node we're starting our search from to the list of visitedNodes if it isn't already there
-		const currentNodeHasntBeenVisitedYet = !isArrayInArray(visitedArray, startNode)
-		if (currentNodeHasntBeenVisitedYet) {
-			visitedArray.push(startNode)
-		}
-
-		// push the node onto the list of nodes to cycle into this process (unless it's already there)
-		const notPlanningToVisitNextNodeYet = !isArrayInArray(nextArray, nextNode)
-		if (notPlanningToVisitNextNodeYet && (adjacentNode != undefined)) {
-			console.log("Pushing to nextArray!")
-			nextArray.push(nextNode)
-		}
-
-		// do i also have to pass the grid array so it can be accessed within the function? it seemed to work when i did
-		// grid[y][x] = VISITED_NODE; up on the first line of the replaceEmptySpaceWithVisitedMarker...
-
-		// finally, replace the node's visual appearance: convert . to o
-		if (grid[initValY][initValX] === ".") {
-			replaceEmptySpaceWithVisitedMarker(initValX, initValY);
-		}
+		// finally, rerender the board based on the grid
+		rerenderGrid();
+		// rerenderGridSlowly(); // work in progress...
 	}
 
-	// had to pass arrays into the func to push to them, so i also have to return them out of the func 
-	// to assign the value of the modified array to the original variable containing said array. A scope problem.
-	return [visitedArray, nextArray, funcNodeContent]
+	// https://stackoverflow.com/questions/41661287/how-to-check-if-an-array-contains-another-array
+	function isArrayInArray(arr, item) {
+		var item_as_string = JSON.stringify(item);
+
+		var contains = arr.some(function (ele) {
+			return JSON.stringify(ele) === item_as_string;
+		});
+		return contains;
+	}
+
+	function replaceEmptySpaceWithVisitedMarker(emptyXCoord, emptyYCoord) {
+		grid[emptyYCoord][emptyXCoord] = VISITED_NODE;
+		// rerenderGrid();
+	}
+
+	// TODO: Refactor !isArrayInArray() to remove the irritating ! flip
+	function nodeLoop(adjacentNode, nextNode, startNode, visitedArray, nextArray) {
+		// function is called "nodeLoop" because it "loops" over a node in the grid.
+		let funcNodeContent;
+
+		// "if the adjacent node isn't EITHER: (a) a wall segment or (b) already contained in the visitedNodes array..."
+		// (because you don't want to visit the same node twice)
+		const nextNodeHasntBeenVisitedYet = !isArrayInArray(visitedArray, nextNode)
+		if (adjacentNode != WALL_SEGMENT && nextNodeHasntBeenVisitedYet) {
+			funcNodeContent = adjacentNode;
+
+			// push the node we're starting our search from to the list of visitedNodes if it isn't already there
+			const currentNodeHasntBeenVisitedYet = !isArrayInArray(visitedArray, startNode)
+			if (currentNodeHasntBeenVisitedYet) {
+				visitedArray.push(startNode)
+			}
+
+			// push the node onto the list of nodes to cycle into this process (unless it's already there)
+			const notPlanningToVisitNextNodeYet = !isArrayInArray(nextArray, nextNode)
+			if (notPlanningToVisitNextNodeYet && (adjacentNode != undefined)) {
+				console.log("Pushing to nextArray!")
+				nextArray.push(nextNode)
+			}
+
+			// do i also have to pass the grid array so it can be accessed within the function? it seemed to work when i did
+			// grid[y][x] = VISITED_NODE; up on the first line of the replaceEmptySpaceWithVisitedMarker...
+
+			// finally, replace the node's visual appearance: convert . to o
+			if (grid[initValY][initValX] === ".") {
+				replaceEmptySpaceWithVisitedMarker(initValX, initValY);
+			}
+		}
+
+		// had to pass arrays into the func to push to them, so i also have to return them out of the func 
+		// to assign the value of the modified array to the original variable containing said array. A scope problem.
+		return [visitedArray, nextArray, funcNodeContent]
+	}
 }
 
 // FIXME: It seems like there's some "overflow" going on... I'm suspicious something like this is happening:

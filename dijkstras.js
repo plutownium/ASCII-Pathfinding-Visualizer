@@ -22,7 +22,7 @@ function dijkstras(finishedGrid) {
 
 	// step 2: get list of adjacent nodes that have not yet been visited. 
 	// Adjacent nodes have the form: [x + 1, y] | [x - 1, y] | [x, y + 1], | [x, y - 1] AND have not yet been visited
-	const visitedNodes = []; // store arrays of visited node coords here so your program can check values
+	let visitedNodes = []; // store arrays of visited node coords here so your program can check values
 	// also need to store "distance to adjacent node" somehow once program gets there
 	let distanceToNodes = [];
 
@@ -30,7 +30,7 @@ function dijkstras(finishedGrid) {
 	let nodeContent;
 
 	// make a list of nodes to visit next...
-	const nextNodes = [];
+	let nextNodes = [];
 
 	// ### CYCLE start
 	// start cycling through adjacent nodes
@@ -43,6 +43,7 @@ function dijkstras(finishedGrid) {
 	let adjacentNode = grid[nextYCoord][nextXCoord]
 
 	let x = 0;
+	let loopContent;
 
 	while (nodeContent != TARGET_NODE) {
 		// FIXME: e.g. Uncaught TypeError: Cannot read property '2' of undefined when running algo. suspicious its
@@ -63,116 +64,70 @@ function dijkstras(finishedGrid) {
 		// ### get the node directly to the right
 		nextXCoord = startValueX + 1
 		nextYCoord = startValueY
-		console.log(nextYCoord, nextXCoord);
+
 		if (nextYCoord < 0 || nextXCoord < 0) {
 			adjacentNode = undefined;
+			console.log(nextYCoord, nextXCoord);
 			console.log("UNDEFINED!")
 		} else {
 			adjacentNode = grid[nextYCoord][nextXCoord]
 		}
 
-		nodeLoop(adjacentNode, nextXCoord, nextYCoord);
-		// if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-		// 	// assign nodeContent the value of adjacentNode so the while loop can check its condition...
-		// 	nodeContent = adjacentNode;
+		loopContent = nodeLoop(adjacentNode, nextXCoord, nextYCoord, startValueX, startValueY, visitedNodes, nextNodes);
+		visitedNodes = loopContent[0];
+		nextNodes = loopContent[1];
+		nodeContent = loopContent[2];
 
-		// 	// calculate how far it is to this node from the origin
-		// 	// ??? what to do for that???
-
-		// 	// push the node we're starting our search from to the list of visitedNodes if it isn't already there
-		// 	if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
-		// 		visitedNodes.push([startValueX, startValueY])
-		// 	}
-
-		// 	// push the node onto the list of nodes to cycle into this process (unless it's already there)
-		// 	if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord]) && (adjacentNode != undefined)) {
-		// 		nextNodes.push([nextXCoord, nextYCoord])
-		// 	}
-
-		// 	// finally, replace the node's visual appearance: convert . to o
-		// 	if (grid[startValueY][startValueX] === ".") {
-		// 		replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
-		// 	}
-		// }
 		// ### get the node directly to the left
 		nextXCoord = startValueX - 1
 		nextYCoord = startValueY
-		console.log(nextYCoord, nextXCoord);
+
 		if (nextYCoord < 0 || nextXCoord < 0) {
 			adjacentNode = undefined;
+			console.log(nextYCoord, nextXCoord);
 			console.log("UNDEFINED!")
 		} else {
 			adjacentNode = grid[nextYCoord][nextXCoord]
 		}
 
-		if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-			nodeContent = adjacentNode;
+		loopContent = nodeLoop(adjacentNode, nextXCoord, nextYCoord, startValueX, startValueY, visitedNodes, nextNodes);
+		visitedNodes = loopContent[0];
+		nextNodes = loopContent[1];
+		nodeContent = loopContent[2];
 
-			if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
-				visitedNodes.push([startValueX, startValueY])
-			}
-
-			if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord]) && (adjacentNode != undefined)) {
-				nextNodes.push([nextXCoord, nextYCoord])
-			}
-
-			if (grid[startValueY][startValueX] === ".") {
-				replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
-			}
-		}
 		// ### get the node directly above
 		nextXCoord = startValueX
 		nextYCoord = startValueY + 1
-		console.log(nextYCoord, nextXCoord);
+
 		if (nextYCoord < 0 || nextXCoord < 0) {
 			adjacentNode = undefined;
+			console.log(nextYCoord, nextXCoord);
 			console.log("UNDEFINED!")
 		} else {
 			adjacentNode = grid[nextYCoord][nextXCoord]
 		}
 
-		if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-			nodeContent = adjacentNode;
-
-			if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
-				visitedNodes.push([startValueX, startValueY])
-			}
-
-			if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord]) && (adjacentNode != undefined)) {
-				nextNodes.push([nextXCoord, nextYCoord])
-			}
-
-			if (grid[startValueY][startValueX] === ".") {
-				replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
-			}
-		}
+		loopContent = nodeLoop(adjacentNode, nextXCoord, nextYCoord, startValueX, startValueY, visitedNodes, nextNodes);
+		visitedNodes = loopContent[0];
+		nextNodes = loopContent[1];
+		nodeContent = loopContent[2];
 
 		// ### get the node directly below
 		nextXCoord = startValueX
 		nextYCoord = startValueY - 1
-		console.log(nextYCoord, nextXCoord);
+
 		if (nextYCoord < 0 || nextXCoord < 0) {
 			adjacentNode = undefined;
+			console.log(nextYCoord, nextXCoord);
 			console.log("UNDEFINED!")
 		} else {
 			adjacentNode = grid[nextYCoord][nextXCoord]
 		}
 
-		if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedNodes, [nextXCoord, nextYCoord])) {
-			nodeContent = adjacentNode;
-
-			if (!isArrayInArray(visitedNodes, [startValueX, startValueY])) {
-				visitedNodes.push([startValueX, startValueY])
-			}
-
-			if (!isArrayInArray(nextNodes, [nextXCoord, nextYCoord]) && (adjacentNode != undefined)) {
-				nextNodes.push([nextXCoord, nextYCoord])
-			}
-
-			if (grid[startValueY][startValueX] === ".") {
-				replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
-			}
-		}
+		loopContent = nodeLoop(adjacentNode, nextXCoord, nextYCoord, startValueX, startValueY, visitedNodes, nextNodes);
+		visitedNodes = loopContent[0];
+		nextNodes = loopContent[1];
+		nodeContent = loopContent[2];
 
 		x = x + 1;
 	}
@@ -195,15 +150,15 @@ function replaceEmptySpaceWithVisitedMarker(emptyXCoord, emptyYCoord) {
 }
 
 
-function nodeLoop(adjacentNode, nextXCoord, nextYCoord, visitedArray, nextArray) {
+function nodeLoop(adjacentNode, nextXCoord, nextYCoord, initValX, initValY, visitedArray, nextArray) {
 	// function so called because it "loops" over a node in the grid.
 
 	if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedArray, [nextXCoord, nextYCoord])) {
 		nodeContent = adjacentNode;
 
-		if (!isArrayInArray(visitedArray, [startValueX, startValueY])) {
-			visitedArray.push([startValueX, startValueY])
-		}
+		if (!isArrayInArray(visitedArray, [initValX, initValY])) {
+			visitedArray.push([initValX, initValY])
+		} initValX
 
 		if (!isArrayInArray(nextArray, [nextXCoord, nextYCoord]) && (adjacentNode != undefined)) {
 			nextArray.push([nextXCoord, nextYCoord])
@@ -211,8 +166,8 @@ function nodeLoop(adjacentNode, nextXCoord, nextYCoord, visitedArray, nextArray)
 
 		// do i also have to pass the grid array so it can be accessed within the function? it seemed to work when i did
 		// grid[y][x] = VISITED_NODE; up on the first line of the replaceEmptySpaceWithVisitedMarker...
-		if (grid[startValueY][startValueX] === ".") {
-			replaceEmptySpaceWithVisitedMarker(startValueX, startValueY);
+		if (grid[initValY][initValX] === ".") {
+			replaceEmptySpaceWithVisitedMarker(initValX, initValY);
 		}
 	}
 

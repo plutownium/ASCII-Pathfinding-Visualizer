@@ -54,6 +54,12 @@ function dijkstras(finishedGrid) {
 		// FIXME: while loop runs past TARGET_NODE without stopping
 		// TODO: Implement a way to assign "distance" to a node.
 
+		// TODO: Add a way for user to REMOVE a wall segment and return it to "." status
+
+		// TODO: Build an array that fills up with potential paths through the Grid, each one expanding node by node, until
+		// one of the paths encounters the TARGET_NODE. The *first* one to encounter TARGET_NODE should be the one selected
+		// for highlighting by + signs (the path indicator). This should work...
+
 		if (x == 0) {
 			// do nothing because startValueX and startValueY were already given values up on 
 			// the previous lines for the first iteration.
@@ -136,6 +142,8 @@ function dijkstras(finishedGrid) {
 		x = x + 1;
 	}
 
+	rerenderGridSlowly();
+
 }
 
 // https://stackoverflow.com/questions/41661287/how-to-check-if-an-array-contains-another-array
@@ -150,7 +158,7 @@ function isArrayInArray(arr, item) {
 
 function replaceEmptySpaceWithVisitedMarker(emptyXCoord, emptyYCoord) {
 	grid[emptyYCoord][emptyXCoord] = VISITED_NODE;
-	rerenderGrid();
+	// rerenderGrid();
 }
 
 
@@ -165,6 +173,10 @@ function nodeLoop(adjacentNode, nextXCoord, nextYCoord, initValX, initValY, visi
 			visitedArray.push([initValX, initValY])
 		} initValX
 
+		// FIXME: It seems like there's some "overflow" going on... I'm suspicious something like this is happening:
+		// When the algorithm encounters the edge of the grid, it adds that location value thats out in the abyss to the nextNodes
+		// search list. I think this because there was a hell of a lot of spaces filled up in one of my tests.
+		// TODO: Add a delay between each "visited" indicator being added to the board.
 		if (!isArrayInArray(nextArray, [nextXCoord, nextYCoord]) && (adjacentNode != undefined)) {
 			nextArray.push([nextXCoord, nextYCoord])
 		}
@@ -173,6 +185,11 @@ function nodeLoop(adjacentNode, nextXCoord, nextYCoord, initValX, initValY, visi
 		// grid[y][x] = VISITED_NODE; up on the first line of the replaceEmptySpaceWithVisitedMarker...
 		if (grid[initValY][initValX] === ".") {
 			replaceEmptySpaceWithVisitedMarker(initValX, initValY);
+			// TODO: Figure out how to animate the change in the board .... sloooowly...
+			// PLAN: Replace the value of the node in the Grid with a "Visited" marker.
+			// ONLY ONCE the grid is finished being re-computed w/ visited spaces, and the while loop is finished...
+			// THEN you pass the grid to a function that goes, "Animate a change every n milliseconds"
+
 		}
 	}
 
@@ -180,3 +197,5 @@ function nodeLoop(adjacentNode, nextXCoord, nextYCoord, initValX, initValY, visi
 	// to assign the value of the modified array to the original variable containing said array. A scope problem.
 	return [visitedArray, nextArray, funcNodeContent]
 }
+
+

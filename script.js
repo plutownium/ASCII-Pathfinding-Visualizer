@@ -114,6 +114,49 @@ function rerenderGrid() {
 	}
 }
 
+function rerenderGridSlowly(renderMe) {
+	// PLAN: renderMe is the sole input. It is the Grid as it is after the algorithm searches & decides on a path.
+	// Function operates by starting w/ the time of datetime.now(). 
+	// Then, a while loop updates the current time.
+	// Every time the current time increases by n milliseconds, the function goes another step forward in rendering changes.
+	// the while loop breaks once the last node in the grid has been updated.
+
+	let startTime = Date.now();
+	// set interval duration...
+	const interval = 200;
+
+	let currentTime;
+	let lastUpdateTime;
+
+	// build a list of coords to be updated...
+	const coordsToUpdate = [];
+	for (let i = 0; i < numOfRows; i++) {
+		for (let j = 0; j < numOfColumns; j++) {
+			coordsToUpdate.push[[i, j]]
+		}
+	}
+	let xCoord;
+	let yCoord;
+	// figure out how many times this while loop has to loop...
+	const finalIndex = coordsToUpdate.length - 1;
+	let iteration = 0;
+
+	// update currentTime over and over, executing code every n milliseconds...
+	while (iteration < finalIndex) {
+		currentTime = Date.now();
+		if (currentTime - startTime > interval) {
+			// update a node on the grid...
+			xCoord = coordsToUpdate[iteration][0];
+			yCoord = coordsToUpdate[iteration][1];
+			const targetDiv = getLocationByCoordinates(xCoord, yCoord)
+			targetDiv.innerHTML = renderMe[yCoord, xCoord]
+			// reset the timer & update the iteration position...
+			startTime = Date.now();
+			iteration = iteration + 1;
+		}
+	}
+}
+
 function nextClickMovesStart() {
 	// function allows the user to move the Start Node around on the grid.
 	// First all event listeners are removed so there isn't conflict between "add wall" and "add start node".

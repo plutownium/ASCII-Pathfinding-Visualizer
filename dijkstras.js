@@ -48,7 +48,7 @@ function dijkstras(finishedGrid) {
 	let maxXValue = finishedGrid[0].length - 1;
 	let maxYValue = finishedGrid.length - 1;
 
-	while (nodeContent != TARGET_NODE) {
+	while (nodeContent !== TARGET_NODE) {
 		// FIXME: e.g. Uncaught TypeError: Cannot read property '2' of undefined when running algo. suspicious its
 		// from the algo trying to find e.g. grid[-1][2] which obviously does not exist as there is no negative index of the grid
 		// FIXME: while loop runs past TARGET_NODE without stopping
@@ -65,6 +65,9 @@ function dijkstras(finishedGrid) {
 			// the previous lines for the first iteration.
 		} else {
 			startCoords = nextNodes[x - 1]
+			// console.log("nextNodes length:" + nextNodes.length);
+			// console.log("index value:" + (x - 1))
+			// console.log("START COORDS:" + startCoords);
 		}
 
 		startValueX = startCoords[0]
@@ -76,8 +79,8 @@ function dijkstras(finishedGrid) {
 
 		if (nextYCoord < 0 || nextXCoord < 0 || nextYCoord > maxYValue || nextXCoord > maxXValue) {
 			adjacentNode = undefined;
-			console.log(nextYCoord, nextXCoord);
-			console.log("UNDEFINED!")
+			// console.log(nextYCoord, nextXCoord);
+			// console.log("UNDEFINED!")
 		} else {
 			adjacentNode = grid[nextYCoord][nextXCoord]
 		}
@@ -86,6 +89,11 @@ function dijkstras(finishedGrid) {
 		visitedNodes = loopContent[0];
 		nextNodes = loopContent[1];
 		nodeContent = loopContent[2];
+		console.log(nodeContent);
+
+		if (nodeContent === TARGET_NODE) {
+			continue
+		}
 
 		// ### get the node directly to the left
 		nextXCoord = startValueX - 1
@@ -93,8 +101,8 @@ function dijkstras(finishedGrid) {
 
 		if (nextYCoord < 0 || nextXCoord < 0 || nextYCoord > maxYValue || nextXCoord > maxXValue) {
 			adjacentNode = undefined;
-			console.log(nextYCoord, nextXCoord);
-			console.log("UNDEFINED!")
+			// console.log(nextYCoord, nextXCoord);
+			// console.log("UNDEFINED!")
 		} else {
 			adjacentNode = grid[nextYCoord][nextXCoord]
 		}
@@ -103,6 +111,11 @@ function dijkstras(finishedGrid) {
 		visitedNodes = loopContent[0];
 		nextNodes = loopContent[1];
 		nodeContent = loopContent[2];
+		console.log(nodeContent);
+
+		if (nodeContent === TARGET_NODE) {
+			continue
+		}
 
 		// ### get the node directly above
 		nextXCoord = startValueX
@@ -111,8 +124,8 @@ function dijkstras(finishedGrid) {
 		// FIXME: Condition should also include, "if nextYCoord or NextXCoord > max width or height of grid"
 		if (nextYCoord < 0 || nextXCoord < 0 || nextYCoord > maxYValue || nextXCoord > maxXValue) {
 			adjacentNode = undefined;
-			console.log(nextYCoord, nextXCoord);
-			console.log("UNDEFINED!")
+			// console.log(nextYCoord, nextXCoord);
+			// console.log("UNDEFINED!")
 		} else {
 			adjacentNode = grid[nextYCoord][nextXCoord]
 		}
@@ -121,6 +134,11 @@ function dijkstras(finishedGrid) {
 		visitedNodes = loopContent[0];
 		nextNodes = loopContent[1];
 		nodeContent = loopContent[2];
+		console.log(nodeContent);
+
+		if (nodeContent === TARGET_NODE) {
+			continue
+		}
 
 		// ### get the node directly below
 		nextXCoord = startValueX
@@ -128,8 +146,8 @@ function dijkstras(finishedGrid) {
 
 		if (nextYCoord < 0 || nextXCoord < 0 || nextYCoord > maxYValue || nextXCoord > maxXValue) {
 			adjacentNode = undefined;
-			console.log(nextYCoord, nextXCoord);
-			console.log("UNDEFINED!")
+			// console.log(nextYCoord, nextXCoord);
+			// console.log("UNDEFINED!")
 		} else {
 			adjacentNode = grid[nextYCoord][nextXCoord]
 		}
@@ -138,11 +156,14 @@ function dijkstras(finishedGrid) {
 		visitedNodes = loopContent[0];
 		nextNodes = loopContent[1];
 		nodeContent = loopContent[2];
+		console.log(nodeContent);
+
+		// console.log("nextnodes value:" + nextNodes)
 
 		x = x + 1;
 	}
 
-	rerenderGridSlowly();
+	// rerenderGridSlowly();
 
 }
 
@@ -158,7 +179,7 @@ function isArrayInArray(arr, item) {
 
 function replaceEmptySpaceWithVisitedMarker(emptyXCoord, emptyYCoord) {
 	grid[emptyYCoord][emptyXCoord] = VISITED_NODE;
-	// rerenderGrid();
+	rerenderGrid();
 }
 
 
@@ -189,6 +210,9 @@ function nodeLoop(adjacentNode, nextXCoord, nextYCoord, initValX, initValY, visi
 			// PLAN: Replace the value of the node in the Grid with a "Visited" marker.
 			// ONLY ONCE the grid is finished being re-computed w/ visited spaces, and the while loop is finished...
 			// THEN you pass the grid to a function that goes, "Animate a change every n milliseconds"
+
+			// IDEA: use a for loop to set async code, 1 execution for each node in the grid, delayed by an increasing
+			// amount of time with each node. 200, 400, 600, 800 etc. should work even tho its n * m async calls
 
 		}
 	}

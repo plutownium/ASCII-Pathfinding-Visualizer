@@ -18,11 +18,12 @@ function dijkstras(finishedGrid) {
 		console.log("Place start node & target node");
 		return "Place start node & target node";
 	}
-	// console.log(startNodeExists, targetNodeExists, startCoords);
 
 	// step 2: get list of adjacent nodes that have not yet been visited. 
 	// Adjacent nodes have the form: [x + 1, y] | [x - 1, y] | [x, y + 1], | [x, y - 1] AND have not yet been visited
-	let visitedNodes = []; // store arrays of visited node coords here so your program can check values
+
+	// store arrays of visited node coords here so your program can check values... helps w/ "and have not yet been visited" check
+	let visitedNodes = [];
 	// also need to store "distance to adjacent node" somehow once program gets there
 	let distanceToNodes = [];
 
@@ -37,10 +38,10 @@ function dijkstras(finishedGrid) {
 	let startValueX = startCoords[0]
 	let startValueY = startCoords[1]
 
-	// ### get the node directly to the right
-	let nextXCoord = startValueX + 1
-	let nextYCoord = startValueY
-	let adjacentNode = grid[nextYCoord][nextXCoord]
+	// // ### get the node directly to the right
+	// let nextXCoord = startValueX + 1
+	// let nextYCoord = startValueY
+	// let adjacentNode = finishedGrid[nextYCoord][nextXCoord]
 
 	let k = 0;
 	let loopContent;
@@ -64,10 +65,11 @@ function dijkstras(finishedGrid) {
 			// do nothing because startValueX and startValueY were already given values up on 
 			// the previous lines for the first iteration.
 		} else {
-			startCoords = nextNodes[k - 1]
-			console.log("nextNodes length:" + nextNodes.length);
-			console.log("index value:" + (k - 1))
-			console.log("START COORDS:" + startCoords);
+			const index = k - 1;
+			startCoords = nextNodes[index]
+			console.log(nextNodes)
+			console.log("index value: " + index);
+			console.log("START COORDS: " + startCoords);
 		}
 
 		startValueX = startCoords[0]
@@ -96,27 +98,20 @@ function dijkstras(finishedGrid) {
 			console.log(nextYCoord, nextXCoord);
 			console.log("UNDEFINED!")
 		} else {
-			adjacentNode = grid[nextYCoord][nextXCoord]
+			adjacentNode = finishedGrid[nextYCoord][nextXCoord]
 		}
 
 		loopContent = nodeLoop(adjacentNode, nextXCoord, nextYCoord, startValueX, startValueY, visitedNodes, nextNodes);
 		visitedNodes = loopContent[0];
 		nextNodes = loopContent[1];
 		nodeContent = loopContent[2];
-		console.log(nodeContent);
 
-		// console.log("nextnodes value:" + nextNodes)
 
 		k = k + 1;
 	}
-
 	// finally, rerender the board based on the grid
 	rerenderGrid();
-
-	console.log("Done!")
-
-	// rerenderGridSlowly();
-
+	// rerenderGridSlowly(); // work in progress...
 }
 
 // https://stackoverflow.com/questions/41661287/how-to-check-if-an-array-contains-another-array
@@ -134,39 +129,36 @@ function replaceEmptySpaceWithVisitedMarker(emptyXCoord, emptyYCoord) {
 	// rerenderGrid();
 }
 
-
+// TODO: Refactor !isArrayInArray() to remove the irritating ! flip
 function nodeLoop(adjacentNode, nextXCoord, nextYCoord, initValX, initValY, visitedArray, nextArray) {
-	// function so called because it "loops" over a node in the grid.
+	// function is called "nodeLoop" because it "loops" over a node in the grid.
 	let funcNodeContent;
 
-	if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedArray, [nextXCoord, nextYCoord])) {
+	// "if the adjacent node isn't EITHER: (a) a wall segment or (b) already contained in the visitedNodes array..."
+	// (because you don't want to visit the same node twice)
+	const nextNodeHasntBeenVisitedYet = !isArrayInArray(visitedArray, [nextXCoord, nextYCoord])
+	if (adjacentNode != WALL_SEGMENT && nextNodeHasntBeenVisitedYet) {
 		funcNodeContent = adjacentNode;
 
-		if (!isArrayInArray(visitedArray, [initValX, initValY])) {
+		// push the node we're starting our search from to the list of visitedNodes if it isn't already there
+		const currentNodeHasntBeenVisitedYet = !isArrayInArray(visitedArray, [initValX, initValY])
+		if (currentNodeHasntBeenVisitedYet) {
 			visitedArray.push([initValX, initValY])
-		} initValX
+		}
 
-		// FIXME: It seems like there's some "overflow" going on... I'm suspicious something like this is happening:
-		// When the algorithm encounters the edge of the grid, it adds that location value thats out in the abyss to the nextNodes
-		// search list. I think this because there was a hell of a lot of spaces filled up in one of my tests.
-		// TODO: Add a delay between each "visited" indicator being added to the board.
-		if (!isArrayInArray(nextArray, [nextXCoord, nextYCoord]) && (adjacentNode != undefined)) {
+		// push the node onto the list of nodes to cycle into this process (unless it's already there)
+		const notPlanningToVisitNextNodeYet = !isArrayInArray(nextArray, [nextXCoord, nextYCoord])
+		if (notPlanningToVisitNextNodeYet && (adjacentNode != undefined)) {
+			console.log("Pushing to nextArray!")
 			nextArray.push([nextXCoord, nextYCoord])
 		}
 
 		// do i also have to pass the grid array so it can be accessed within the function? it seemed to work when i did
 		// grid[y][x] = VISITED_NODE; up on the first line of the replaceEmptySpaceWithVisitedMarker...
-		console.log(grid)
+
+		// finally, replace the node's visual appearance: convert . to o
 		if (grid[initValY][initValX] === ".") {
 			replaceEmptySpaceWithVisitedMarker(initValX, initValY);
-			// TODO: Figure out how to animate the change in the board .... sloooowly...
-			// PLAN: Replace the value of the node in the Grid with a "Visited" marker.
-			// ONLY ONCE the grid is finished being re-computed w/ visited spaces, and the while loop is finished...
-			// THEN you pass the grid to a function that goes, "Animate a change every n milliseconds"
-
-			// IDEA: use a for loop to set async code, 1 execution for each node in the grid, delayed by an increasing
-			// amount of time with each node. 200, 400, 600, 800 etc. should work even tho its n * m async calls
-
 		}
 	}
 
@@ -175,4 +167,15 @@ function nodeLoop(adjacentNode, nextXCoord, nextYCoord, initValX, initValY, visi
 	return [visitedArray, nextArray, funcNodeContent]
 }
 
+// FIXME: It seems like there's some "overflow" going on... I'm suspicious something like this is happening:
+// When the algorithm encounters the edge of the grid, it adds that location value thats out in the abyss to the nextNodes
+// search list. I think this because there was a hell of a lot of spaces filled up in one of my tests.
+// TODO: Add a delay between each "visited" indicator being added to the board.
 
+// TODO: Figure out how to animate the change in the board .... sloooowly...
+// PLAN: Replace the value of the node in the Grid with a "Visited" marker.
+// ONLY ONCE the grid is finished being re-computed w/ visited spaces, and the while loop is finished...
+// THEN you pass the grid to a function that goes, "Animate a change every n milliseconds"
+
+// IDEA: use a for loop to set async code, 1 execution for each node in the grid, delayed by an increasing
+// amount of time with each node. 200, 400, 600, 800 etc. should work even tho its n * m async calls

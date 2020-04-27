@@ -42,7 +42,7 @@ function dijkstras(finishedGrid) {
 	let nextYCoord = startValueY
 	let adjacentNode = grid[nextYCoord][nextXCoord]
 
-	let x = 0;
+	let k = 0;
 	let loopContent;
 
 	let maxXValue = finishedGrid[0].length - 1;
@@ -60,89 +60,36 @@ function dijkstras(finishedGrid) {
 		// one of the paths encounters the TARGET_NODE. The *first* one to encounter TARGET_NODE should be the one selected
 		// for highlighting by + signs (the path indicator). This should work...
 
-		if (x == 0) {
+		if (k == 0) {
 			// do nothing because startValueX and startValueY were already given values up on 
 			// the previous lines for the first iteration.
 		} else {
-			startCoords = nextNodes[x - 1]
-			// console.log("nextNodes length:" + nextNodes.length);
-			// console.log("index value:" + (x - 1))
-			// console.log("START COORDS:" + startCoords);
+			startCoords = nextNodes[k - 1]
+			console.log("nextNodes length:" + nextNodes.length);
+			console.log("index value:" + (k - 1))
+			console.log("START COORDS:" + startCoords);
 		}
 
 		startValueX = startCoords[0]
 		startValueY = startCoords[1]
 
-		// ### get the node directly to the right
-		nextXCoord = startValueX + 1
-		nextYCoord = startValueY
-
-		if (nextYCoord < 0 || nextXCoord < 0 || nextYCoord > maxYValue || nextXCoord > maxXValue) {
-			adjacentNode = undefined;
-			console.log(nextYCoord, nextXCoord);
-			console.log("UNDEFINED!")
+		if (k % 4 == 0) {
+			// ### get the node directly to the right
+			nextXCoord = startValueX + 1
+			nextYCoord = startValueY
+		} else if (k % 4 == 1) {
+			// ### get the node directly to the left
+			nextXCoord = startValueX - 1
+			nextYCoord = startValueY
+		} else if (k % 4 == 2) {
+			// ### get the node directly above
+			nextXCoord = startValueX
+			nextYCoord = startValueY + 1
 		} else {
-			adjacentNode = grid[nextYCoord][nextXCoord]
+			// ### get the node directly below
+			nextXCoord = startValueX
+			nextYCoord = startValueY - 1
 		}
-
-		loopContent = nodeLoop(adjacentNode, nextXCoord, nextYCoord, startValueX, startValueY, visitedNodes, nextNodes);
-		visitedNodes = loopContent[0];
-		nextNodes = loopContent[1];
-		nodeContent = loopContent[2];
-		console.log(nodeContent);
-
-		if (nodeContent === TARGET_NODE) {
-			continue
-		}
-
-		// ### get the node directly to the left
-		nextXCoord = startValueX - 1
-		nextYCoord = startValueY
-
-		if (nextYCoord < 0 || nextXCoord < 0 || nextYCoord > maxYValue || nextXCoord > maxXValue) {
-			adjacentNode = undefined;
-			console.log(nextYCoord, nextXCoord);
-			console.log("UNDEFINED!")
-		} else {
-			adjacentNode = grid[nextYCoord][nextXCoord]
-		}
-
-		loopContent = nodeLoop(adjacentNode, nextXCoord, nextYCoord, startValueX, startValueY, visitedNodes, nextNodes);
-		visitedNodes = loopContent[0];
-		nextNodes = loopContent[1];
-		nodeContent = loopContent[2];
-		console.log(nodeContent);
-
-		if (nodeContent === TARGET_NODE) {
-			continue
-		}
-
-		// ### get the node directly above
-		nextXCoord = startValueX
-		nextYCoord = startValueY + 1
-
-		// FIXME: Condition should also include, "if nextYCoord or NextXCoord > max width or height of grid"
-		if (nextYCoord < 0 || nextXCoord < 0 || nextYCoord > maxYValue || nextXCoord > maxXValue) {
-			adjacentNode = undefined;
-			console.log(nextYCoord, nextXCoord);
-			console.log("UNDEFINED!")
-		} else {
-			adjacentNode = grid[nextYCoord][nextXCoord]
-		}
-
-		loopContent = nodeLoop(adjacentNode, nextXCoord, nextYCoord, startValueX, startValueY, visitedNodes, nextNodes);
-		visitedNodes = loopContent[0];
-		nextNodes = loopContent[1];
-		nodeContent = loopContent[2];
-		console.log(nodeContent);
-
-		if (nodeContent === TARGET_NODE) {
-			continue
-		}
-
-		// ### get the node directly below
-		nextXCoord = startValueX
-		nextYCoord = startValueY - 1
 
 		if (nextYCoord < 0 || nextXCoord < 0 || nextYCoord > maxYValue || nextXCoord > maxXValue) {
 			adjacentNode = undefined;
@@ -160,7 +107,7 @@ function dijkstras(finishedGrid) {
 
 		// console.log("nextnodes value:" + nextNodes)
 
-		x = x + 1;
+		k = k + 1;
 	}
 
 	// finally, rerender the board based on the grid

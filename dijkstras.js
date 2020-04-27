@@ -45,6 +45,9 @@ function dijkstras(finishedGrid) {
 	let x = 0;
 	let loopContent;
 
+	let maxXValue = finishedGrid[0].length - 1;
+	let maxYValue = finishedGrid.length - 1;
+
 	while (nodeContent != TARGET_NODE) {
 		// FIXME: e.g. Uncaught TypeError: Cannot read property '2' of undefined when running algo. suspicious its
 		// from the algo trying to find e.g. grid[-1][2] which obviously does not exist as there is no negative index of the grid
@@ -65,7 +68,7 @@ function dijkstras(finishedGrid) {
 		nextXCoord = startValueX + 1
 		nextYCoord = startValueY
 
-		if (nextYCoord < 0 || nextXCoord < 0) {
+		if (nextYCoord < 0 || nextXCoord < 0 || nextYCoord > maxYValue || nextXCoord > maxXValue) {
 			adjacentNode = undefined;
 			console.log(nextYCoord, nextXCoord);
 			console.log("UNDEFINED!")
@@ -82,7 +85,7 @@ function dijkstras(finishedGrid) {
 		nextXCoord = startValueX - 1
 		nextYCoord = startValueY
 
-		if (nextYCoord < 0 || nextXCoord < 0) {
+		if (nextYCoord < 0 || nextXCoord < 0 || nextYCoord > maxYValue || nextXCoord > maxXValue) {
 			adjacentNode = undefined;
 			console.log(nextYCoord, nextXCoord);
 			console.log("UNDEFINED!")
@@ -99,7 +102,8 @@ function dijkstras(finishedGrid) {
 		nextXCoord = startValueX
 		nextYCoord = startValueY + 1
 
-		if (nextYCoord < 0 || nextXCoord < 0) {
+		// FIXME: Condition should also include, "if nextYCoord or NextXCoord > max width or height of grid"
+		if (nextYCoord < 0 || nextXCoord < 0 || nextYCoord > maxYValue || nextXCoord > maxXValue) {
 			adjacentNode = undefined;
 			console.log(nextYCoord, nextXCoord);
 			console.log("UNDEFINED!")
@@ -116,7 +120,7 @@ function dijkstras(finishedGrid) {
 		nextXCoord = startValueX
 		nextYCoord = startValueY - 1
 
-		if (nextYCoord < 0 || nextXCoord < 0) {
+		if (nextYCoord < 0 || nextXCoord < 0 || nextYCoord > maxYValue || nextXCoord > maxXValue) {
 			adjacentNode = undefined;
 			console.log(nextYCoord, nextXCoord);
 			console.log("UNDEFINED!")
@@ -152,9 +156,10 @@ function replaceEmptySpaceWithVisitedMarker(emptyXCoord, emptyYCoord) {
 
 function nodeLoop(adjacentNode, nextXCoord, nextYCoord, initValX, initValY, visitedArray, nextArray) {
 	// function so called because it "loops" over a node in the grid.
+	let funcNodeContent;
 
 	if (adjacentNode != WALL_SEGMENT && !isArrayInArray(visitedArray, [nextXCoord, nextYCoord])) {
-		nodeContent = adjacentNode;
+		funcNodeContent = adjacentNode;
 
 		if (!isArrayInArray(visitedArray, [initValX, initValY])) {
 			visitedArray.push([initValX, initValY])
@@ -173,5 +178,5 @@ function nodeLoop(adjacentNode, nextXCoord, nextYCoord, initValX, initValY, visi
 
 	// had to pass arrays into the func to push to them, so i also have to return them out of the func 
 	// to assign the value of the modified array to the original variable containing said array. A scope problem.
-	return [visitedArray, nextArray, nodeContent]
+	return [visitedArray, nextArray, funcNodeContent]
 }

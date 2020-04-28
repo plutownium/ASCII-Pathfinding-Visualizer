@@ -67,7 +67,9 @@ function dijkstras(finishedGrid) {
 	// one of the paths encounters the TARGET_NODE. The *first* one to encounter TARGET_NODE should be the one selected
 	// for highlighting by + signs (the path indicator). This should work...
 	while (nodeContent !== TARGET_NODE && iteration < 10) {
+		// one loop thru this while loop will scan the nodes in all cardinal directions and act on them...
 		console.log("[[[starting loop...]]]")
+
 		// do nothing for "iteration == 0" because startValueX and startValueY were already given values up on 
 		// the previous lines for the first iteration.
 		if (iteration > 0) {
@@ -81,40 +83,101 @@ function dijkstras(finishedGrid) {
 		startValueX = startCoordinates[0]
 		startValueY = startCoordinates[1]
 
-		// if (iteration % 4 == 0) {
-		// 	// ### get the node directly to the right
-		// 	nextXCoord = startValueX + 1
-		// 	nextYCoord = startValueY
-		// } else if (iteration % 4 == 1) {
-		// 	// ### get the node directly to the left
-		// 	nextXCoord = startValueX - 1
-		// 	nextYCoord = startValueY
-		// } else if (iteration % 4 == 2) {
-		// 	// ### get the node directly above
-		// 	nextXCoord = startValueX
-		// 	nextYCoord = startValueY + 1
-		// } else {
-		// 	// ### get the node directly below
-		// 	nextXCoord = startValueX
-		// 	nextYCoord = startValueY - 1
-		// }
+		// ### ### ### ### ### ### ### ### ### ### ### ### ### 
+		// ### get the node directly to the right
+		nextXCoord = startValueX + 1
+		nextYCoord = startValueY
 
 		const coordsAreOnTheGrid = nextYCoord < 0 && nextXCoord < 0 && nextYCoord > maxYValue && nextXCoord > maxXValue;
 		if (coordsAreOnTheGrid) {
+			adjacentNode = finishedGrid[nextYCoord][nextXCoord]
+		} else {
 			adjacentNode = undefined;
 			console.log(nextYCoord, nextXCoord);
 			console.log("UNDEFINED!")
-		} else {
-			adjacentNode = finishedGrid[nextYCoord][nextXCoord]
 		}
 
-		// loopContent = nodeLoop(adjacentNode, [nextXCoord, nextYCoord], [startValueX, startValueY], visitedNodes, nextNodes);
-		// visitedNodes = loopContent[0];
-		// nextNodes = loopContent[1];
-		// nodeContent = loopContent[2];
+		loopContent = nodeLoop(adjacentNode, [nextXCoord, nextYCoord], [startValueX, startValueY], visitedNodes, nextNodes);
+		visitedNodes = loopContent[0];
+		nextNodes = loopContent[1];
+		nodeContent = loopContent[2];
 
+		if (nodeContent === TARGET_NODE) {
+			continue
+		}
+
+		// ### ### ### ### ### ### ### ### ### ### ### ### ### 
+		// ### get the node directly to the left
+		nextXCoord = startValueX - 1
+		nextYCoord = startValueY
+
+		const coordsAreOnTheGrid = nextYCoord < 0 && nextXCoord < 0 && nextYCoord > maxYValue && nextXCoord > maxXValue;
+		if (coordsAreOnTheGrid) {
+			adjacentNode = finishedGrid[nextYCoord][nextXCoord]
+		} else {
+			adjacentNode = undefined;
+			console.log(nextYCoord, nextXCoord);
+			console.log("UNDEFINED!")
+		}
+
+		loopContent = nodeLoop(adjacentNode, [nextXCoord, nextYCoord], [startValueX, startValueY], visitedNodes, nextNodes);
+		visitedNodes = loopContent[0];
+		nextNodes = loopContent[1];
+		nodeContent = loopContent[2];
+
+		if (nodeContent === TARGET_NODE) {
+			continue
+		}
+
+		// ### ### ### ### ### ### ### ### ### ### ### ### ### 
+		// ### get the node directly above
+		nextXCoord = startValueX
+		nextYCoord = startValueY + 1
+
+		const coordsAreOnTheGrid = nextYCoord < 0 && nextXCoord < 0 && nextYCoord > maxYValue && nextXCoord > maxXValue;
+		if (coordsAreOnTheGrid) {
+			adjacentNode = finishedGrid[nextYCoord][nextXCoord]
+		} else {
+			adjacentNode = undefined;
+			console.log(nextYCoord, nextXCoord);
+			console.log("UNDEFINED!")
+		}
+
+		loopContent = nodeLoop(adjacentNode, [nextXCoord, nextYCoord], [startValueX, startValueY], visitedNodes, nextNodes);
+		visitedNodes = loopContent[0];
+		nextNodes = loopContent[1];
+		nodeContent = loopContent[2];
+
+		if (nodeContent === TARGET_NODE) {
+			continue
+		}
+
+		// ### ### ### ### ### ### ### ### ### ### ### ### ### 
+		// ### get the node directly below
+		nextXCoord = startValueX
+		nextYCoord = startValueY - 1
+
+		const coordsAreOnTheGrid = nextYCoord < 0 && nextXCoord < 0 && nextYCoord > maxYValue && nextXCoord > maxXValue;
+		if (coordsAreOnTheGrid) {
+			adjacentNode = finishedGrid[nextYCoord][nextXCoord]
+		} else {
+			adjacentNode = undefined;
+			console.log(nextYCoord, nextXCoord);
+			console.log("UNDEFINED!")
+		}
+
+		loopContent = nodeLoop(adjacentNode, [nextXCoord, nextYCoord], [startValueX, startValueY], visitedNodes, nextNodes);
+		visitedNodes = loopContent[0];
+		nextNodes = loopContent[1];
+		nodeContent = loopContent[2];
+
+		if (nodeContent === TARGET_NODE) {
+			continue
+		}
 
 		iteration = iteration + 1;
+
+
 	}
 	// finally, rerender the board based on the grid
 	rerenderGrid();

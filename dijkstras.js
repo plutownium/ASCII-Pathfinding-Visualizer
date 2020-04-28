@@ -81,23 +81,23 @@ function dijkstras(finishedGrid) {
 		startValueX = startCoordinates[0]
 		startValueY = startCoordinates[1]
 
-		if (iteration % 4 == 0) {
-			// ### get the node directly to the right
-			nextXCoord = startValueX + 1
-			nextYCoord = startValueY
-		} else if (iteration % 4 == 1) {
-			// ### get the node directly to the left
-			nextXCoord = startValueX - 1
-			nextYCoord = startValueY
-		} else if (iteration % 4 == 2) {
-			// ### get the node directly above
-			nextXCoord = startValueX
-			nextYCoord = startValueY + 1
-		} else {
-			// ### get the node directly below
-			nextXCoord = startValueX
-			nextYCoord = startValueY - 1
-		}
+		// if (iteration % 4 == 0) {
+		// 	// ### get the node directly to the right
+		// 	nextXCoord = startValueX + 1
+		// 	nextYCoord = startValueY
+		// } else if (iteration % 4 == 1) {
+		// 	// ### get the node directly to the left
+		// 	nextXCoord = startValueX - 1
+		// 	nextYCoord = startValueY
+		// } else if (iteration % 4 == 2) {
+		// 	// ### get the node directly above
+		// 	nextXCoord = startValueX
+		// 	nextYCoord = startValueY + 1
+		// } else {
+		// 	// ### get the node directly below
+		// 	nextXCoord = startValueX
+		// 	nextYCoord = startValueY - 1
+		// }
 
 		const coordsAreOnTheGrid = nextYCoord < 0 && nextXCoord < 0 && nextYCoord > maxYValue && nextXCoord > maxXValue;
 		if (coordsAreOnTheGrid) {
@@ -108,10 +108,10 @@ function dijkstras(finishedGrid) {
 			adjacentNode = finishedGrid[nextYCoord][nextXCoord]
 		}
 
-		loopContent = nodeLoop(adjacentNode, [nextXCoord, nextYCoord], [startValueX, startValueY], visitedNodes, nextNodes);
-		visitedNodes = loopContent[0];
-		nextNodes = loopContent[1];
-		nodeContent = loopContent[2];
+		// loopContent = nodeLoop(adjacentNode, [nextXCoord, nextYCoord], [startValueX, startValueY], visitedNodes, nextNodes);
+		// visitedNodes = loopContent[0];
+		// nextNodes = loopContent[1];
+		// nodeContent = loopContent[2];
 
 
 		iteration = iteration + 1;

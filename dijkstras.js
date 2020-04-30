@@ -72,7 +72,6 @@ function dijkstras(finishedGrid) {
 			const index = iteration - 1;
 			startCoordinates = nextVisitsList[index] // will yield values like [x, y, a, b] (see Google Docs documentation for more)
 		}
-		// console.log("Starting with Coordinates: ", startCoordinates)
 
 		startValueX = startCoordinates[0]
 		startValueY = startCoordinates[1]
@@ -106,10 +105,6 @@ function dijkstras(finishedGrid) {
 		if (iteration == 0) { // while iteration==0, STARTING_NODE===CurrentNode, so it's unique: There is no path to get there.
 			const firstEntry = [startValueX, startValueY]
 			const initPath = new Path(0, [], firstEntry, false)
-			console.log("INIT PATH: ")
-			console.log(initPath)
-			// FIXME: Path {distance: 0, lastEntry: null, path: 1, containsTarget: false} how is path === 1?
-			// FIXME (cont'd): this.path = currentPath.push(newCoords) ---> .path=1? how?
 
 			potentialPaths.push(initPath)
 		} else { // generate a new Path to add to potentialPaths
@@ -118,12 +113,7 @@ function dijkstras(finishedGrid) {
 			const previousNodeCoordinates = [startCoordinates[2], startCoordinates[3]]
 
 			// returns the path object that leads to the current node... so...
-			console.log("PREVNODECOORDS:")
-			console.log(previousNodeCoordinates)
 			const pathToNode = locatePathToCurrentNode(potentialPaths, previousNodeCoordinates, iteration)
-			console.log("3330: ")
-			console.log(pathToNode) // so the problem is locatePathToCurrentNode is returning [] instead of the Path object
-
 			const isTarget = finishedGrid[startValueY][startValueX] === TARGET_NODE;
 			const currentPath = pathToNode.path;
 			const newPath = new Path(pathToNode.distance + 1, currentPath, [startValueX, startValueY], isTarget)
@@ -148,7 +138,8 @@ function dijkstras(finishedGrid) {
 	// step 7: Select the shortest path from the START_NODE to the TARGET_NODE & animate that path...
 	const shortestPathObject = potentialPaths[potentialPaths.length - 1]; // should be the last 1...
 
-	console.log(shortestPathObject) // success if program gets to here... w/ a good path anyway...
+	// FIXME: shortestPathObject is messed up.
+	console.log(shortestPathObject)
 	return shortestPathObject
 
 	// ONCE NON BUGGY: TURN rerenderGrid(); BACK ON!
@@ -163,17 +154,12 @@ function scanPerimeterNode(funcScanTarget, startNode, nextNode, visitedArray, ne
 
 	// "if the adjacent node isn't EITHER: (a) a wall segment or (b) already contained in the visitedNodes array..."
 	// (because you don't want to visit the same node twice)
-	console.log("testing values @ start of scanPerimeterNode:")
-	console.log(visitedArray)
-	console.log(nextNode)
 	const nextNodeHasntBeenVisitedYet = !isArrayInArray(visitedArray, nextNode)
 	// either (a) isArrayInArray is malfunctioning and telling me the array is in the array when it isn't
 	// or (b) I have somehow pushed nextNode into visitedArray early
 	// or (c) I am making a logical error: in other words, I believe I am correctly adding nodes to visitedArray when some shouldn't be
 	// or (d) maybe the value i passe dinto isArrayInArray was wrong
 	const nodeIsNotAWall = funcScanTarget != WALL_SEGMENT
-	console.log("condition a: " + nodeIsNotAWall)
-	console.log("condition b: " + nextNodeHasntBeenVisitedYet)
 
 	if (nodeIsNotAWall && nextNodeHasntBeenVisitedYet) {
 		funcNodeContent = funcScanTarget;
@@ -189,9 +175,6 @@ function scanPerimeterNode(funcScanTarget, startNode, nextNode, visitedArray, ne
 		// so the algo knows where to go next
 		const notPlanningToVisitNextNodeYet = !isArrayInArray(nextArray, nextNode)
 		const funcScanTargetExists = (funcScanTarget != undefined)
-		console.log("condition 1: " + notPlanningToVisitNextNodeYet)
-		console.log("condition 2: " + funcScanTargetExists)
-		console.log(funcScanTarget)
 		if (notPlanningToVisitNextNodeYet && funcScanTargetExists) {
 			console.log("Pushing to nextArray!")
 			nextArray.push(nextNode)
@@ -202,9 +185,6 @@ function scanPerimeterNode(funcScanTarget, startNode, nextNode, visitedArray, ne
 
 		// finally, replace the node's visual appearance: convert . to o
 		// so the user can tell what's going on in the code
-		console.log("START NODE: ")
-		console.log(startNode)
-		console.log(grid[startNode[1]][startNode[0]])
 		const gridSpaceIsEmpty = grid[startNode[1]][startNode[0]] === "."
 		if (gridSpaceIsEmpty) {
 			console.log("Changing a . to a o")
@@ -222,16 +202,16 @@ function locatePathToCurrentNode(paths, previousNodeCoords, iteration) {
 	// searches list of Paths for the right Path object and returns it.
 	// the right path should be the one where the .lastEntry property is === previousNodeCoords as a string.
 
-	console.log("basic test: ")
-	console.log(paths)
-	console.log(previousNodeCoords)
-	for (let i = 0; i < paths.length; i++) {
-		console.log("PRINTING")
-		console.log(paths[i].lastEntry)
+	// NOTE: lastEntry is currentPath[-1], meaning, it's the node that LEAD TO the CurrentNode
+
+	// this conditional retrieves the init Path if it is the only one in the paths argument
+	if (paths[paths.length - 1].lastEntry === null) {
+		return paths[0] // actually pull out the Path object from the array...
 	}
+
 	const correctPath = paths.filter(entry => JSON.stringify(entry.lastEntry) === JSON.stringify(previousNodeCoords))
 
-	return correctPath
+	return correctPath[0]
 }
 
 function updateNextVisitsList(adjacentNode, nextVisitsArray, adjNodeContent, visitedNodesArray, currentNode) {

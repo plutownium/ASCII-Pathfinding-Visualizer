@@ -45,15 +45,18 @@ function dijkstras(finishedGrid) {
 	const minXValue = 0;
 	const minYValue = 0;
 
+	let startValueX; // initialize these outside of the while loop because they are also used after it
+	let startValueY;
+
 	// store arrays of visited node coords here so your program can check values... helps w/ "and have not yet been visited" check
 	let nextVisitsList = []; // go to these nodes
+	// note: nextVisitsList contains values [x,y,a,b] where [a,b] is the node that was Current when node [x,y] was added to the list.
 	let visitedNodesList = []; // don't go to these nodes
 
-	let potentialPaths = [];
+	let potentialPaths = []; // an array of Path objects...
 
 	let nodeContent;
-	let scanTarget; // = finishedGrid[nextYCoord][nextXCoord]
-	let loopContent;
+
 	let iteration = 0;
 
 	// [cycle start] start cycling through adjacent nodes
@@ -64,56 +67,75 @@ function dijkstras(finishedGrid) {
 		// *** *** *** *** *** *** *** *** ***
 		// BEGIN initialization of loop
 
-		// startValueX and startValueY were already given values up on the previous lines for the first iteration.
+		// for the first iteration, startValueX and startValueY were already given values up on the previous lines.
 		if (iteration > 0) {
 			const index = iteration - 1;
-			startCoordinates = nextNodes[index]
+			startCoordinates = nextVisitsList[index] // will yield values like [x, y, a, b] (see Google Docs documentation for more)
 		}
+		console.log("Starting with Coordinates: ", startCoordinates)
 
-		let startValueX = startCoordinates[0]
-		let startValueY = startCoordinates[1]
-
-		nodeContent = finishedGrid[startValueY][startValueX];
+		startValueX = startCoordinates[0]
+		startValueY = startCoordinates[1]
 
 		// END initialization of loop
 		// *** *** *** *** *** *** *** *** ***
 
 		// Step 3 in documentation...
-		// ### ### ### ### ### ### ### ### ### ### ### ### ### 
 		// ### get the node directly to the right
 		let adjacentNode = [startValueX + 1, startValueY]
 		// use finishedGrid[y-coord][x-coord] as arg because we're pulling out the # symbol if it is there
-		nextVisitsList = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList)
+		nextVisitsList = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates)
 
-		// ### ### ### ### ### ### ### ### ### ### ### ### ### 
 		// ### get the node directly to the left
 		adjacentNode = [startValueX - 1, startValueY]
-		nextVisitsList = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList)
+		nextVisitsList = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates)
 
-		// ### ### ### ### ### ### ### ### ### ### ### ### ### 
 		// ### get the node directly above
 		adjacentNode = [startValueX, startValueY + 1]
-		nextVisitsList = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList)
+		nextVisitsList = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates)
 
-		// ### ### ### ### ### ### ### ### ### ### ### ### ### 
 		// ### get the node directly below
 		adjacentNode = [startValueX, startValueY - 1]
-		nextVisitsList = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList)
+		nextVisitsList = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates)
 
 		// Step 4 in documentation...
 		// add Current Node to the list of Visited Nodes so the program knows to not go back here...
 		visitedNodesList.push(startCoordinates)
 
 		// Step 5... Record the distance from the Starting Node to the Current node & record the path used to get there...
+		if (iteration == 0) { // while iteration==0, STARTING_NODE===CurrentNode, so it's unique: There is no path to get there.
+			const initPath = new Path(0, [], [startValueX, startValueY], false)
+			potentialPaths.push(initPath)
+		} else { // generate a new Path to add to potentialPaths
+			// startCoordinates = nextVisitsList[index] at the start of the loop.
+			// remember nextVisitsList contains values like [x, y, a, b]
+			const previousNodeCoordinates = [startCoordinates[2], startCoordinates[3]]
 
-		break;
-		iteration = iteration + 1;
+			const pathToNode = locatePathToCurrentNode(potentialPaths, previousNodeCoordinates) // returns a Path object
+			const isTarget = finishedGrid[startValueY][startValueX] === TARGET_NODE ? true : false;
+			const newPath = new Path(pathToNode.distance + 1, pathToNode.path, [startValueX, startValueY], isTarget)
+			potentialPaths.push(newPath)
+		}
 
+		// Step 6:
+		nodeContent = finishedGrid[startValueY][startValueX];
+		if (nodeContent === TARGET_NODE) {
+			break
+		} else {
+			finishedGrid[startValueY][startValueY] = VISITED_NODE;
+			iteration = iteration + 1;
+		}
+		// TODO: Figure out how to pass an array w/ the nodes in order of which they were scanned to a renderGridSlowly() func.
+		// TODO: write a renderGridSlowly() func and animate the scanning process.
+		// TODO: use the renderGridSlowly() func to animate the shortest path.
+		// TODO: Alternatively, figure out how to pass the coords to be rendered via a func that builds a list to render slowly.
 	}
 
 	// after while loop, which *scans* for TARGET_NODE, use this following step to select teh shortest path to TARGET_NODE
-	// step 5: Select the shortest path from the START_NODE to the TARGET_NODE & animate that path...
+	// step 7: Select the shortest path from the START_NODE to the TARGET_NODE & animate that path...
+	const shortestPathObject = potentialPaths[potentialPaths.length - 1]; // should be the last 1...
 
+	return shortestPathObject
 
 	// ONCE NON BUGGY: TURN rerenderGrid(); BACK ON!
 	// finally, rerender the board based on the grid
@@ -182,7 +204,11 @@ function scanPerimeterNode(funcScanTarget, startNode, nextNode, visitedArray, ne
 	return [visitedArray, nextArray, funcNodeContent]
 }
 
-function updateNextVisitsList(adjacentNode, nextVisitsArray, nodeContent, visitedNodesArray) {
+function locatePathToCurrentNode(paths, previousNodeCoords) {
+	// searches list of Paths for the right path and returns it.
+}
+
+function updateNextVisitsList(adjacentNode, nextVisitsArray, adjNodeContent, visitedNodesArray, currentNode) {
 	const alreadyVisited = isArrayInArray(visitedNodesArray, adjacentNode);
 
 	// if the adjacent node is already in the list of Visited Nodes, do not add the adjacent node to the Next Visits List.
@@ -190,11 +216,13 @@ function updateNextVisitsList(adjacentNode, nextVisitsArray, nodeContent, visite
 		return nextVisitsArray // exit early because the adjacentNode is already visited and doesn't need to be added again
 	} else {
 		// don't put Wall segments on the nextVisitsList.
-		const nodeIsWall = nodeContent === WALL_SEGMENT;
+		const nodeIsWall = adjNodeContent === WALL_SEGMENT;
 		// don't put a node on nextVisitsList twice.
 		const alreadyPlanningToVisit = isArrayInArray(nextVisitsArray, adjacentNode)
 		if (alreadyPlanningToVisit === false && nodeIsWall === false) {
-			nextVisitsArray.push(adjacentNode)
+			// see "the potentialPaths Data Structure" in Google Docs documentation for more info...
+			const nextVisitsInfo = [adjacentNode[0], adjacentNode[1], currentNode[0], currentNode[1]]
+			nextVisitsArray.push(nextVisitsInfo)
 		}
 		return nextVisitsArray;
 	}

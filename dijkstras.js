@@ -61,7 +61,7 @@ function dijkstras(finishedGrid) {
 
 	// [cycle start] start cycling through adjacent nodes
 	// removed while(nodeContent !== TARGET_NODE) because there is an if/break block at the end that takes care of exiting loop
-	while (iteration < 200) {
+	while (true) {
 		// see https://docs.google.com/document/d/1kJzkln9Ye40Btx5OwGsN23HQ26TX3rjfpbJIDXeUg7g/edit for loop documentation
 		// one loop thru this while loop will scan the nodes in all cardinal directions and act on them...
 		// console.log("[[[starting loop...]]]")
@@ -73,33 +73,50 @@ function dijkstras(finishedGrid) {
 			const index = iteration - 1;
 			startCoordinates = nextVisitsList[index] // will yield values like [x, y, a, b] (see Google Docs documentation for more)
 		}
-
+		// TODO: install a "isWithinTheGrid" boolean check
 		startValueX = startCoordinates[0]
 		startValueY = startCoordinates[1]
-
-		// FIXME: I am not sure if the while loop is properly locating TARGET_NODE. Test with various locs on grid.
-		// FIXME: Grid also seems to not be updating properly.
-
 		// END initialization of loop
 		// *** *** *** *** *** *** *** *** ***
 
 		// Step 3 in documentation...
 		// ### get the node directly to the right
 		let adjacentNode = [startValueX + 1, startValueY]
-		// use finishedGrid[y-coord][x-coord] as arg because we're pulling out the # symbol if it is there
-		nextVisitsList = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates)
+		// confirm the adjacentNode is on the grid and therefore will exist.
+		let isOnTheGrid =
+			adjacentNode[0] <= maxXValue && adjacentNode[0] >= minXValue &&
+			adjacentNode[1] <= maxYValue && adjacentNode[1] >= minYValue
+		if (isOnTheGrod) {
+			// use finishedGrid[y-coord][x-coord] as arg because we're pulling out the # symbol if it is there
+			nextVisitsList = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates)
+		}
 
 		// ### get the node directly to the left
 		adjacentNode = [startValueX - 1, startValueY]
-		nextVisitsList = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates)
+		isOnTheGrid =
+			adjacentNode[0] <= maxXValue && adjacentNode[0] >= minXValue &&
+			adjacentNode[1] <= maxYValue && adjacentNode[1] >= minYValue
+		if (isOnTheGrid) {
+			nextVisitsList = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates)
+		}
 
 		// ### get the node directly above
 		adjacentNode = [startValueX, startValueY + 1]
-		nextVisitsList = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates)
+		isOnTheGrid =
+			adjacentNode[0] <= maxXValue && adjacentNode[0] >= minXValue &&
+			adjacentNode[1] <= maxYValue && adjacentNode[1] >= minYValue
+		if (isOnTheGrid) {
+			nextVisitsList = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates)
+		}
 
 		// ### get the node directly below
 		adjacentNode = [startValueX, startValueY - 1]
-		nextVisitsList = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates)
+		isOnTheGrid =
+			adjacentNode[0] <= maxXValue && adjacentNode[0] >= minXValue &&
+			adjacentNode[1] <= maxYValue && adjacentNode[1] >= minYValue
+		if (isOnTheGrid) {
+			nextVisitsList = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates)
+		}
 
 		// Step 4 in documentation...
 		// add Current Node to the list of Visited Nodes so the program knows to not go back here...
@@ -119,7 +136,7 @@ function dijkstras(finishedGrid) {
 			const pathToNode = locatePathToCurrentNode(potentialPaths, previousNodeCoordinates, iteration)
 			const isTarget = finishedGrid[startValueY][startValueX] === TARGET_NODE;
 			const currentPath = [...pathToNode.path]
-			console.log(currentPath.length)
+			console.log("currentPath length: " + currentPath.length)
 			const newPath = new Path(pathToNode.distance + 1, currentPath, [startValueX, startValueY], isTarget)
 			potentialPaths.push(newPath)
 		}

@@ -116,9 +116,15 @@ function dijkstras(finishedGrid) {
 			// remember nextVisitsList contains values like [x, y, a, b]
 			const previousNodeCoordinates = [startCoordinates[2], startCoordinates[3]]
 
-			const pathToNode = locatePathToCurrentNode(potentialPaths, previousNodeCoordinates) // returns a Path object
-			const isTarget = finishedGrid[startValueY][startValueX] === TARGET_NODE ? true : false;
-			const newPath = new Path(pathToNode.distance + 1, pathToNode.path, [startValueX, startValueY], isTarget)
+			console.log("potentialPaths: ")
+			console.log(potentialPaths)
+			// returns the path object that leads to the current node... so...
+			const pathToNode = locatePathToCurrentNode(potentialPaths, previousNodeCoordinates)
+			console.log("is path here?")
+			console.log(pathToNode) // fails
+			const isTarget = finishedGrid[startValueY][startValueX] === TARGET_NODE;
+			const currentPath = pathToNode.path;
+			const newPath = new Path(pathToNode.distance + 1, currentPath, [startValueX, startValueY], isTarget)
 			potentialPaths.push(newPath)
 		}
 
@@ -213,6 +219,9 @@ function scanPerimeterNode(funcScanTarget, startNode, nextNode, visitedArray, ne
 function locatePathToCurrentNode(paths, previousNodeCoords) {
 	// searches list of Paths for the right Path object and returns it.
 	// the right path should be the one where the .lastEntry property is === previousNodeCoords as a string.
+	console.log("basic test: ")
+	console.log(paths)
+	console.log(previousNodeCoords)
 	const correctPath = paths.filter(entry => JSON.stringify(entry.lastEntry) === JSON.stringify(previousNodeCoords))
 
 	return correctPath

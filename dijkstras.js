@@ -173,8 +173,9 @@ function locatePathToCurrentNode(paths, previousNodeCoords, iteration) {
 	}
 
 	const correctPath = paths.filter(entry => JSON.stringify(entry.lastEntry) === JSON.stringify(previousNodeCoords))
+	console.log("correctPath length: " + correctPath.length)
 
-	return correctPath[0]
+	return correctPath[correctPath.length - 1] // pretty sure when there's two potential correctPaths, you take the last one...
 }
 
 function updateNextVisitsList(adjacentNode, nextVisitsArray, adjNodeContent, visitedNodesArray, currentNode) {

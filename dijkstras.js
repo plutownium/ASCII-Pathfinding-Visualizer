@@ -64,7 +64,7 @@ function dijkstras(finishedGrid) {
 	while (iteration < 200) {
 		// see https://docs.google.com/document/d/1kJzkln9Ye40Btx5OwGsN23HQ26TX3rjfpbJIDXeUg7g/edit for loop documentation
 		// one loop thru this while loop will scan the nodes in all cardinal directions and act on them...
-		console.log("[[[starting loop...]]]")
+		// console.log("[[[starting loop...]]]")
 		// *** *** *** *** *** *** *** *** ***
 		// BEGIN initialization of loop
 
@@ -111,15 +111,15 @@ function dijkstras(finishedGrid) {
 			const initPath = new Path(0, [], firstEntry, false)
 
 			potentialPaths.push(initPath)
-		} else { // generate a new Path to add to potentialPaths
+		} else { // block summary: generate a new Path to add to potentialPaths
 			// startCoordinates = nextVisitsList[index] at the start of the loop.
 			// remember nextVisitsList contains values like [x, y, a, b]
 			const previousNodeCoordinates = [startCoordinates[2], startCoordinates[3]]
 
-			// returns the path object that leads to the current node... so...
 			const pathToNode = locatePathToCurrentNode(potentialPaths, previousNodeCoordinates, iteration)
 			const isTarget = finishedGrid[startValueY][startValueX] === TARGET_NODE;
-			const currentPath = pathToNode.path;
+			const currentPath = [...pathToNode.path]
+			console.log(currentPath.length)
 			const newPath = new Path(pathToNode.distance + 1, currentPath, [startValueX, startValueY], isTarget)
 			potentialPaths.push(newPath)
 		}
@@ -141,6 +141,10 @@ function dijkstras(finishedGrid) {
 
 	// after while loop, which *scans* for TARGET_NODE, use this following step to select teh shortest path to TARGET_NODE
 	// step 7: Select the shortest path from the START_NODE to the TARGET_NODE & animate that path...
+
+	console.log("visitedNodes length: " + visitedNodesList.length)
+	console.log(potentialPaths)
+	console.log(potentialPaths.length)
 	const shortestPathObject = potentialPaths[potentialPaths.length - 1]; // should be the last 1...
 
 	// FIXME: shortestPathObject is messed up.
@@ -171,9 +175,9 @@ function locatePathToCurrentNode(paths, previousNodeCoords, iteration) {
 	if (paths[paths.length - 1].lastEntry === null) {
 		return paths[0] // actually pull out the Path object from the array...
 	}
-
+	// TODO: More thoroughly explore why paths.filter() sometimes yields two Path objects. Understand what is meant to happen
 	const correctPath = paths.filter(entry => JSON.stringify(entry.lastEntry) === JSON.stringify(previousNodeCoords))
-	console.log("correctPath length: " + correctPath.length)
+	// console.log("correctPath length: " + correctPath.length)
 
 	return correctPath[correctPath.length - 1] // pretty sure when there's two potential correctPaths, you take the last one...
 }

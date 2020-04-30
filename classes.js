@@ -9,7 +9,7 @@ class Path {
         this.lastEntry = newCoords
         const startPath = currentPath
         startPath.push(newCoords)
-        this.path = startPath
+        this.path = [...startPath]
         this.containsTarget = containsTarget; // do the boolean calculation outside of the class pls
     }
 }

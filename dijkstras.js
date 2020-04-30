@@ -104,7 +104,10 @@ function dijkstras(finishedGrid) {
 
 		// Step 5... Record the distance from the Starting Node to the Current node & record the path used to get there...
 		if (iteration == 0) { // while iteration==0, STARTING_NODE===CurrentNode, so it's unique: There is no path to get there.
-			const initPath = new Path(0, [], [startValueX, startValueY], false)
+			const firstEntry = [startValueX, startValueY]
+			const initPath = new Path(0, [], firstEntry, false)
+			console.log(initPath)
+
 			potentialPaths.push(initPath)
 		} else { // generate a new Path to add to potentialPaths
 			// startCoordinates = nextVisitsList[index] at the start of the loop.
@@ -135,6 +138,7 @@ function dijkstras(finishedGrid) {
 	// step 7: Select the shortest path from the START_NODE to the TARGET_NODE & animate that path...
 	const shortestPathObject = potentialPaths[potentialPaths.length - 1]; // should be the last 1...
 
+	console.log(shortestPathObject) // success if program gets to here... w/ a good path anyway...
 	return shortestPathObject
 
 	// ONCE NON BUGGY: TURN rerenderGrid(); BACK ON!
@@ -205,7 +209,11 @@ function scanPerimeterNode(funcScanTarget, startNode, nextNode, visitedArray, ne
 }
 
 function locatePathToCurrentNode(paths, previousNodeCoords) {
-	// searches list of Paths for the right path and returns it.
+	// searches list of Paths for the right Path object and returns it.
+	// the right path should be the one where the .lastEntry property is === previousNodeCoords as a string.
+	const correctPath = paths.filter(entry => JSON.stringify(entry.lastEntry) === JSON.stringify(previousNodeCoords))
+
+	return correctPath
 }
 
 function updateNextVisitsList(adjacentNode, nextVisitsArray, adjNodeContent, visitedNodesArray, currentNode) {

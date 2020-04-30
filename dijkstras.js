@@ -61,7 +61,7 @@ function dijkstras(finishedGrid) {
 
 	// [cycle start] start cycling through adjacent nodes
 	// removed while(nodeContent !== TARGET_NODE) because there is an if/break block at the end that takes care of exiting loop
-	while (true) {
+	while (iteration < 30) {
 		// see https://docs.google.com/document/d/1kJzkln9Ye40Btx5OwGsN23HQ26TX3rjfpbJIDXeUg7g/edit for loop documentation
 		// one loop thru this while loop will scan the nodes in all cardinal directions and act on them...
 		// console.log("[[[starting loop...]]]")
@@ -73,7 +73,7 @@ function dijkstras(finishedGrid) {
 			const index = iteration - 1;
 			startCoordinates = nextVisitsList[index] // will yield values like [x, y, a, b] (see Google Docs documentation for more)
 		}
-		// TODO: install a "isWithinTheGrid" boolean check
+
 		startValueX = startCoordinates[0]
 		startValueY = startCoordinates[1]
 		// END initialization of loop
@@ -86,7 +86,7 @@ function dijkstras(finishedGrid) {
 		let isOnTheGrid =
 			adjacentNode[0] <= maxXValue && adjacentNode[0] >= minXValue &&
 			adjacentNode[1] <= maxYValue && adjacentNode[1] >= minYValue
-		if (isOnTheGrod) {
+		if (isOnTheGrid) {
 			// use finishedGrid[y-coord][x-coord] as arg because we're pulling out the # symbol if it is there
 			nextVisitsList = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates)
 		}
@@ -120,7 +120,11 @@ function dijkstras(finishedGrid) {
 
 		// Step 4 in documentation...
 		// add Current Node to the list of Visited Nodes so the program knows to not go back here...
-		visitedNodesList.push(startCoordinates)
+		// but only add Current Node if it ISN'T already on the list...
+		const currentNodeIsInVisitedNodesList = isArrayInArray(visitedNodesList, [startCoordinates[0], startCoordinates[1]])
+		if (!currentNodeIsInVisitedNodesList) {
+			visitedNodesList.push(startCoordinates)
+		}
 
 		// Step 5... Record the distance from the Starting Node to the Current node & record the path used to get there...
 		if (iteration == 0) { // while iteration==0, STARTING_NODE===CurrentNode, so it's unique: There is no path to get there.
@@ -140,6 +144,8 @@ function dijkstras(finishedGrid) {
 			const newPath = new Path(pathToNode.distance + 1, currentPath, [startValueX, startValueY], isTarget)
 			potentialPaths.push(newPath)
 		}
+		// FIXME: current code causes a burdensome loop. currentPath length of 7 has looped 4,700 times & 8 looped 8000 times
+		// and the TARGET_NODE still isn't found. something is wrong. TEST: install safeguards against recycling old nodes
 
 		// Step 6: if the CurrentNode is not the TargetNode, change it from . to o in the Grid, then cycle back to step 2
 		if (finishedGrid[startValueY][startValueX] === TARGET_NODE) {
@@ -159,7 +165,9 @@ function dijkstras(finishedGrid) {
 	// after while loop, which *scans* for TARGET_NODE, use this following step to select teh shortest path to TARGET_NODE
 	// step 7: Select the shortest path from the START_NODE to the TARGET_NODE & animate that path...
 
-	console.log("visitedNodes length: " + visitedNodesList.length)
+	console.log("visitedNodesList length: " + visitedNodesList.length)
+	console.log("nextVisitsList length: " + nextVisitsList.length)
+	console.log(nextVisitsList)
 	console.log(potentialPaths)
 	console.log(potentialPaths.length)
 	const shortestPathObject = potentialPaths[potentialPaths.length - 1]; // should be the last 1...
@@ -201,21 +209,24 @@ function locatePathToCurrentNode(paths, previousNodeCoords, iteration) {
 
 function updateNextVisitsList(adjacentNode, nextVisitsArray, adjNodeContent, visitedNodesArray, currentNode) {
 	const alreadyVisited = isArrayInArray(visitedNodesArray, adjacentNode);
+	// FIXME: 100% pushing too many times to the nextVisitsList & visitedNodesList
+	// TODO: Reduce looping from 335 loops for currentPath.length = 5 to ~24 to ~40. totally doable
+	const newNextVisits = [...nextVisitsArray]
 
 	// if the adjacent node is already in the list of Visited Nodes, do not add the adjacent node to the Next Visits List.
 	if (alreadyVisited) {
-		return nextVisitsArray // exit early because the adjacentNode is already visited and doesn't need to be added again
+		return newNextVisits // exit early because the adjacentNode is already visited and doesn't need to be added again
 	} else {
 		// don't put Wall segments on the nextVisitsList.
 		const nodeIsWall = adjNodeContent === WALL_SEGMENT;
 		// don't put a node on nextVisitsList twice.
-		const alreadyPlanningToVisit = isArrayInArray(nextVisitsArray, adjacentNode)
+		const alreadyPlanningToVisit = isArrayInArray(newNextVisits, adjacentNode)
 		if (alreadyPlanningToVisit === false && nodeIsWall === false) {
 			// see "the potentialPaths Data Structure" in Google Docs documentation for more info...
 			const nextVisitsInfo = [adjacentNode[0], adjacentNode[1], currentNode[0], currentNode[1]]
-			nextVisitsArray.push(nextVisitsInfo)
+			newNextVisits.push(nextVisitsInfo)
 		}
-		return nextVisitsArray;
+		return newNextVisits;
 	}
 }
 

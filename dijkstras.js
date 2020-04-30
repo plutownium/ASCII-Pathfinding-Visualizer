@@ -72,7 +72,7 @@ function dijkstras(finishedGrid) {
 			const index = iteration - 1;
 			startCoordinates = nextVisitsList[index] // will yield values like [x, y, a, b] (see Google Docs documentation for more)
 		}
-		console.log("Starting with Coordinates: ", startCoordinates)
+		// console.log("Starting with Coordinates: ", startCoordinates)
 
 		startValueX = startCoordinates[0]
 		startValueY = startCoordinates[1]
@@ -106,6 +106,7 @@ function dijkstras(finishedGrid) {
 		if (iteration == 0) { // while iteration==0, STARTING_NODE===CurrentNode, so it's unique: There is no path to get there.
 			const firstEntry = [startValueX, startValueY]
 			const initPath = new Path(0, [], firstEntry, false)
+			console.log("INIT PATH: ")
 			console.log(initPath)
 			// FIXME: Path {distance: 0, lastEntry: null, path: 1, containsTarget: false} how is path === 1?
 			// FIXME (cont'd): this.path = currentPath.push(newCoords) ---> .path=1? how?
@@ -116,12 +117,13 @@ function dijkstras(finishedGrid) {
 			// remember nextVisitsList contains values like [x, y, a, b]
 			const previousNodeCoordinates = [startCoordinates[2], startCoordinates[3]]
 
-			console.log("potentialPaths: ")
-			console.log(potentialPaths)
 			// returns the path object that leads to the current node... so...
-			const pathToNode = locatePathToCurrentNode(potentialPaths, previousNodeCoordinates)
-			console.log("is path here?")
-			console.log(pathToNode) // fails
+			console.log("PREVNODECOORDS:")
+			console.log(previousNodeCoordinates)
+			const pathToNode = locatePathToCurrentNode(potentialPaths, previousNodeCoordinates, iteration)
+			console.log("3330: ")
+			console.log(pathToNode) // so the problem is locatePathToCurrentNode is returning [] instead of the Path object
+
 			const isTarget = finishedGrid[startValueY][startValueX] === TARGET_NODE;
 			const currentPath = pathToNode.path;
 			const newPath = new Path(pathToNode.distance + 1, currentPath, [startValueX, startValueY], isTarget)
@@ -216,12 +218,17 @@ function scanPerimeterNode(funcScanTarget, startNode, nextNode, visitedArray, ne
 	return [visitedArray, nextArray, funcNodeContent]
 }
 
-function locatePathToCurrentNode(paths, previousNodeCoords) {
+function locatePathToCurrentNode(paths, previousNodeCoords, iteration) {
 	// searches list of Paths for the right Path object and returns it.
 	// the right path should be the one where the .lastEntry property is === previousNodeCoords as a string.
+
 	console.log("basic test: ")
 	console.log(paths)
 	console.log(previousNodeCoords)
+	for (let i = 0; i < paths.length; i++) {
+		console.log("PRINTING")
+		console.log(paths[i].lastEntry)
+	}
 	const correctPath = paths.filter(entry => JSON.stringify(entry.lastEntry) === JSON.stringify(previousNodeCoords))
 
 	return correctPath

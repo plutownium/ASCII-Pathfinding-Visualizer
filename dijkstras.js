@@ -60,7 +60,8 @@ function dijkstras(finishedGrid) {
 	let iteration = 0;
 
 	// [cycle start] start cycling through adjacent nodes
-	while (nodeContent !== TARGET_NODE) {
+	// removed while(nodeContent !== TARGET_NODE) because there is an if/break block at the end that takes care of exiting loop
+	while (iteration < 200) {
 		// see https://docs.google.com/document/d/1kJzkln9Ye40Btx5OwGsN23HQ26TX3rjfpbJIDXeUg7g/edit for loop documentation
 		// one loop thru this while loop will scan the nodes in all cardinal directions and act on them...
 		console.log("[[[starting loop...]]]")
@@ -124,8 +125,8 @@ function dijkstras(finishedGrid) {
 		}
 
 		// Step 6: if the CurrentNode is not the TargetNode, change it from . to o in the Grid, then cycle back to step 2
-		nodeContent = finishedGrid[startValueY][startValueX];
-		if (nodeContent === TARGET_NODE) {
+
+		if (finishedGrid[startValueY][startValueX] === TARGET_NODE) {
 			break
 		} else {
 			finishedGrid[startValueY][startValueX] = VISITED_NODE;

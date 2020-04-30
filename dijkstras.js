@@ -107,6 +107,8 @@ function dijkstras(finishedGrid) {
 			const firstEntry = [startValueX, startValueY]
 			const initPath = new Path(0, [], firstEntry, false)
 			console.log(initPath)
+			// FIXME: Path {distance: 0, lastEntry: null, path: 1, containsTarget: false} how is path === 1?
+			// FIXME (cont'd): this.path = currentPath.push(newCoords) ---> .path=1? how?
 
 			potentialPaths.push(initPath)
 		} else { // generate a new Path to add to potentialPaths

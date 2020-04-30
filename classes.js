@@ -7,9 +7,9 @@ class Path {
         } else {
             this.lastEntry = currentPath[currentPath.length - 1]
         }
-
-        console.log(newCoords)
-        this.path = currentPath.push(newCoords)
+        const startPath = currentPath
+        startPath.push(newCoords)
+        this.path = startPath
         this.containsTarget = containsTarget === TARGET_NODE ? true : false;
     }
 }

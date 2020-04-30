@@ -60,7 +60,7 @@ function dijkstras(finishedGrid) {
 	let iteration = 0;
 
 	// [cycle start] start cycling through adjacent nodes
-	while (nodeContent !== TARGET_NODE && iteration < 10) {
+	while (nodeContent !== TARGET_NODE) {
 		// see https://docs.google.com/document/d/1kJzkln9Ye40Btx5OwGsN23HQ26TX3rjfpbJIDXeUg7g/edit for loop documentation
 		// one loop thru this while loop will scan the nodes in all cardinal directions and act on them...
 		console.log("[[[starting loop...]]]")
@@ -75,6 +75,9 @@ function dijkstras(finishedGrid) {
 
 		startValueX = startCoordinates[0]
 		startValueY = startCoordinates[1]
+
+		// FIXME: I am not sure if the while loop is properly locating TARGET_NODE. Test with various locs on grid.
+		// FIXME: Grid also seems to not be updating properly.
 
 		// END initialization of loop
 		// *** *** *** *** *** *** *** *** ***
@@ -120,12 +123,12 @@ function dijkstras(finishedGrid) {
 			potentialPaths.push(newPath)
 		}
 
-		// Step 6:
+		// Step 6: if the CurrentNode is not the TargetNode, change it from . to o in the Grid, then cycle back to step 2
 		nodeContent = finishedGrid[startValueY][startValueX];
 		if (nodeContent === TARGET_NODE) {
 			break
 		} else {
-			finishedGrid[startValueY][startValueY] = VISITED_NODE;
+			finishedGrid[startValueY][startValueX] = VISITED_NODE;
 			iteration = iteration + 1;
 		}
 		// TODO: Figure out how to pass an array w/ the nodes in order of which they were scanned to a renderGridSlowly() func.
@@ -139,63 +142,20 @@ function dijkstras(finishedGrid) {
 	const shortestPathObject = potentialPaths[potentialPaths.length - 1]; // should be the last 1...
 
 	// FIXME: shortestPathObject is messed up.
+	// if START_NODE = [2, 2] and TARGET_NODE = [4, 2], expect values...
+	// distance = 2
+	// containsTarget = true
+	// lastEntry = [3, 2]
+	// .path[path.length - 1] = [4, 2] and .path.length = 3
 	console.log(shortestPathObject)
+	// FIXME: rerenderGrid() is messed up. It's not actually the func, but the Grid itself.
+	console.log(grid)
+	rerenderGrid();
+
 	return shortestPathObject
 
-	// ONCE NON BUGGY: TURN rerenderGrid(); BACK ON!
 	// finally, rerender the board based on the grid
-	// rerenderGrid();
 	// rerenderGridSlowly(); // work in progress...
-}
-
-function scanPerimeterNode(funcScanTarget, startNode, nextNode, visitedArray, nextArray) {
-	// function is called "scanPerimeterNode" because it "scans" a node in the grid.
-	let funcNodeContent;
-
-	// "if the adjacent node isn't EITHER: (a) a wall segment or (b) already contained in the visitedNodes array..."
-	// (because you don't want to visit the same node twice)
-	const nextNodeHasntBeenVisitedYet = !isArrayInArray(visitedArray, nextNode)
-	// either (a) isArrayInArray is malfunctioning and telling me the array is in the array when it isn't
-	// or (b) I have somehow pushed nextNode into visitedArray early
-	// or (c) I am making a logical error: in other words, I believe I am correctly adding nodes to visitedArray when some shouldn't be
-	// or (d) maybe the value i passe dinto isArrayInArray was wrong
-	const nodeIsNotAWall = funcScanTarget != WALL_SEGMENT
-
-	if (nodeIsNotAWall && nextNodeHasntBeenVisitedYet) {
-		funcNodeContent = funcScanTarget;
-
-		// push the node we're starting our search from to the list of visitedNodes if it isn't already there
-		// so the algo doesn't scan it again when its at an adjacent node
-		const currentNodeHasntBeenVisitedYet = !isArrayInArray(visitedArray, startNode)
-		if (currentNodeHasntBeenVisitedYet) {
-			visitedArray.push(startNode)
-		}
-
-		// push the node onto the list of nodes to cycle into this process (unless it's already there)
-		// so the algo knows where to go next
-		const notPlanningToVisitNextNodeYet = !isArrayInArray(nextArray, nextNode)
-		const funcScanTargetExists = (funcScanTarget != undefined)
-		if (notPlanningToVisitNextNodeYet && funcScanTargetExists) {
-			console.log("Pushing to nextArray!")
-			nextArray.push(nextNode)
-		}
-
-		// do i also have to pass the grid array so it can be accessed within the function? it seemed to work when i did
-		// grid[y][x] = VISITED_NODE; up on the first line of the replaceEmptySpaceWithVisitedMarker...
-
-		// finally, replace the node's visual appearance: convert . to o
-		// so the user can tell what's going on in the code
-		const gridSpaceIsEmpty = grid[startNode[1]][startNode[0]] === "."
-		if (gridSpaceIsEmpty) {
-			console.log("Changing a . to a o")
-			replaceEmptySpaceWithVisitedMarker(startNode[0], startNode[1]);
-			rerenderGrid();
-		}
-	}
-
-	// had to pass arrays into the func to push to them, so i also have to return them out of the func 
-	// to assign the value of the modified array to the original variable containing said array. A scope problem.
-	return [visitedArray, nextArray, funcNodeContent]
 }
 
 function locatePathToCurrentNode(paths, previousNodeCoords, iteration) {

@@ -125,11 +125,12 @@ function dijkstras(finishedGrid) {
 		}
 
 		// Step 6: if the CurrentNode is not the TargetNode, change it from . to o in the Grid, then cycle back to step 2
-
 		if (finishedGrid[startValueY][startValueX] === TARGET_NODE) {
 			break
 		} else {
-			finishedGrid[startValueY][startValueX] = VISITED_NODE;
+			if (finishedGrid[startValueY][startValueX] !== START_NODE) {
+				finishedGrid[startValueY][startValueX] = VISITED_NODE;
+			}
 			iteration = iteration + 1;
 		}
 		// TODO: Figure out how to pass an array w/ the nodes in order of which they were scanned to a renderGridSlowly() func.
@@ -148,9 +149,10 @@ function dijkstras(finishedGrid) {
 	// containsTarget = true
 	// lastEntry = [3, 2]
 	// .path[path.length - 1] = [4, 2] and .path.length = 3
+	// FIXME: Almost guarantee that shortestPathObject will not obey the Wall segments.
+	// TODO: Test code with Wall Segments inserted. Does shortestPath describe trail around wall segments?
 	console.log(shortestPathObject)
-	// FIXME: rerenderGrid() is messed up. It's not actually the func, but the Grid itself.
-	console.log(grid)
+
 	rerenderGrid();
 
 	return shortestPathObject

@@ -75,9 +75,15 @@ moveBombBtn.addEventListener("click", () => {
 });
 
 // ### Let user remove a wall segment
-const removeWallBtn = document.getElementById("removeWall");
+const removeWallBtn = document.getElementById("removeWallBtn");
 removeWallBtn.addEventListener("click", () => {
 	nextClickRemovesWall();
+})
+
+// ### Let user clear the board (also should allow the user to "Run Pathfinding Algorithm" again)
+const clearBoardBtn = document.getElementById("clearBoardBtn")
+clearBoardBtn.addEventListener("click", () => {
+	clearBoard();
 })
 
 // todo: add Dijkstra's algorithm and test it
@@ -254,6 +260,8 @@ function nextClickMovesStart() {
 			});
 		}
 	}
+	const messageBarParagraphTag = document.getElementById("messageBar").children[0]
+	messageBarParagraphTag.innerHTML = "Click to add or move a Start Node"
 }
 
 function addStartNode(x, y) {
@@ -297,6 +305,8 @@ function nextClickMovesTarget() {
 			});
 		}
 	}
+	const messageBarParagraphTag = document.getElementById("messageBar").children[0]
+	messageBarParagraphTag.innerHTML = "Click to add or move a Target Node"
 }
 
 function addTargetNode(x, y) {
@@ -340,6 +350,9 @@ function nextClickMovesBomb() {
 			});
 		}
 	}
+	// show the user a message...
+	const messageBarParagraphTag = document.getElementById("messageBar").children[0]
+	messageBarParagraphTag.innerHTML = "Click to add or move a Bomb Node"
 }
 
 function addBombNode(x, y) {
@@ -393,17 +406,34 @@ function nextClickRemovesWall() {
 			}
 		}
 		// show the user a message letting them know they have to click and remove an event listener to continue
+		const messageBarParagraphTag = document.getElementById("messageBar").children[0]
+		messageBarParagraphTag.innerHTML = "Click to remove a Wall Segment"
 
+		return true // done
 	} else {
+		// show the user a message letting them know there is no wall segment to remove...
+		const messageBarParagraphTag = document.getElementById("messageBar").children[0]
+		messageBarParagraphTag.innerHTML = "No wall segment to remove!"
+
 		return false // do nothing because there is no wall segment on the grid
 	}
-	// else:
-
-
 }
 
 function removeWallNode(x, y) {
 	grid[y][x] = EMPTY_SPACE;
+	rerenderGrid();
+	resetEventListeners();
+}
+
+function clearBoard() {
+	const width = grid[0].length;
+	const height = grid.length;
+
+	for (let i = 0; i < width; i++) {
+		for (let j = 0; j < height; j++) {
+			grid[j][i] = EMPTY_SPACE;
+		}
+	}
 	rerenderGrid();
 	resetEventListeners();
 }

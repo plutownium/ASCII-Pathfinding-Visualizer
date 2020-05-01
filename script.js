@@ -11,6 +11,7 @@ const BOMB_NODE = "%";
 const TARGET_NODE = "X";
 const VISITED_NODE = "o";
 const VISITED_AFTER_BOMB = "O";
+const SHORTEST_PATH_NODE = "+"
 
 // generate a n by m grid of .'s
 const grid = [];
@@ -111,6 +112,57 @@ function rerenderGrid() {
 			const targetDiv = getLocationByCoordinates(j, i);
 			targetDiv.innerHTML = grid[i][j];
 		}
+	}
+}
+
+function promisesRendering(animationDelay, algoPath) {
+	// receives a delay timer and an array which is the trail from START_NODE to TARGET_NODE
+	const numOfAnimations = algoPath.length;
+
+	// i starts at 1 because we don't wanna animate the START_NODE into a + symbol, nor the TARGET_NODE
+	for (let i = 1; i < numOfAnimations - 1; i++) {
+		const xCoordinate = algoPath[i][0];
+		const yCoordinate = algoPath[i][1];
+		setTimeout(i * animationDelay, updateCoordinatesWithTrailMarker(xCoordinate, yCoordinate))
+		// FIXME: updateCoordsWTrailMarker should rerender a specific node, not the whole grid.
+	}
+}
+
+function sleep(milliseconds) {
+	// Step 1. Pick out which node is going to be animated.
+	// Step 2. Generate a promise delayed by n ms set to update the visual appearance of the node when the promise resolves
+	// step 3. repeat this for each node in the list of nodes to be animated.
+	return new Promise(resolve => setTimeout())
+}
+
+// FIXME: this option for adding a delay to the animation didn't work, what else can be done?
+// TODO: Add a "REMOVE WALL SEGMENT" button
+// TODO: Add "generate board width by browser width"
+// TODO: Add a random maze generator option...! Yikes.
+// TODO: add Horizontal Skew Maze generator. YIKES
+// TODO: Add a "bomb node" option... Also yikes!
+// TODO: pass NodeList to renderByTimer()
+// TODO: animate grid with CSS transitions (colors, KISS)
+// TODO: Add a "No Route To Target Node Available!" msg when its true
+// NOTE: It's more important to make it LOOK good than add lots of diff pathfinding algos (all basically the same)
+// ...or lots of diff maze algos (two is enough)
+
+function updateCoordinatesWithTrailMarker(xCoord, yCoord) {
+	grid[yCoord][xCoord] = SHORTEST_PATH_NODE;
+	const targetDiv = getLocationByCoordinates(xCoord, yCoord);
+	targetDiv.innerHTML = grid[yCoord][xCoord];
+
+}
+
+function renderByTimer(animationDelay, algoPath, scanTargets) {
+	// receives a delay timer and an array which is the trail from START_NODE to TARGET_NODE
+	const numOfAnimations = algoPath.length;
+
+	// i starts at 1 because we don't wanna animate the START_NODE into a + symbol, nor the TARGET_NODE
+	for (let i = 1; i < numOfAnimations - 1; i++) {
+		const xCoordinate = algoPath[i][0];
+		const yCoordinate = algoPath[i][1];
+		setTimeout(i * animationDelay, updateCoordinatesWithTrailMarker(xCoordinate, yCoordinate))
 	}
 }
 
@@ -320,7 +372,8 @@ testButton.addEventListener("click", () => {
 
 const inspect = document.getElementById("inspect");
 inspect.addEventListener("click", () => {
-	dijkstras(grid);
+	const shortestPathAndScanningOrder = dijkstras(grid);
+	renderByTimer(1000, shortestPathAndScanningOrder[0].path, shortestPathAndScanningOrder[1])
 });
 
 // <^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^>

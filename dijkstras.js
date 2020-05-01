@@ -72,7 +72,7 @@ function dijkstras(finishedGrid) {
 		// for the first iteration, startValueX and startValueY were already given values up on the previous lines.
 		if (iteration > 0) {
 			index = iteration - 1;
-			startCoordinates = nextVisitsList[index] // will yield values like [x, y, a, b] (see Google Docs documentation for more)
+			startCoordinates = nextVisitsList[index]
 		}
 
 		startValueX = startCoordinates[0]
@@ -87,7 +87,6 @@ function dijkstras(finishedGrid) {
 			adjacentNode[1] <= maxYValue && adjacentNode[1] >= minYValue
 		// don't put a node on nextVisitsList twice.
 		let notPlanningToVisit = !isArrayInArray(nextVisitsList, adjacentNode)
-		// console.log(notPlanningToVisit)
 		if (isOnTheGrid && notPlanningToVisit) {
 			// use finishedGrid[y-coord][x-coord] as arg because we're pulling out the # symbol if it is there
 			content = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates, visitsWithPathList)
@@ -101,7 +100,6 @@ function dijkstras(finishedGrid) {
 			adjacentNode[0] <= maxXValue && adjacentNode[0] >= minXValue &&
 			adjacentNode[1] <= maxYValue && adjacentNode[1] >= minYValue
 		notPlanningToVisit = !isArrayInArray(nextVisitsList, adjacentNode)
-		// console.log(notPlanningToVisit)
 		if (isOnTheGrid && notPlanningToVisit) {
 			content = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates, visitsWithPathList)
 			nextVisitsList = content[0]
@@ -114,7 +112,6 @@ function dijkstras(finishedGrid) {
 			adjacentNode[0] <= maxXValue && adjacentNode[0] >= minXValue &&
 			adjacentNode[1] <= maxYValue && adjacentNode[1] >= minYValue
 		notPlanningToVisit = !isArrayInArray(nextVisitsList, adjacentNode)
-		// console.log(notPlanningToVisit)
 		if (isOnTheGrid && notPlanningToVisit) {
 			content = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates, visitsWithPathList)
 			nextVisitsList = content[0]
@@ -127,7 +124,6 @@ function dijkstras(finishedGrid) {
 			adjacentNode[0] <= maxXValue && adjacentNode[0] >= minXValue &&
 			adjacentNode[1] <= maxYValue && adjacentNode[1] >= minYValue
 		notPlanningToVisit = !isArrayInArray(nextVisitsList, adjacentNode)
-		// console.log(notPlanningToVisit)
 		if (isOnTheGrid && notPlanningToVisit) {
 			content = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates, visitsWithPathList)
 			nextVisitsList = content[0]
@@ -150,9 +146,6 @@ function dijkstras(finishedGrid) {
 
 			potentialPaths.push(initPath)
 		} else { // block summary: generate a new Path to add to potentialPaths
-			// console.log("TEST")
-			// console.log(visitsWithPathList)
-			// console.log(index)
 			const previousNodeCoordinates = [visitsWithPathList[index][2], visitsWithPathList[index][3]]
 
 			const pathToNode = locatePathToCurrentNode(potentialPaths, previousNodeCoordinates)
@@ -162,8 +155,6 @@ function dijkstras(finishedGrid) {
 			const newPath = new Path(pathToNode.distance + 1, currentPath, [startValueX, startValueY], isTarget)
 			potentialPaths.push(newPath)
 		}
-		// FIXME: current code causes a burdensome loop. currentPath length of 7 has looped 4,700 times & 8 looped 8000 times
-		// and the TARGET_NODE still isn't found. something is wrong. TEST: install safeguards against recycling old nodes
 
 		// Step 6: if the CurrentNode is not the TargetNode, change it from . to o in the Grid, then cycle back to step 2
 		if (finishedGrid[startValueY][startValueX] === TARGET_NODE) {
@@ -182,30 +173,14 @@ function dijkstras(finishedGrid) {
 
 	// after while loop, which *scans* for TARGET_NODE, use this following step to select teh shortest path to TARGET_NODE
 	// step 7: Select the shortest path from the START_NODE to the TARGET_NODE & animate that path...
+	const shortestPathObject = potentialPaths[potentialPaths.length - 1]; // shortestPathObject should be the last 1...
+	const scanningOrderForAnimation = nextVisitsList.slice(0, iteration) // return only the scanned nodes from nextVisitsList
 
-	console.log("visitedNodesList length: " + visitedNodesList.length)
-	console.log("nextVisitsList length: " + nextVisitsList.length)
-	console.log(nextVisitsList)
-	console.log(potentialPaths)
-	console.log(potentialPaths.length)
-	const shortestPathObject = potentialPaths[potentialPaths.length - 1]; // should be the last 1...
-
-	// FIXME: shortestPathObject is messed up.
-	// if START_NODE = [2, 2] and TARGET_NODE = [4, 2], expect values...
-	// distance = 2
-	// containsTarget = true
-	// lastEntry = [3, 2]
-	// .path[path.length - 1] = [4, 2] and .path.length = 3
-	// FIXME: Almost guarantee that shortestPathObject will not obey the Wall segments.
-	// TODO: Test code with Wall Segments inserted. Does shortestPath describe trail around wall segments?
+	// TODO: also return a list "nodeScanningOrder" to animate in the browser
 	console.log(shortestPathObject)
 
-	rerenderGrid();
+	return [shortestPathObject, scanningOrderForAnimation]
 
-	return shortestPathObject
-
-	// finally, rerender the board based on the grid
-	// rerenderGridSlowly(); // work in progress...
 }
 
 function locatePathToCurrentNode(paths, previousNodeCoords) {
@@ -224,8 +199,6 @@ function locatePathToCurrentNode(paths, previousNodeCoords) {
 
 function updateNextVisitsList(adjacentNode, nextVisitsArray, adjNodeContent, visitedNodesArray, currentNode, vWithPathList) {
 	const alreadyVisited = isArrayInArray(visitedNodesArray, adjacentNode);
-	// FIXME: 100% pushing too many times to the nextVisitsList & visitedNodesList
-	// TODO: Reduce looping from 335 loops for currentPath.length = 5 to ~24 to ~40. totally doable
 	const newNextVisits = [...nextVisitsArray]
 	const visitsWithPath = [...vWithPathList]
 

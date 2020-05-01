@@ -170,6 +170,7 @@ function dijkstras(finishedGrid) {
 
 	// TODO: also return a list "nodeScanningOrder" to animate in the browser
 	console.log(shortestPathObject)
+	console.log(grid)
 
 	return [shortestPathObject, scanningOrderForAnimation]
 

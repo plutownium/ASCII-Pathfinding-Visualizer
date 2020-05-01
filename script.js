@@ -74,12 +74,17 @@ moveBombBtn.addEventListener("click", () => {
 	nextClickMovesBomb();
 });
 
+// ### Let user remove a wall segment
+const removeWallBtn = document.getElementById("removeWall");
+removeWallBtn.addEventListener("click", () => {
+	nextClickRemovesWall();
+})
+
 // todo: add Dijkstra's algorithm and test it
 // todo: make each space used by Dijkstra's turn into a +, one by one (one space every .3 seconds or something)
 // todo: make Dijkstra's find its way to the bomb first if there is a bomb
 // todo: make Dijkstra's path from the bomb to the target
 // todo: visualize all the spaces "searched" by Dijkstra's. o's and O's
-// todo: Add 3-4 other algorithms
 // todo: Add "Clear Board" button
 // todo: Add "Clear walls & weights" button
 // todo: Add "Speed" selector
@@ -145,8 +150,12 @@ function renderAfterDelay(milliseconds) {
 	// Step 1. Pick out which node is going to be animated.
 	// Step 2. Generate a promise delayed by n ms set to update the visual appearance of the node when the promise resolves
 	// step 3. repeat this for each node in the list of nodes to be animated.
-	return new Promise(resolve => setTimeout(resolve, milliseconds))
+	return new Promise(resolve => setTimeout(resolve(), milliseconds))
 }
+
+// FIXME: after clikcing "inspect dijkstras", clicking on the board again causes the Scanning Nodes to display instead of the Path.
+// ...in fact I want the Scanning Nodes to display, THEN the path.
+
 
 // FIXME: this option for adding a delay to the animation didn't work, what else can be done?
 // TODO: Add a "REMOVE WALL SEGMENT" button
@@ -347,6 +356,54 @@ function addBombNode(x, y) {
 	}
 	// Step 2: Set the new Target Node
 	grid[y][x] = BOMB_NODE;
+	rerenderGrid();
+	resetEventListeners();
+}
+
+function nextClickRemovesWall() {
+	// if the grid contains no wall segments, do nothing.
+	let containsWallSegment = false;
+	for (let i = 0; i < grid[0].length; i++) { // use the length of row 0
+		for (let j = 0; j < grid.length; j++) { // use the height of the grid
+			if (grid[j][i] === WALL_SEGMENT) { // should iterate over every 
+				containsWallSegment = true;
+			}
+		}
+	}
+	if (containsWallSegment) {
+		// first, remove all event listeners.
+		const columnDivs = mainDiv.children;
+		for (let x = 0; x < numOfColumns; x++) {
+			// iterate through the columns, getting a list of their children
+			const targetColumnRows = columnDivs[x].children;
+			for (let y = 0; y < numOfRows; y++) {
+				// iterate through the row divs in the columns.
+				// To remove all event listeners, clone the node, and replace it with the clone.
+				const oldElement = targetColumnRows[y];
+				const newElement = oldElement.cloneNode(true);
+				oldElement.parentNode.replaceChild(newElement, oldElement);
+			}
+			// next, add event listeners to nodes that contain a WALL SEGMENT which turn WALL SEGMENTs into unvisited nodes.
+			for (let y = 0; y < numOfRows; y++) {
+				if (targetColumnRows[y].innerHTML === WALL_SEGMENT) {
+					targetColumnRows[y].addEventListener("click", () => {
+						removeWallNode(x, y);
+					});
+				}
+			}
+		}
+		// show the user a message letting them know they have to click and remove an event listener to continue
+
+	} else {
+		return false // do nothing because there is no wall segment on the grid
+	}
+	// else:
+
+
+}
+
+function removeWallNode(x, y) {
+	grid[y][x] = EMPTY_SPACE;
 	rerenderGrid();
 	resetEventListeners();
 }

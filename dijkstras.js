@@ -59,17 +59,15 @@ function dijkstras(finishedGrid) {
 	let potentialPaths = []; // an array of Path objects...
 
 	let content;
-
 	let iteration = 0;
 
 	// [cycle start] start cycling through adjacent nodes
 	// removed while(nodeContent !== TARGET_NODE) because there is an if/break block at the end that takes care of exiting loop
-	while (iteration < 30) {
+	while (true) { // sub out iteration < 30 to test
 		// see https://docs.google.com/document/d/1kJzkln9Ye40Btx5OwGsN23HQ26TX3rjfpbJIDXeUg7g/edit for loop documentation
 		// one loop thru this while loop will scan the nodes in all cardinal directions and act on them...
 		// console.log("[[[starting loop...]]]")
-		// *** *** *** *** *** *** *** *** ***
-		// BEGIN initialization of loop
+
 		let index;
 		// for the first iteration, startValueX and startValueY were already given values up on the previous lines.
 		if (iteration > 0) {
@@ -79,8 +77,6 @@ function dijkstras(finishedGrid) {
 
 		startValueX = startCoordinates[0]
 		startValueY = startCoordinates[1]
-		// END initialization of loop
-		// *** *** *** *** *** *** *** *** ***
 
 		// Step 3 in documentation...
 		// ### get the node directly to the right
@@ -97,7 +93,6 @@ function dijkstras(finishedGrid) {
 			content = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates, visitsWithPathList)
 			nextVisitsList = content[0]
 			visitsWithPathList = content[1]
-			console.log("CONTENT 1: " + visitsWithPathList)
 		}
 
 		// ### get the node directly to the left
@@ -137,6 +132,7 @@ function dijkstras(finishedGrid) {
 			content = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates, visitsWithPathList)
 			nextVisitsList = content[0]
 			visitsWithPathList = content[1]
+
 		}
 
 		// Step 4 in documentation...
@@ -154,14 +150,15 @@ function dijkstras(finishedGrid) {
 
 			potentialPaths.push(initPath)
 		} else { // block summary: generate a new Path to add to potentialPaths
-			// startCoordinates = nextVisitsList[index] at the start of the loop.
-			// remember nextVisitsList contains values like [x, y, a, b]
+			// console.log("TEST")
+			// console.log(visitsWithPathList)
+			// console.log(index)
 			const previousNodeCoordinates = [visitsWithPathList[index][2], visitsWithPathList[index][3]]
-			console.log(visitsWithPathList)
+
 			const pathToNode = locatePathToCurrentNode(potentialPaths, previousNodeCoordinates)
 			const isTarget = finishedGrid[startValueY][startValueX] === TARGET_NODE;
 			const currentPath = [...pathToNode.path]
-			console.log("currentPath length: " + currentPath.length)
+			// console.log("currentPath length: " + currentPath.length)
 			const newPath = new Path(pathToNode.distance + 1, currentPath, [startValueX, startValueY], isTarget)
 			potentialPaths.push(newPath)
 		}
@@ -221,7 +218,6 @@ function locatePathToCurrentNode(paths, previousNodeCoords) {
 	}
 	// TODO: More thoroughly explore why paths.filter() sometimes yields two Path objects. Understand what is meant to happen
 	const correctPath = paths.filter(entry => JSON.stringify(entry.lastEntry) === JSON.stringify(previousNodeCoords))
-	// console.log("correctPath length: " + correctPath.length)
 
 	return correctPath[correctPath.length - 1] // pretty sure when there's two potential correctPaths, you take the last one...
 }
@@ -234,8 +230,9 @@ function updateNextVisitsList(adjacentNode, nextVisitsArray, adjNodeContent, vis
 	const visitsWithPath = [...vWithPathList]
 
 	// if the adjacent node is already in the list of Visited Nodes, do not add the adjacent node to the Next Visits List.
+
 	if (alreadyVisited) {
-		return newNextVisits // exit early because the adjacentNode is already visited and doesn't need to be added again
+		return [newNextVisits, visitsWithPath] // exit early because the adjacentNode is already visited and doesn't need to be added again
 	} else {
 		// don't put Wall segments on the nextVisitsList.
 		const nodeIsWall = adjNodeContent === WALL_SEGMENT;
@@ -243,7 +240,6 @@ function updateNextVisitsList(adjacentNode, nextVisitsArray, adjNodeContent, vis
 			// see "the potentialPaths Data Structure" in Google Docs documentation for more info...
 			const nextVisitsInfo = [adjacentNode[0], adjacentNode[1], currentNode[0], currentNode[1]]
 			visitsWithPath.push(nextVisitsInfo)
-			console.log("Pushing...")
 			newNextVisits.push([adjacentNode[0], adjacentNode[1]])
 		}
 		return [newNextVisits, visitsWithPath];

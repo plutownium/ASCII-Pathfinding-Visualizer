@@ -58,7 +58,7 @@ function dijkstras(finishedGrid) {
 
 	let potentialPaths = []; // an array of Path objects...
 
-	let nodeContent;
+	let content;
 
 	let iteration = 0;
 
@@ -70,10 +70,10 @@ function dijkstras(finishedGrid) {
 		// console.log("[[[starting loop...]]]")
 		// *** *** *** *** *** *** *** *** ***
 		// BEGIN initialization of loop
-
+		let index;
 		// for the first iteration, startValueX and startValueY were already given values up on the previous lines.
 		if (iteration > 0) {
-			const index = iteration - 1;
+			index = iteration - 1;
 			startCoordinates = nextVisitsList[index] // will yield values like [x, y, a, b] (see Google Docs documentation for more)
 		}
 
@@ -94,7 +94,10 @@ function dijkstras(finishedGrid) {
 		// console.log(notPlanningToVisit)
 		if (isOnTheGrid && notPlanningToVisit) {
 			// use finishedGrid[y-coord][x-coord] as arg because we're pulling out the # symbol if it is there
-			nextVisitsList = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates)
+			content = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates, visitsWithPathList)
+			nextVisitsList = content[0]
+			visitsWithPathList = content[1]
+			console.log("CONTENT 1: " + visitsWithPathList)
 		}
 
 		// ### get the node directly to the left
@@ -105,7 +108,9 @@ function dijkstras(finishedGrid) {
 		notPlanningToVisit = !isArrayInArray(nextVisitsList, adjacentNode)
 		// console.log(notPlanningToVisit)
 		if (isOnTheGrid && notPlanningToVisit) {
-			nextVisitsList = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates)
+			content = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates, visitsWithPathList)
+			nextVisitsList = content[0]
+			visitsWithPathList = content[1]
 		}
 
 		// ### get the node directly above
@@ -116,7 +121,9 @@ function dijkstras(finishedGrid) {
 		notPlanningToVisit = !isArrayInArray(nextVisitsList, adjacentNode)
 		// console.log(notPlanningToVisit)
 		if (isOnTheGrid && notPlanningToVisit) {
-			nextVisitsList = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates)
+			content = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates, visitsWithPathList)
+			nextVisitsList = content[0]
+			visitsWithPathList = content[1]
 		}
 
 		// ### get the node directly below
@@ -127,7 +134,9 @@ function dijkstras(finishedGrid) {
 		notPlanningToVisit = !isArrayInArray(nextVisitsList, adjacentNode)
 		// console.log(notPlanningToVisit)
 		if (isOnTheGrid && notPlanningToVisit) {
-			nextVisitsList = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates)
+			content = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates, visitsWithPathList)
+			nextVisitsList = content[0]
+			visitsWithPathList = content[1]
 		}
 
 		// Step 4 in documentation...
@@ -147,9 +156,9 @@ function dijkstras(finishedGrid) {
 		} else { // block summary: generate a new Path to add to potentialPaths
 			// startCoordinates = nextVisitsList[index] at the start of the loop.
 			// remember nextVisitsList contains values like [x, y, a, b]
-			const previousNodeCoordinates = [startCoordinates[2], startCoordinates[3]]
-
-			const pathToNode = locatePathToCurrentNode(potentialPaths, previousNodeCoordinates, iteration)
+			const previousNodeCoordinates = [visitsWithPathList[index][2], visitsWithPathList[index][3]]
+			console.log(visitsWithPathList)
+			const pathToNode = locatePathToCurrentNode(potentialPaths, previousNodeCoordinates)
 			const isTarget = finishedGrid[startValueY][startValueX] === TARGET_NODE;
 			const currentPath = [...pathToNode.path]
 			console.log("currentPath length: " + currentPath.length)
@@ -202,7 +211,7 @@ function dijkstras(finishedGrid) {
 	// rerenderGridSlowly(); // work in progress...
 }
 
-function locatePathToCurrentNode(paths, previousNodeCoords, iteration) {
+function locatePathToCurrentNode(paths, previousNodeCoords) {
 	// searches list of Paths for the right Path object and returns it.
 	// the right path should be the one where the .lastEntry property is === previousNodeCoords as a string.
 
@@ -217,11 +226,12 @@ function locatePathToCurrentNode(paths, previousNodeCoords, iteration) {
 	return correctPath[correctPath.length - 1] // pretty sure when there's two potential correctPaths, you take the last one...
 }
 
-function updateNextVisitsList(adjacentNode, nextVisitsArray, adjNodeContent, visitedNodesArray, currentNode) {
+function updateNextVisitsList(adjacentNode, nextVisitsArray, adjNodeContent, visitedNodesArray, currentNode, vWithPathList) {
 	const alreadyVisited = isArrayInArray(visitedNodesArray, adjacentNode);
 	// FIXME: 100% pushing too many times to the nextVisitsList & visitedNodesList
 	// TODO: Reduce looping from 335 loops for currentPath.length = 5 to ~24 to ~40. totally doable
 	const newNextVisits = [...nextVisitsArray]
+	const visitsWithPath = [...vWithPathList]
 
 	// if the adjacent node is already in the list of Visited Nodes, do not add the adjacent node to the Next Visits List.
 	if (alreadyVisited) {
@@ -232,10 +242,11 @@ function updateNextVisitsList(adjacentNode, nextVisitsArray, adjNodeContent, vis
 		if (nodeIsWall === false) {
 			// see "the potentialPaths Data Structure" in Google Docs documentation for more info...
 			const nextVisitsInfo = [adjacentNode[0], adjacentNode[1], currentNode[0], currentNode[1]]
+			visitsWithPath.push(nextVisitsInfo)
 			console.log("Pushing...")
-			newNextVisits.push(nextVisitsInfo)
+			newNextVisits.push([adjacentNode[0], adjacentNode[1]])
 		}
-		return newNextVisits;
+		return [newNextVisits, visitsWithPath];
 	}
 
 	// TODO: Refactor alreadyPlanningToisit bool check to outside of func

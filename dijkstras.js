@@ -53,6 +53,9 @@ function dijkstras(finishedGrid) {
 	// note: nextVisitsList contains values [x,y,a,b] where [a,b] is the node that was Current when node [x,y] was added to the list.
 	let visitedNodesList = []; // don't go to these nodes
 
+	// for tracking previousNodeCoordinates
+	let visitsWithPathList = [];
+
 	let potentialPaths = []; // an array of Path objects...
 
 	let nodeContent;
@@ -86,7 +89,10 @@ function dijkstras(finishedGrid) {
 		let isOnTheGrid =
 			adjacentNode[0] <= maxXValue && adjacentNode[0] >= minXValue &&
 			adjacentNode[1] <= maxYValue && adjacentNode[1] >= minYValue
-		if (isOnTheGrid) {
+		// don't put a node on nextVisitsList twice.
+		let notPlanningToVisit = !isArrayInArray(nextVisitsList, adjacentNode)
+		// console.log(notPlanningToVisit)
+		if (isOnTheGrid && notPlanningToVisit) {
 			// use finishedGrid[y-coord][x-coord] as arg because we're pulling out the # symbol if it is there
 			nextVisitsList = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates)
 		}
@@ -96,7 +102,9 @@ function dijkstras(finishedGrid) {
 		isOnTheGrid =
 			adjacentNode[0] <= maxXValue && adjacentNode[0] >= minXValue &&
 			adjacentNode[1] <= maxYValue && adjacentNode[1] >= minYValue
-		if (isOnTheGrid) {
+		notPlanningToVisit = !isArrayInArray(nextVisitsList, adjacentNode)
+		// console.log(notPlanningToVisit)
+		if (isOnTheGrid && notPlanningToVisit) {
 			nextVisitsList = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates)
 		}
 
@@ -105,7 +113,9 @@ function dijkstras(finishedGrid) {
 		isOnTheGrid =
 			adjacentNode[0] <= maxXValue && adjacentNode[0] >= minXValue &&
 			adjacentNode[1] <= maxYValue && adjacentNode[1] >= minYValue
-		if (isOnTheGrid) {
+		notPlanningToVisit = !isArrayInArray(nextVisitsList, adjacentNode)
+		// console.log(notPlanningToVisit)
+		if (isOnTheGrid && notPlanningToVisit) {
 			nextVisitsList = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates)
 		}
 
@@ -114,7 +124,9 @@ function dijkstras(finishedGrid) {
 		isOnTheGrid =
 			adjacentNode[0] <= maxXValue && adjacentNode[0] >= minXValue &&
 			adjacentNode[1] <= maxYValue && adjacentNode[1] >= minYValue
-		if (isOnTheGrid) {
+		notPlanningToVisit = !isArrayInArray(nextVisitsList, adjacentNode)
+		// console.log(notPlanningToVisit)
+		if (isOnTheGrid && notPlanningToVisit) {
 			nextVisitsList = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates)
 		}
 
@@ -194,8 +206,6 @@ function locatePathToCurrentNode(paths, previousNodeCoords, iteration) {
 	// searches list of Paths for the right Path object and returns it.
 	// the right path should be the one where the .lastEntry property is === previousNodeCoords as a string.
 
-	// NOTE: lastEntry is currentPath[-1], meaning, it's the node that LEAD TO the CurrentNode
-
 	// this conditional retrieves the init Path if it is the only one in the paths argument
 	if (paths[paths.length - 1].lastEntry === null) {
 		return paths[0] // actually pull out the Path object from the array...
@@ -219,15 +229,16 @@ function updateNextVisitsList(adjacentNode, nextVisitsArray, adjNodeContent, vis
 	} else {
 		// don't put Wall segments on the nextVisitsList.
 		const nodeIsWall = adjNodeContent === WALL_SEGMENT;
-		// don't put a node on nextVisitsList twice.
-		const alreadyPlanningToVisit = isArrayInArray(newNextVisits, adjacentNode)
-		if (alreadyPlanningToVisit === false && nodeIsWall === false) {
+		if (nodeIsWall === false) {
 			// see "the potentialPaths Data Structure" in Google Docs documentation for more info...
 			const nextVisitsInfo = [adjacentNode[0], adjacentNode[1], currentNode[0], currentNode[1]]
+			console.log("Pushing...")
 			newNextVisits.push(nextVisitsInfo)
 		}
 		return newNextVisits;
 	}
+
+	// TODO: Refactor alreadyPlanningToisit bool check to outside of func
 }
 
 // https://stackoverflow.com/questions/41661287/how-to-check-if-an-array-contains-another-array

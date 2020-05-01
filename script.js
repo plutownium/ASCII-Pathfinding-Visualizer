@@ -115,24 +115,37 @@ function rerenderGrid() {
 	}
 }
 
-function promisesRendering(animationDelay, algoPath) {
+function promisesRendering(animationDelay, algoPath, scanTargets) {
 	// receives a delay timer and an array which is the trail from START_NODE to TARGET_NODE
-	const numOfAnimations = algoPath.length;
+	const numOfAnimationsForScanning = scanTargets.length;
+	const numOfAnimationsForPath = algoPath.length;
 
 	// i starts at 1 because we don't wanna animate the START_NODE into a + symbol, nor the TARGET_NODE
-	for (let i = 1; i < numOfAnimations - 1; i++) {
+	for (let i = 1; i < numOfAnimationsForPath - 1; i++) {
 		const xCoordinate = algoPath[i][0];
 		const yCoordinate = algoPath[i][1];
-		setTimeout(i * animationDelay, updateCoordinatesWithTrailMarker(xCoordinate, yCoordinate))
+		renderAfterDelay(animationDelay * i).then(renderNode(xCoordinate, yCoordinate, "path"))
 		// FIXME: updateCoordsWTrailMarker should rerender a specific node, not the whole grid.
 	}
 }
 
-function sleep(milliseconds) {
+function renderNode(x, y, type) {
+	if (type === "scan") {
+		const targetDiv = getLocationByCoordinates(x, y);
+		targetDiv.innerHTML = VISITED_NODE;
+	} else if (type === "path") {
+		const targetDiv = getLocationByCoordinates(x, y);
+		targetDiv.innerHTML = SHORTEST_PATH_NODE;
+	} else {
+		throw "passed incorrect parameter to 'type' argument"
+	}
+}
+
+function renderAfterDelay(milliseconds) {
 	// Step 1. Pick out which node is going to be animated.
 	// Step 2. Generate a promise delayed by n ms set to update the visual appearance of the node when the promise resolves
 	// step 3. repeat this for each node in the list of nodes to be animated.
-	return new Promise(resolve => setTimeout())
+	return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
 
 // FIXME: this option for adding a delay to the animation didn't work, what else can be done?
@@ -373,7 +386,7 @@ testButton.addEventListener("click", () => {
 const inspect = document.getElementById("inspect");
 inspect.addEventListener("click", () => {
 	const shortestPathAndScanningOrder = dijkstras(grid);
-	renderByTimer(1000, shortestPathAndScanningOrder[0].path, shortestPathAndScanningOrder[1])
+	promisesRendering(10000, shortestPathAndScanningOrder[0].path, shortestPathAndScanningOrder[1])
 });
 
 // <^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^>

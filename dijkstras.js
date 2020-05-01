@@ -1,12 +1,3 @@
-// dijkstras() works with a grid that looks like...
-const exampleGrid = [
-	[".", ".", ".", ".", ".", ".", ".", "."],
-	[".", "*", ".", ".", ".", ".", ".", "."],
-	[".", ".", ".", ".", ".", ".", ".", "."],
-	[".", "X", ".", ".", ".", ".", ".", "."],
-	[".", ".", ".", ".", ".", ".", ".", "."]
-]
-
 function dijkstras(finishedGrid) {
 	// step 1: confirm there is both a Start Node and a Target Node & get start coordinates
 	let startNodeExists = false;
@@ -161,6 +152,7 @@ function dijkstras(finishedGrid) {
 			break
 		} else {
 			if (finishedGrid[startValueY][startValueX] !== START_NODE) {
+				// replace empty space with "VISITED" marker
 				finishedGrid[startValueY][startValueX] = VISITED_NODE;
 			}
 			iteration = iteration + 1;

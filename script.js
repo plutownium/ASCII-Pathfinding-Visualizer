@@ -124,7 +124,21 @@ function rerenderGrid() {
 	}
 }
 
-function renderByTimer(algoPath, scanTargets) {
+function generateAnimationSequence(scansArray, pathArray) {
+	const sequence = [];
+	// scansArray.length - 1 because scansArray.length results in the TARGET_NODE being animated over
+	for (let i = 0; i < scansArray.length - 1; i++) {
+		sequence.push([scansArray[i][0], scansArray[i][1], "scan"])
+	}
+	// pathArray.length - 1 because scansArray.length results in the TARGET_NODE being animated over
+	// i = 1 because pathArray[0] would animate over the START_NODE
+	for (let i = 1; i < pathArray.length; i++) {
+		sequence.push([pathArray[i][0], pathArray[i][1], "path"])
+	}
+	return sequence
+}
+
+function renderScansAndPathByTimer(algoPath) {
 	const numOfAnimations = algoPath.length - 1; // - 1 because we don't wanna animate the TARGET_NODE at the end
 	let frameNum = 1;
 
@@ -138,10 +152,20 @@ function renderByTimer(algoPath, scanTargets) {
 		}
 
 		// Immediately render the current frame
-		const xCoordinate = algoPath[frameNum][0];
-		const yCoordinate = algoPath[frameNum][1];
-		frameNum = frameNum + 1;
-		updateCoordinatesWithTrailMarker(xCoordinate, yCoordinate);
+		if (algoPath[frameNum][2] === "scan") {
+			const xCoordinate = algoPath[frameNum][0];
+			const yCoordinate = algoPath[frameNum][1];
+			frameNum = frameNum + 1;
+			updateCoordinatesWithScanMarker(xCoordinate, yCoordinate)
+		} else if (algoPath[frameNum][2] === "path") {
+			const xCoordinate = algoPath[frameNum][0];
+			const yCoordinate = algoPath[frameNum][1];
+			frameNum = frameNum + 1;
+			updateCoordinatesWithTrailMarker(xCoordinate, yCoordinate);
+		} else {
+			throw "You shouldn't be able to get here you know."
+		}
+
 
 		// Schedule the next frame for rendering
 		setTimeout(function () {
@@ -169,6 +193,13 @@ function renderByTimer(algoPath, scanTargets) {
 
 function updateCoordinatesWithTrailMarker(xCoord, yCoord) {
 	grid[yCoord][xCoord] = SHORTEST_PATH_NODE;
+	const targetDiv = getLocationByCoordinates(xCoord, yCoord);
+	targetDiv.innerHTML = grid[yCoord][xCoord];
+
+}
+
+function updateCoordinatesWithScanMarker(xCoord, yCoord) {
+	grid[yCoord][xCoord] = VISITED_NODE;
 	const targetDiv = getLocationByCoordinates(xCoord, yCoord);
 	targetDiv.innerHTML = grid[yCoord][xCoord];
 
@@ -410,7 +441,8 @@ testButton.addEventListener("click", () => {
 const inspect = document.getElementById("inspect");
 inspect.addEventListener("click", () => {
 	const shortestPathAndScanningOrder = dijkstras(grid);
-	renderByTimer(shortestPathAndScanningOrder[0].path, shortestPathAndScanningOrder[1])
+	const scansAndPath = generateAnimationSequence(shortestPathAndScanningOrder[1], shortestPathAndScanningOrder[0].path)
+	renderScansAndPathByTimer(scansAndPath)
 });
 
 // <^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^>

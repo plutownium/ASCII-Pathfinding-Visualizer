@@ -73,52 +73,75 @@ function recursiveDivisionMaze() {
     // NOTE: I originally believed this code would build a *horizontal* wall... a vertical one is just as good but...
     // ...why did it turn out that way?
     console.log("* * * * Building wall one")
-    let newWallPosition = parseInt((Math.random() * width).toFixed(0));
+    let newWallXCoord = parseInt((Math.random() * width).toFixed(0)); // the horizontal location of the wall
     let startVal = 1 // start at y=1
     let endVal = height - 1 // end at y=height-1
-    let unacceptableStartPosition = newWallPosition <= offset || newWallPosition >= width - offset || newWallPosition % 2 === 1
+
+    let unacceptableStartPosition = newWallXCoord <= offset || newWallXCoord >= width - offset || newWallXCoord % 2 === 1
     while (unacceptableStartPosition) {
         console.log("watch me loop")
-        newWallPosition = parseInt((Math.random() * width).toFixed(0));
-        unacceptableStartPosition = newWallPosition <= offset || newWallPosition >= width - offset || newWallPosition % 2 === 1
+        newWallXCoord = parseInt((Math.random() * width).toFixed(0));
+        unacceptableStartPosition = newWallXCoord <= offset || newWallXCoord >= width - offset || newWallXCoord % 2 === 1
     }
-    console.log(newWallPosition, startVal, endVal, true);
-    let wallNodes = buildNewWall(newWallPosition, startVal, endVal, true); // "position, startLocation, endLocation, isVertical"
+
+    console.log(newWallXCoord, startVal, endVal, true);
+    let wallNodes = buildNewWall(newWallXCoord, startVal, endVal, true); // "position, startLocation, endLocation, isVertical"
     let prevWallNodes = wallNodes; // exists so later code can update the val of "wallNodes" w/o overwriting useful info
     console.log("wallNodes 1: " + wallNodes)
     for (let i = 0; i < wallNodes.length; i++) {
         buildSequence.push(wallNodes[i])
     }
-    let biggerSegmentIsOnRightSide = newWallPosition >= (width / 2) // TESTED: this seems to pass 100% of the time
+    let biggerSegmentIsOnRightSide = newWallXCoord >= (width / 2) // TESTED: this seems to pass 100% of the time
 
 
 
     // make a horizontal(?!) wall in the bigger cell
     console.log("* * * * Building wall 2")
-    newWallPosition = parseInt((Math.random() * height).toFixed(0));
-    unacceptableStartPosition = newWallPosition <= offset || newWallPosition >= height - offset || newWallPosition % 2 === 1
+    let newWallYCoord = parseInt((Math.random() * height).toFixed(0)); // the vertical location of the wall
+
+    unacceptableStartPosition = newWallYCoord <= offset || newWallYCoord >= height - offset || newWallYCoord % 2 === 1
     while (unacceptableStartPosition) {
-        console.log("watch me loop")
-        newWallPosition = parseInt((Math.random() * height).toFixed(0))
-        unacceptableStartPosition = newWallPosition <= offset || newWallPosition >= height - offset || newWallPosition % 2 === 1
+        newWallYCoord = parseInt((Math.random() * height).toFixed(0))
+        unacceptableStartPosition = newWallYCoord <= offset || newWallYCoord >= height - offset || newWallYCoord % 2 === 1
     }
+    console.log("...................................")
+
+    // NOTE: EXPLANATION FOR "prevWallNodes.filter(node => node[1] === newWallYCoord)[0][0]" IS AS FOLLOWS...
+    // the code searches thru prevWallNodes, a list of coordinates for the previous wall, for the entry where the Y coordinate 
+    // (the height) is equal to the height of the next wall. It returns the entry where those two match.
+    // Then it extracts the X coordinate's value ("[0][0]", since .filter returns a 1 entry list e.g. "[[2, 3]]")
+    // and sets that X value equal to either the start value or the end value of the new wall, depending on whether
+    // the new wall will be on the left or the right of the previous wall.
+    let gapIsAtHeightOfNewWall = prevWallNodes.filter(node => node[1] === newWallYCoord).length === 0
+
     if (biggerSegmentIsOnRightSide) { // decide whether to build in the left or right cell
-        // get the y value where the wall starts (if the bigger segment is on the top, this is zero)
-        // startVal = prevWallNodes.filter(node => node[1] === newWallPosition)[0][0]
-        startVal = prevWallNodes.filter(node => node[1] === newWallPosition)[0][0]
-        // get the y value where the wall ends (if the bigger segment is on the bottom, this is the height of the prev. wall)
+        // get the x value where the wall starts (this is the x value of the prev vertical wall)
+        // startVal = prevWallNodes.filter(node => node[1] === newWallYCoord)[0][0]
+        console.log(prevWallNodes, newWallYCoord)
+        if (gapIsAtHeightOfNewWall) {
+            startVal = prevWallNodes.filter(node => node[1] === newWallYCoord - 1)[0][0] - 1
+        } else {
+            startVal = prevWallNodes.filter(node => node[1] === newWallYCoord)[0][0]
+        }
+        // get the x value where the wall ends (this is equal to the width of the grid because we end adjacent to the right wall)
         endVal = width - 1
     } else { // 
+        // get the x value where the wall starts (this is 1 because we are starting adjacent to the left wall)
         startVal = 1
         // Uncaught TypeError: Cannot read property '0' of undefined at recursiveDivisionMaze (mazes.js:112)
         console.log("value check:")
-        console.log(prevWallNodes)
-        console.log(newWallPosition)
-        // endVal = prevWallNodes.filter(node => node[1] === newWallPosition)[0][0]
-        endVal = prevWallNodes.filter(node => node[1] === newWallPosition)[0][0]
+        console.log(prevWallNodes, newWallYCoord)
+        // get the x value where the wall ends (this is the x value of the prev vertical wall)
+        // endVal = prevWallNodes.filter(node => node[1] === newWallYCoord)[0][0]
+        if (gapIsAtHeightOfNewWall) {
+            endVal = prevWallNodes.filter(node => node[1] === newWallYCoord - 1)[0][0] - 1
+
+        } else {
+            endVal = prevWallNodes.filter(node => node[1] === newWallYCoord)[0][0]
+        }
     }
-    console.log(newWallPosition, startVal, endVal, false);
-    wallNodes = buildNewWall(newWallPosition, startVal, endVal, false);
+    console.log(newWallYCoord, startVal, endVal, false);
+    wallNodes = buildNewWall(newWallYCoord, startVal, endVal, false);
     console.log("wallNodes 2: ")
     console.log(wallNodes)
     for (let i = 0; i < wallNodes.length; i++) {
@@ -127,29 +150,41 @@ function recursiveDivisionMaze() {
 
     // make a horizontal wall in the smaller cell
     console.log("* * * * Building wall three")
-    // use a new random newWallPosition
-    newWallPosition = parseInt((Math.random() * height).toFixed(0))
-    unacceptableStartPosition = newWallPosition <= offset || newWallPosition >= height - offset || newWallPosition % 2 === 1
+    // use a new random newWallYCoord
+    // newWallYCoord is the y coord here, the vertical location of the wall
+    newWallYCoord = parseInt((Math.random() * height).toFixed(0))
+
+    unacceptableStartPosition = newWallYCoord <= offset || newWallYCoord >= height - offset || newWallYCoord % 2 === 1
     while (unacceptableStartPosition) {
-        newWallPosition = parseInt((Math.random() * height).toFixed(0))
-        unacceptableStartPosition = newWallPosition <= offset || newWallPosition >= height - offset || newWallPosition % 2 === 1
+        newWallYCoord = parseInt((Math.random() * height).toFixed(0))
+        unacceptableStartPosition = newWallYCoord <= offset || newWallYCoord >= height - offset || newWallYCoord % 2 === 1
     }
-    console.log(prevWallNodes)
     console.log("...................................")
+
+    gapIsAtHeightOfNewWall = prevWallNodes.filter(node => node[1] === newWallYCoord).length === 0
     // reverse the values in the if/else blocks from before because we are doing the other side of the wall (use !)
     if (!biggerSegmentIsOnRightSide) { // build in the cell opposite to the previous one
-        console.log(prevWallNodes, newWallPosition)
-        startVal = prevWallNodes.filter(node => node[1] === newWallPosition)[0][0]
+        console.log(prevWallNodes, newWallYCoord)
+        if (gapIsAtHeightOfNewWall) {
+            startVal = prevWallNodes.filter(node => node[1] === newWallYCoord - 1)[0][0] - 1
+        } else {
+            startVal = prevWallNodes.filter(node => node[1] === newWallYCoord)[0][0]
+        }
         endVal = width - 1
         console.log("Left: " + startVal)
     } else {
-        console.log(prevWallNodes, newWallPosition)
+        console.log(prevWallNodes, newWallYCoord)
         startVal = 1
-        endVal = prevWallNodes.filter(node => node[1] === newWallPosition)[0][0]
+        if (gapIsAtHeightOfNewWall) {
+            endVal = prevWallNodes.filter(node => node[1] === newWallYCoord - 1)[0][0] - 1
+
+        } else {
+            endVal = prevWallNodes.filter(node => node[1] === newWallYCoord)[0][0]
+        }
         console.log("Right: " + endVal)
     }
-    console.log(newWallPosition, startVal, endVal, false);
-    wallNodes = buildNewWall(newWallPosition, startVal, endVal, false);
+    console.log(newWallYCoord, startVal, endVal, false);
+    wallNodes = buildNewWall(newWallYCoord, startVal, endVal, false);
     console.log("wallNodes three: ")
     console.log(wallNodes)
     for (let i = 0; i < wallNodes.length; i++) {
@@ -157,8 +192,8 @@ function recursiveDivisionMaze() {
     }
 
     // todo: mk walls land on even numbered index values CHECK
-    // fixme: buildNewWall() occasionally removes the same value used by newWallPosition in the .filter()ing check.
-    // solution: insert a step that iterates over prevWallNodes, generating a list of potential values for startVal/endVal. select @ random
+    // fixme: buildNewWall() occasionally removes the same value used by newWallYCoord in the .filter()ing check.
+    // causes Uncaught TypeError: Cannot read property '0' of undefined at recursiveDivisionMaze(mazes.js: 144)
 
     // TODO: add: "if cell height or width is = 3, in other words, if there is a 1 node trail to follow, stop recursion"
 
@@ -170,6 +205,8 @@ function buildNewWall(position, start, end, isVertical) {
     // choose a random position for the gap in the wall
     const rangeOfPotentialPositions = end - start;
     const gapPosition = start + parseInt((Math.random() * rangeOfPotentialPositions).toFixed(0))
+    console.log("buildNewWall values: ")
+    console.log(start, end, gapPosition)
 
     for (let i = start; i < end; i++) {
         // this if block creates the wall's 1 unit gap

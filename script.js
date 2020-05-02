@@ -124,30 +124,32 @@ function rerenderGrid() {
 	}
 }
 
-function renderByTimer(animationDelay, algoPath, scanTargets) {
-	const numOfAnimations = algoPath.length;
+function renderByTimer(algoPath, scanTargets) {
+	const numOfAnimations = algoPath.length - 1; // - 1 because we don't wanna animate the TARGET_NODE at the end
+	let frameNum = 1;
 
 	// Renders the current frame and schedules the next frame
 	// This repeats until we have exhausted all frames
-	function renderIn(msToNextFrame, frameNum, pathVar) {
+	function renderIn() {
 		if (frameNum >= numOfAnimations) {
 			// end recursion
+			console.log("Done!")
 			return
 		}
 
 		// Immediately render the current frame
-		console.log(algoPath)
-		const xCoordinate = pathVar[frameNum][0];
-		const yCoordinate = pathVar[frameNum][1];
+		const xCoordinate = algoPath[frameNum][0];
+		const yCoordinate = algoPath[frameNum][1];
+		frameNum = frameNum + 1;
 		updateCoordinatesWithTrailMarker(xCoordinate, yCoordinate);
 
 		// Schedule the next frame for rendering
-		setTimeout(function (msToNextFrame, frameNum, pathVar) {
-			renderIn(msToNextFrame, frameNum + 1)
-		}, msToNextFrame);
+		setTimeout(function () {
+			renderIn()
+		}, 500);
 	}
 	// Render first frame
-	renderIn(animationDelay, 1, algoPath)
+	renderIn()
 }
 
 // FIXME: after clikcing "inspect dijkstras", clicking on the board again causes the Scanning Nodes to display instead of the Path.
@@ -408,7 +410,7 @@ testButton.addEventListener("click", () => {
 const inspect = document.getElementById("inspect");
 inspect.addEventListener("click", () => {
 	const shortestPathAndScanningOrder = dijkstras(grid);
-	renderByTimer(1000, shortestPathAndScanningOrder[0].path, shortestPathAndScanningOrder[1])
+	renderByTimer(shortestPathAndScanningOrder[0].path, shortestPathAndScanningOrder[1])
 });
 
 // <^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^>

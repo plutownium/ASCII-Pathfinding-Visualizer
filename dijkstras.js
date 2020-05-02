@@ -17,6 +17,7 @@ function dijkstras(finishedGrid) {
 	if (startNodeExists === false || targetNodeExists === false) {
 		console.log("Place start node & target node");
 		return "Place start node & target node";
+		// FIXME: update msg to user with appropriate msg ("Place start node & target node first")
 	}
 
 	// TODO: Implement a way to assign "distance" to a node.

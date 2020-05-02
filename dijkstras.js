@@ -59,7 +59,6 @@ function dijkstras(finishedGrid) {
 		if (iteration > 0) {
 			index = iteration - 1;
 			startCoordinates = nextVisitsList[index]
-			console.log(startCoordinates)
 			if (typeof startCoordinates == 'undefined') {
 				console.log("ERROR")
 				const messageBarParagraphTag = document.getElementById("messageBar").children[0]

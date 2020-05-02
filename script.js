@@ -96,7 +96,8 @@ randomMazeBtn.addEventListener("click", () => {
 // ### Let user generate a maze via Recursive Division
 const recursiveDivisonBtn = document.getElementById("recursiveDivisonBtn")
 recursiveDivisonBtn.addEventListener("click", () => {
-	recursiveDivisionMaze();
+	const sequence = recursiveDivisionMaze();
+	animateMaze(sequence);
 })
 
 const binaryTreeBtn = document.getElementById("binaryTreeBtn")
@@ -194,10 +195,14 @@ function renderScansAndPathByTimer(algoPath) {
 			throw "You shouldn't be able to get here you know."
 		}
 		// Schedule the next frame for rendering
-		if (numOfAnimations > 50 && algoPath[frameNum][2] !== "path") {
+		if (numOfAnimations > 120 && algoPath[frameNum][2] !== "path") {
 			setTimeout(function () {
 				renderIn()
-			}, 300); // speed up the animation if the numOfAnimations is > 50
+			}, 50); // speed up the animation *even more* if the numOfAnimations is > 120
+		} else if (numOfAnimations > 50 && algoPath[frameNum][2] !== "path") {
+			setTimeout(function () {
+				renderIn()
+			}, 250); // speed up the animation if the numOfAnimations is > 50 
 		} else {
 			setTimeout(function () {
 				renderIn()

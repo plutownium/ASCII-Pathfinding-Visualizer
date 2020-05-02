@@ -86,13 +86,41 @@ clearBoardBtn.addEventListener("click", () => {
 	clearBoard();
 })
 
-// todo: add Dijkstra's algorithm and test it
-// todo: make each space used by Dijkstra's turn into a +, one by one (one space every .3 seconds or something)
+// ### Let user generate a random maze
+const randomMazeBtn = document.getElementById("randomMazeBtn")
+randomMazeBtn.addEventListener("click", () => {
+	generateRandomMaze();
+})
+
+// ### Let user generate a maze via Recursive Division
+const recursiveDivisonBtn = document.getElementById("recursiveDivisonBtn")
+recursiveDivisonBtn.addEventListener("click", () => {
+	recursiveDivisionMaze();
+})
+
+const binaryTreeBtn = document.getElementById("binaryTreeBtn")
+binaryTreeBtn.addEventListener("click", () => {
+	// step 1: modify the grid
+	const sequence = binaryTreeMaze();
+	// step 2: animate changes in the grid
+	animateMaze(sequence);
+})
+
 // todo: make Dijkstra's find its way to the bomb first if there is a bomb
 // todo: make Dijkstra's path from the bomb to the target
 // todo: visualize all the spaces "searched" by Dijkstra's. o's and O's
 // todo: Add "Speed" selector
 // todo: Add "Mazes & Patterns" selector & generators (how?)
+
+// TODO: Add "generate board width by browser width"
+// TODO: Add a random maze generator option...! Yikes.
+// TODO: add Horizontal Skew Maze generator. YIKES
+// TODO: Add a "bomb node" option... Also yikes!
+
+// TODO: animate grid with CSS transitions (colors, KISS)
+// TODO: Style the page...
+// NOTE: It's more important to make it LOOK good than add lots of diff pathfinding algos (all basically the same)
+// ...or lots of diff maze algos (two is enough)
 
 // *** ********* *** ********* *** ********* *** ********* *** ********* *** ********* ***
 // *** FUNCTIONS *** FUNCTIONS *** FUNCTIONS *** FUNCTIONS *** FUNCTIONS *** FUNCTIONS ***
@@ -172,16 +200,6 @@ function renderScansAndPathByTimer(algoPath) {
 	// Render first frame
 	renderIn()
 }
-
-// TODO: Add "generate board width by browser width"
-// TODO: Add a random maze generator option...! Yikes.
-// TODO: add Horizontal Skew Maze generator. YIKES
-// TODO: Add a "bomb node" option... Also yikes!
-
-// TODO: animate grid with CSS transitions (colors, KISS)
-// TODO: Add a "No Route To Target Node Available!" msg when its true
-// NOTE: It's more important to make it LOOK good than add lots of diff pathfinding algos (all basically the same)
-// ...or lots of diff maze algos (two is enough)
 
 function updateCoordinatesWithTrailMarker(xCoord, yCoord) {
 	grid[yCoord][xCoord] = SHORTEST_PATH_NODE;
@@ -397,6 +415,41 @@ function clearBoard() {
 	rerenderGrid();
 	resetEventListeners();
 }
+
+function animateMaze(sequence) {
+	const numOfAnimations = sequence.length; // - 1 because we don't wanna animate the TARGET_NODE at the end
+	let frameNum = 0;
+
+	// Renders the current frame and schedules the next frame
+	// This repeats until we have exhausted all frames
+	function renderIn() {
+		if (frameNum >= numOfAnimations) {
+			// end recursion
+			console.log("hey!")
+			return
+		}
+		// Immediately render the current frame
+
+		const xCoordinate = sequence[frameNum][0];
+		const yCoordinate = sequence[frameNum][1];
+		frameNum = frameNum + 1;
+		updateCoordsWithWall(xCoordinate, yCoordinate)
+
+		// Schedule the next frame for rendering
+		setTimeout(function () {
+			renderIn()
+		}, 200);
+	}
+	// Render first frame
+	renderIn()
+}
+
+function updateCoordsWithWall(xCoord, yCoord) {
+	grid[yCoord][xCoord] = WALL_SEGMENT;
+	const targetDiv = getLocationByCoordinates(xCoord, yCoord);
+	targetDiv.innerHTML = grid[yCoord][xCoord];
+}
+
 
 function resetEventListeners() {
 	// general purpose function used to

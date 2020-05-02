@@ -51,7 +51,7 @@ function dijkstras(finishedGrid) {
 	// removed while(nodeContent !== TARGET_NODE) because there is an if/break block at the end that takes care of exiting loop
 	while (true) { // sub out iteration < 30 to test
 		// see https://docs.google.com/document/d/1kJzkln9Ye40Btx5OwGsN23HQ26TX3rjfpbJIDXeUg7g/edit for loop documentation
-		// one loop thru this while loop will scan the nodes in all cardinal directions and act on them...
+		// summary: one loop thru this while loop will scan the nodes in all cardinal directions and act on them...
 		// console.log("[[[starting loop...]]]")
 
 		let index;
@@ -59,6 +59,21 @@ function dijkstras(finishedGrid) {
 		if (iteration > 0) {
 			index = iteration - 1;
 			startCoordinates = nextVisitsList[index]
+			console.log(startCoordinates)
+			if (typeof startCoordinates == 'undefined') {
+				console.log("ERROR")
+				const messageBarParagraphTag = document.getElementById("messageBar").children[0]
+				messageBarParagraphTag.innerHTML = "No path available! Remove a Wall Segment and try again!"
+				return false
+			}
+			// try {
+			// 	startCoordinates = nextVisitsList[index]
+			// } catch (err) {
+			// 	console.log("ERROR: " + err)
+			// 	const messageBarParagraphTag = document.getElementById("messageBar").children[0]
+			// 	messageBarParagraphTag.innerHTML = "No path available! Remove a Wall Segment and try again!"
+			// 	return
+			// }
 		}
 
 		startValueX = startCoordinates[0]
@@ -137,7 +152,6 @@ function dijkstras(finishedGrid) {
 			const pathToNode = locatePathToCurrentNode(potentialPaths, previousNodeCoordinates)
 			const isTarget = finishedGrid[startValueY][startValueX] === TARGET_NODE;
 			const currentPath = [...pathToNode.path]
-			// console.log("currentPath length: " + currentPath.length)
 			const newPath = new Path(pathToNode.distance + 1, currentPath, [startValueX, startValueY], isTarget)
 			potentialPaths.push(newPath)
 		}
@@ -158,9 +172,6 @@ function dijkstras(finishedGrid) {
 	// step 7: Select the shortest path from the START_NODE to the TARGET_NODE & animate that path...
 	const shortestPathObject = potentialPaths[potentialPaths.length - 1]; // shortestPathObject should be the last 1...
 	const scanningOrderForAnimation = nextVisitsList.slice(0, iteration) // return only the scanned nodes from nextVisitsList
-
-	// TODO: also return a list "nodeScanningOrder" to animate in the browser
-	console.log(shortestPathObject)
 
 	return [shortestPathObject, scanningOrderForAnimation]
 

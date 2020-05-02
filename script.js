@@ -173,9 +173,6 @@ function renderScansAndPathByTimer(algoPath) {
 	renderIn()
 }
 
-// FIXME: first node in ScanTargets doesn't animate
-
-// FIXME: this option for adding a delay to the animation didn't work, what else can be done?
 // TODO: Add "generate board width by browser width"
 // TODO: Add a random maze generator option...! Yikes.
 // TODO: add Horizontal Skew Maze generator. YIKES
@@ -451,6 +448,9 @@ testButton.addEventListener("click", () => {
 const inspect = document.getElementById("inspect");
 inspect.addEventListener("click", () => {
 	const shortestPathAndScanningOrder = dijkstras(grid);
+	if (shortestPathAndScanningOrder === false) {
+		throw "ERROR: No path from START_NODE to TARGET_NODE. Remove a Wall Segment and try again!"
+	}
 	fixBoardInstantlyFillsOnClickBug();
 	const scansAndPath = generateAnimationSequence(shortestPathAndScanningOrder[1], shortestPathAndScanningOrder[0].path)
 	renderScansAndPathByTimer(scansAndPath)

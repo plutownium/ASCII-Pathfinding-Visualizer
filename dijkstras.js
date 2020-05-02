@@ -20,14 +20,6 @@ function dijkstras(finishedGrid) {
 		// FIXME: update msg to user with appropriate msg ("Place start node & target node first")
 	}
 
-	// TODO: Implement a way to assign "distance" to a node.
-
-	// TODO: Add a way for user to REMOVE a wall segment and return it to "." status
-
-	// TODO: Build an array that fills up with potential paths through the Grid, each one expanding node by node, until
-	// one of the paths encounters the TARGET_NODE. The *first* one to encounter TARGET_NODE should be the one selected
-	// for highlighting by + signs (the path indicator). This should work...
-
 	// step 2: get list of adjacent nodes that have not yet been visited. 
 	// Adjacent nodes have the form: [x + 1, y] | [x - 1, y] | [x, y + 1], | [x, y - 1] AND have not yet been visited
 
@@ -158,10 +150,6 @@ function dijkstras(finishedGrid) {
 			}
 			iteration = iteration + 1;
 		}
-		// TODO: Figure out how to pass an array w/ the nodes in order of which they were scanned to a renderGridSlowly() func.
-		// TODO: write a renderGridSlowly() func and animate the scanning process.
-		// TODO: use the renderGridSlowly() func to animate the shortest path.
-		// TODO: Alternatively, figure out how to pass the coords to be rendered via a func that builds a list to render slowly.
 	}
 
 	// after while loop, which *scans* for TARGET_NODE, use this following step to select teh shortest path to TARGET_NODE
@@ -211,8 +199,6 @@ function updateNextVisitsList(adjacentNode, nextVisitsArray, adjNodeContent, vis
 		}
 		return [newNextVisits, visitsWithPath];
 	}
-
-	// TODO: Refactor alreadyPlanningToisit bool check to outside of func
 }
 
 // https://stackoverflow.com/questions/41661287/how-to-check-if-an-array-contains-another-array
@@ -228,17 +214,3 @@ function isArrayInArray(arr, item) {
 function replaceEmptySpaceWithVisitedMarker(emptyXCoord, emptyYCoord) {
 	grid[emptyYCoord][emptyXCoord] = VISITED_NODE;
 }
-
-// TODO: split up big function into smaller functions
-
-// -------------
-
-// TODO: Add a delay between each "visited" indicator being added to the board.
-
-// TODO: Figure out how to animate the change in the board .... sloooowly...
-// PLAN: Replace the value of the node in the Grid with a "Visited" marker.
-// ONLY ONCE the grid is finished being re-computed w/ visited spaces, and the while loop is finished...
-// THEN you pass the grid to a function that goes, "Animate a change every n milliseconds"
-
-// IDEA: use a for loop to set async code, 1 execution for each node in the grid, delayed by an increasing
-// amount of time with each node. 200, 400, 600, 800 etc. should work even tho its n * m async calls

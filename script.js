@@ -91,8 +91,6 @@ clearBoardBtn.addEventListener("click", () => {
 // todo: make Dijkstra's find its way to the bomb first if there is a bomb
 // todo: make Dijkstra's path from the bomb to the target
 // todo: visualize all the spaces "searched" by Dijkstra's. o's and O's
-// todo: Add "Clear Board" button
-// todo: Add "Clear walls & weights" button
 // todo: Add "Speed" selector
 // todo: Add "Mazes & Patterns" selector & generators (how?)
 
@@ -126,37 +124,30 @@ function rerenderGrid() {
 	}
 }
 
-function promisesRendering(animationDelay, algoPath, scanTargets) {
-	// receives a delay timer and an array which is the trail from START_NODE to TARGET_NODE
-	const numOfAnimationsForScanning = scanTargets.length;
-	const numOfAnimationsForPath = algoPath.length;
+function renderByTimer(animationDelay, algoPath, scanTargets) {
+	const numOfAnimations = algoPath.length;
 
-	// i starts at 1 because we don't wanna animate the START_NODE into a + symbol, nor the TARGET_NODE
-	for (let i = 1; i < numOfAnimationsForPath - 1; i++) {
-		const xCoordinate = algoPath[i][0];
-		const yCoordinate = algoPath[i][1];
-		renderAfterDelay(animationDelay * i).then(renderNode(xCoordinate, yCoordinate, "path"))
-		// FIXME: updateCoordsWTrailMarker should rerender a specific node, not the whole grid.
+	// Renders the current frame and schedules the next frame
+	// This repeats until we have exhausted all frames
+	function renderIn(msToNextFrame, frameNum, pathVar) {
+		if (frameNum >= numOfAnimations) {
+			// end recursion
+			return
+		}
+
+		// Immediately render the current frame
+		console.log(algoPath)
+		const xCoordinate = pathVar[frameNum][0];
+		const yCoordinate = pathVar[frameNum][1];
+		updateCoordinatesWithTrailMarker(xCoordinate, yCoordinate);
+
+		// Schedule the next frame for rendering
+		setTimeout(function (msToNextFrame, frameNum, pathVar) {
+			renderIn(msToNextFrame, frameNum + 1)
+		}, msToNextFrame);
 	}
-}
-
-function renderNode(x, y, type) {
-	if (type === "scan") {
-		const targetDiv = getLocationByCoordinates(x, y);
-		targetDiv.innerHTML = VISITED_NODE;
-	} else if (type === "path") {
-		const targetDiv = getLocationByCoordinates(x, y);
-		targetDiv.innerHTML = SHORTEST_PATH_NODE;
-	} else {
-		throw "passed incorrect parameter to 'type' argument"
-	}
-}
-
-function renderAfterDelay(milliseconds) {
-	// Step 1. Pick out which node is going to be animated.
-	// Step 2. Generate a promise delayed by n ms set to update the visual appearance of the node when the promise resolves
-	// step 3. repeat this for each node in the list of nodes to be animated.
-	return new Promise(resolve => setTimeout(resolve(), milliseconds))
+	// Render first frame
+	renderIn(animationDelay, 1, algoPath)
 }
 
 // FIXME: after clikcing "inspect dijkstras", clicking on the board again causes the Scanning Nodes to display instead of the Path.
@@ -164,12 +155,11 @@ function renderAfterDelay(milliseconds) {
 
 
 // FIXME: this option for adding a delay to the animation didn't work, what else can be done?
-// TODO: Add a "REMOVE WALL SEGMENT" button
 // TODO: Add "generate board width by browser width"
 // TODO: Add a random maze generator option...! Yikes.
 // TODO: add Horizontal Skew Maze generator. YIKES
 // TODO: Add a "bomb node" option... Also yikes!
-// TODO: pass NodeList to renderByTimer()
+
 // TODO: animate grid with CSS transitions (colors, KISS)
 // TODO: Add a "No Route To Target Node Available!" msg when its true
 // NOTE: It's more important to make it LOOK good than add lots of diff pathfinding algos (all basically the same)
@@ -180,61 +170,6 @@ function updateCoordinatesWithTrailMarker(xCoord, yCoord) {
 	const targetDiv = getLocationByCoordinates(xCoord, yCoord);
 	targetDiv.innerHTML = grid[yCoord][xCoord];
 
-}
-
-function renderByTimer(animationDelay, algoPath, scanTargets) {
-	// receives a delay timer and an array which is the trail from START_NODE to TARGET_NODE
-	const numOfAnimations = algoPath.length;
-
-	// i starts at 1 because we don't wanna animate the START_NODE into a + symbol, nor the TARGET_NODE
-	for (let i = 1; i < numOfAnimations - 1; i++) {
-		const xCoordinate = algoPath[i][0];
-		const yCoordinate = algoPath[i][1];
-		setTimeout(i * animationDelay, updateCoordinatesWithTrailMarker(xCoordinate, yCoordinate))
-	}
-}
-
-function rerenderGridSlowly(renderMe) {
-	// PLAN: renderMe is the sole input. It is the Grid as it is after the algorithm searches & decides on a path.
-	// Function operates by starting w/ the time of datetime.now(). 
-	// Then, a while loop updates the current time.
-	// Every time the current time increases by n milliseconds, the function goes another step forward in rendering changes.
-	// the while loop breaks once the last node in the grid has been updated.
-
-	let startTime = Date.now();
-	// set interval duration...
-	const interval = 200;
-
-	let currentTime;
-	let lastUpdateTime;
-
-	// build a list of coords to be updated...
-	const coordsToUpdate = [];
-	for (let i = 0; i < numOfRows; i++) {
-		for (let j = 0; j < numOfColumns; j++) {
-			coordsToUpdate.push[[i, j]]
-		}
-	}
-	let xCoord;
-	let yCoord;
-	// figure out how many times this while loop has to loop...
-	const finalIndex = coordsToUpdate.length - 1;
-	let iteration = 0;
-
-	// update currentTime over and over, executing code every n milliseconds...
-	while (iteration < finalIndex) {
-		currentTime = Date.now();
-		if (currentTime - startTime > interval) {
-			// update a node on the grid...
-			xCoord = coordsToUpdate[iteration][0];
-			yCoord = coordsToUpdate[iteration][1];
-			const targetDiv = getLocationByCoordinates(xCoord, yCoord)
-			targetDiv.innerHTML = renderMe[yCoord, xCoord]
-			// reset the timer & update the iteration position...
-			startTime = Date.now();
-			iteration = iteration + 1;
-		}
-	}
 }
 
 function nextClickMovesStart() {
@@ -473,7 +408,7 @@ testButton.addEventListener("click", () => {
 const inspect = document.getElementById("inspect");
 inspect.addEventListener("click", () => {
 	const shortestPathAndScanningOrder = dijkstras(grid);
-	promisesRendering(10000, shortestPathAndScanningOrder[0].path, shortestPathAndScanningOrder[1])
+	renderByTimer(1000, shortestPathAndScanningOrder[0].path, shortestPathAndScanningOrder[1])
 });
 
 // <^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^>

@@ -102,12 +102,10 @@ function recursiveDivisionMaze() {
         newWallPosition = parseInt((Math.random() * height).toFixed(0))
         unacceptableStartPosition = newWallPosition <= offset || newWallPosition >= height - offset || newWallPosition % 2 === 1
     }
-    // generate a list of potential start/end values for the next wall based on the Y coordinates 
-    let acceptableStartOrEndValues = prevWallNodes.map(node => node[1])
-    let selectionIndex = parseInt((Math.random() * acceptableStartOrEndValues.length).toFixed(0));
     if (biggerSegmentIsOnRightSide) { // decide whether to build in the left or right cell
         // get the y value where the wall starts (if the bigger segment is on the top, this is zero)
-        startVal = acceptableStartOrEndValues[selectionIndex]
+        // startVal = prevWallNodes.filter(node => node[1] === newWallPosition)[0][0]
+        startVal = prevWallNodes.filter(node => node[1] === newWallPosition)[0][0]
         // get the y value where the wall ends (if the bigger segment is on the bottom, this is the height of the prev. wall)
         endVal = width - 1
     } else { // 
@@ -116,7 +114,8 @@ function recursiveDivisionMaze() {
         console.log("value check:")
         console.log(prevWallNodes)
         console.log(newWallPosition)
-        endVal = acceptableStartOrEndValues[selectionIndex]
+        // endVal = prevWallNodes.filter(node => node[1] === newWallPosition)[0][0]
+        endVal = prevWallNodes.filter(node => node[1] === newWallPosition)[0][0]
     }
     console.log(newWallPosition, startVal, endVal, false);
     wallNodes = buildNewWall(newWallPosition, startVal, endVal, false);
@@ -135,20 +134,18 @@ function recursiveDivisionMaze() {
         newWallPosition = parseInt((Math.random() * height).toFixed(0))
         unacceptableStartPosition = newWallPosition <= offset || newWallPosition >= height - offset || newWallPosition % 2 === 1
     }
-    // reverse the values in the if/else blocks from before because we are doing the other side of the wall (use !)
     console.log(prevWallNodes)
     console.log("...................................")
-    acceptableStartOrEndValues = prevWallNodes.map(node => node[1])
-    selectionIndex = parseInt((Math.random() * acceptableStartOrEndValues.length).toFixed(0));
+    // reverse the values in the if/else blocks from before because we are doing the other side of the wall (use !)
     if (!biggerSegmentIsOnRightSide) { // build in the cell opposite to the previous one
         console.log(prevWallNodes, newWallPosition)
-        startVal = acceptableStartOrEndValues[selectionIndex]
+        startVal = prevWallNodes.filter(node => node[1] === newWallPosition)[0][0]
         endVal = width - 1
         console.log("Left: " + startVal)
     } else {
         console.log(prevWallNodes, newWallPosition)
         startVal = 1
-        endVal = acceptableStartOrEndValues[selectionIndex]
+        endVal = prevWallNodes.filter(node => node[1] === newWallPosition)[0][0]
         console.log("Right: " + endVal)
     }
     console.log(newWallPosition, startVal, endVal, false);

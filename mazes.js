@@ -68,65 +68,96 @@ function recursiveDivisionMaze() {
     // recursively divide rooms by building a wall with a path through it
     let offset = 2
 
-    // make a horizontal wall at a random height
-    let newWallPosition = (Math.random() * height).toFixed(0);
-    let startVal = 1 // start at x=1
-    let endVal = height - 1 // end at x=height-1
-    while (newWallPosition <= offset || newWallPosition >= height - offset) {
-        newWallPosition = (Math.random() * height).toFixed(0);
+
+    // make a vertical(?!) wall at a random height
+    // NOTE: I originally believed this code would build a *horizontal* wall... a vertical one is just as good but...
+    // ...why did it turn out that way?
+    console.log("* * * * Building wall one")
+    let newWallPosition = parseInt((Math.random() * width).toFixed(0));
+    let startVal = 1 // start at y=1
+    let endVal = height - 1 // end at y=height-1
+    while (newWallPosition <= offset || newWallPosition >= width - offset) {
+        newWallPosition = parseInt((Math.random() * width).toFixed(0));
     }
-    let wallNodes = buildNewWall(newWallPosition, startVal, endVal, true); // "position, startLocation, endLocation, isHorizontal"
+    console.log(newWallPosition, startVal, endVal, true);
+    let wallNodes = buildNewWall(newWallPosition, startVal, endVal, true); // "position, startLocation, endLocation, isVertical"
+    console.log("wallNodes 1: " + wallNodes)
     for (let i = 0; i < wallNodes.length; i++) {
         buildSequence.push(wallNodes[i])
     }
-    let biggerSegmentIsOnTop = newWallPosition >= height / 2
+    let biggerSegmentIsOnRightSide = newWallPosition >= (width / 2) // TESTED: this seems to pass 100% of the time
 
-    // make a vertical wall in the bigger cell
-    newWallPosition = (Math.random() * width).toFixed(0);
+
+
+    // make a horizontal(?!) wall in the bigger cell
+    console.log("* * * * Building wall 2")
+    newWallPosition = parseInt((Math.random() * height).toFixed(0));
     while (newWallPosition <= offset || newWallPosition >= height - offset) {
-        newWallPosition = (Math.random() * width).toFixed(0);
+        newWallPosition = parseInt((Math.random() * height).toFixed(0))
     }
-    if (biggerSegmentIsOnTop) { // decide whether to build in the top cell or bottom cell
+    if (biggerSegmentIsOnRightSide) { // decide whether to build in the left or right cell
         // get the y value where the wall starts (if the bigger segment is on the top, this is zero)
-        startVal = 0
+        startVal = wallNodes.filter(node => node[1] === newWallPosition)[0][0]
         // get the y value where the wall ends (if the bigger segment is on the bottom, this is the height of the prev. wall)
-        endVal = wallNodes.filter(node => node[1] === newWallPosition)[0]
+        console.log("inspect:")
+        console.log(newWallPosition)
+        console.log(wallNodes)
+        // NOTE: when building a vertical wall, [0][0] => [0][1], i think
+        endVal = width - 1
     } else { // 
-        startVal = wallNodes.filter(node => node[1] === newWallPosition)[0]
-        endVal = 0
+        startVal = 1
+        endVal = wallNodes.filter(node => node[1] === newWallPosition)[0][0]
     }
+    console.log(newWallPosition, startVal, endVal, false);
     wallNodes = buildNewWall(newWallPosition, startVal, endVal, false);
+    console.log("wallNodes 2: ")
+    console.log(wallNodes)
     for (let i = 0; i < wallNodes.length; i++) {
         buildSequence.push(wallNodes[i])
+        console.log("pushing...")
+        console.log(wallNodes[i])
     }
 
-    // make a vertical wall in the smaller cell
-    // reverse the values in the if/else blocks from before because we are doing the other side of the wall
-    if (biggerSegmentIsOnTop) {
-        startVal = wallNodes.filter(node => node[1] === newWallPosition)[0]
-        endVal = 0
-    } else {
-        startVal = 0
-        endVal = wallNodes.filter(node => node[1] === newWallPosition)[0]
-    }
-    wallNodes = buildNewWall(newWallPosition, startVal, endVal, false);
-    for (let i = 0; i < wallNodes.length; i++) {
-        buildSequence.push(wallNodes[i])
-    }
+    // // make a horizontal wall in the smaller cell
+    // console.log("* * * * Building wall three")
+    // // use a new random newWallPosition
+    // newWallPosition = parseInt((Math.random() * height).toFixed(0))
+    // while (newWallPosition <= offset || newWallPosition >= height - offset) {
+    //     newWallPosition = parseInt((Math.random() * height).toFixed(0))
+    // }
+    // // reverse the values in the if/else blocks from before because we are doing the other side of the wall
+    // if (biggerSegmentIsOnRightSide) { // build in the cell opposite to the previous one
+    //     startVal = wallNodes.filter(node => node[1] === newWallPosition)[0][1]
+    //     endVal = 1
+    // } else {
+    //     startVal = 1
+    //     endVal = wallNodes.filter(node => node[1] === newWallPosition)[0][1]
+    // }
+    // console.log(newWallPosition, startVal, endVal, false);
+    // wallNodes = buildNewWall(newWallPosition, startVal, endVal, false);
+    // console.log("wallNodes three: ")
+    // console.log(wallNodes)
+    // for (let i = 0; i < wallNodes.length; i++) {
+    //     console.log("PUSH")
+    //     console.log(wallNodes[i])
+    //     buildSequence.push(wallNodes[i])
+    // }
 
+
+    // TODO: add: "if cell height or width is = 3, in other words, if there is a 1 node trail to follow, stop recursion"
 
     return buildSequence
 }
 
-function buildNewWall(position, start, end, isHorizontal) {
+function buildNewWall(position, start, end, isVertical) {
     const wallNodesSequence = [];
     for (let i = start; i < end; i++) {
-        if (isHorizontal) {
-            grid[position][i] = WALL_SEGMENT
-            wallNodesSequence.push([i, position])
-        } else {
+        if (isVertical) {
             grid[i][position] = WALL_SEGMENT
             wallNodesSequence.push([position, i])
+        } else {
+            grid[position][i] = WALL_SEGMENT
+            wallNodesSequence.push([i, position])
         }
     }
     return wallNodesSequence

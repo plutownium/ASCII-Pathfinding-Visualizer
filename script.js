@@ -119,6 +119,7 @@ binaryTreeBtn.addEventListener("click", () => {
 // TODO: add Horizontal Skew Maze generator. YIKES
 // TODO: Add a "bomb node" option... Also yikes!
 
+// FIXME: add a "reset Grid and board" func and call it before animateMaze() for every "create maze" button *IMPORTANT* 
 // TODO: animate grid with CSS transitions (colors, KISS)
 // TODO: Style the page...
 // NOTE: It's more important to make it LOOK good than add lots of diff pathfinding algos (all basically the same)
@@ -451,7 +452,7 @@ function animateMaze(sequence) {
 		// Schedule the next frame for rendering
 		setTimeout(function () {
 			renderIn()
-		}, 100);
+		}, 10); // TEMP: changed from 100 down to 10 so I cna see results of my coding faster
 	}
 	// Render first frame
 	renderIn()

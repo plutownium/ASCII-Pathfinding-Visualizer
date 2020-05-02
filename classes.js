@@ -13,3 +13,9 @@ class Path {
         this.containsTarget = containsTarget; // do the boolean calculation outside of the class pls
     }
 }
+
+class Cell {
+    constructor() {
+
+    }
+}

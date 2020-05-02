@@ -189,18 +189,16 @@ function recursiveDivisionMaze() {
 
 function buildNewWall(position, start, end, isVertical) {
     const wallNodesSequence = [];
-    const endValWasOneTooLong = end - 1
+    const endValWasOneTooLongForThis = end - 1
     // choose a random position for the gap in the wall
-    const rangeOfPotentialPositions = endValWasOneTooLong - start;
+    const rangeOfPotentialPositions = endValWasOneTooLongForThis - start;
     const gapPosition = start + parseInt((Math.random() * rangeOfPotentialPositions).toFixed(0))
-    console.log("buildNewWall values: ")
-    console.log(start, endValWasOneTooLong, gapPosition)
 
-    for (let i = start; i < endValWasOneTooLong; i++) {
+    for (let i = start; i < end; i++) {
         // this if block creates the wall's 1 unit gap
         if (i === gapPosition) {
             console.log("start: " + start)
-            console.log("end: " + endValWasOneTooLong)
+            console.log("end: " + end)
             console.log("gap position: " + gapPosition)
             continue
         } else {

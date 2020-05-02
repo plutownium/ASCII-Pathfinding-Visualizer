@@ -1,5 +1,20 @@
 function generateRandomMaze() {
+    const width = grid[0].length - 1;
+    const height = grid.length - 1;
 
+    const buildSequence = [];
+
+    for (let i = 0; i < height; i++) {
+        for (let j = 0; j < width; j++) {
+            const isWall = Math.random() > 0.5;
+            if (isWall) {
+                grid[i][j] = WALL_SEGMENT;
+                buildSequence.push([j, i])
+            }
+        }
+    }
+
+    return buildSequence
 }
 
 function recursiveDivisionMaze() {
@@ -28,6 +43,5 @@ function binaryTreeMaze() {
         }
     }
 
-    console.log(grid)
     return buildSequence
 }

@@ -89,7 +89,8 @@ clearBoardBtn.addEventListener("click", () => {
 // ### Let user generate a random maze
 const randomMazeBtn = document.getElementById("randomMazeBtn")
 randomMazeBtn.addEventListener("click", () => {
-	generateRandomMaze();
+	const sequence = generateRandomMaze();
+	animateMaze(sequence);
 })
 
 // ### Let user generate a maze via Recursive Division
@@ -193,9 +194,16 @@ function renderScansAndPathByTimer(algoPath) {
 			throw "You shouldn't be able to get here you know."
 		}
 		// Schedule the next frame for rendering
-		setTimeout(function () {
-			renderIn()
-		}, 500);
+		if (numOfAnimations > 50 && algoPath[frameNum][2] !== "path") {
+			setTimeout(function () {
+				renderIn()
+			}, 300); // speed up the animation if the numOfAnimations is > 50
+		} else {
+			setTimeout(function () {
+				renderIn()
+			}, 500);
+		}
+
 	}
 	// Render first frame
 	renderIn()
@@ -425,7 +433,7 @@ function animateMaze(sequence) {
 	function renderIn() {
 		if (frameNum >= numOfAnimations) {
 			// end recursion
-			console.log("hey!")
+			console.log("Done maze animation")
 			return
 		}
 		// Immediately render the current frame
@@ -438,7 +446,7 @@ function animateMaze(sequence) {
 		// Schedule the next frame for rendering
 		setTimeout(function () {
 			renderIn()
-		}, 200);
+		}, 100);
 	}
 	// Render first frame
 	renderIn()

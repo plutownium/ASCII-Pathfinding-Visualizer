@@ -3,11 +3,13 @@ function dijkstras(finishedGrid) {
 	let startNodeExists = false;
 	let targetNodeExists = false;
 	let startCoordinates;
+	let origin;
 	for (let x = 0; x < finishedGrid[0].length; x++) {
 		for (let y = 0; y < finishedGrid.length; y++) {
 			if (finishedGrid[y][x] === START_NODE) {
 				startNodeExists = true;
 				startCoordinates = [x, y]
+				origin = [x, y]
 			}
 			if (finishedGrid[y][x] === TARGET_NODE) {
 				targetNodeExists = true;
@@ -159,7 +161,6 @@ function dijkstras(finishedGrid) {
 
 	// TODO: also return a list "nodeScanningOrder" to animate in the browser
 	console.log(shortestPathObject)
-	console.log(grid)
 
 	return [shortestPathObject, scanningOrderForAnimation]
 

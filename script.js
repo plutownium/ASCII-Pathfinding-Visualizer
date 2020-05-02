@@ -140,7 +140,7 @@ function generateAnimationSequence(scansArray, pathArray) {
 
 function renderScansAndPathByTimer(algoPath) {
 	const numOfAnimations = algoPath.length - 1; // - 1 because we don't wanna animate the TARGET_NODE at the end
-	let frameNum = 1;
+	let frameNum = 0;
 
 	// Renders the current frame and schedules the next frame
 	// This repeats until we have exhausted all frames
@@ -150,7 +150,6 @@ function renderScansAndPathByTimer(algoPath) {
 			console.log("Done!")
 			return
 		}
-
 		// Immediately render the current frame
 		if (algoPath[frameNum][2] === "scan") {
 			const xCoordinate = algoPath[frameNum][0];
@@ -165,8 +164,6 @@ function renderScansAndPathByTimer(algoPath) {
 		} else {
 			throw "You shouldn't be able to get here you know."
 		}
-
-
 		// Schedule the next frame for rendering
 		setTimeout(function () {
 			renderIn()
@@ -176,9 +173,7 @@ function renderScansAndPathByTimer(algoPath) {
 	renderIn()
 }
 
-// FIXME: after clikcing "inspect dijkstras", clicking on the board again causes the Scanning Nodes to display instead of the Path.
-// ...in fact I want the Scanning Nodes to display, THEN the path.
-
+// FIXME: first node in ScanTargets doesn't animate
 
 // FIXME: this option for adding a delay to the animation didn't work, what else can be done?
 // TODO: Add "generate board width by browser width"
@@ -430,6 +425,21 @@ function resetEventListeners() {
 	}
 }
 
+function fixBoardInstantlyFillsOnClickBug() {
+	const columnDivs = mainDiv.children;
+	for (let x = 0; x < numOfColumns; x++) {
+		// iterate through the columns, getting a list of their children
+		const targetColumnRows = columnDivs[x].children;
+		for (let y = 0; y < numOfRows; y++) {
+			// iterate through the row divs in the columns.
+			// To remove all event listeners, clone the node, and replace it with the clone.
+			const oldElement = targetColumnRows[y];
+			const newElement = oldElement.cloneNode(true);
+			oldElement.parentNode.replaceChild(newElement, oldElement);
+		}
+	}
+}
+
 // a button for printing the grid's current first 4 values
 const testButton = document.getElementById("printGrid");
 testButton.addEventListener("click", () => {
@@ -441,8 +451,10 @@ testButton.addEventListener("click", () => {
 const inspect = document.getElementById("inspect");
 inspect.addEventListener("click", () => {
 	const shortestPathAndScanningOrder = dijkstras(grid);
+	fixBoardInstantlyFillsOnClickBug();
 	const scansAndPath = generateAnimationSequence(shortestPathAndScanningOrder[1], shortestPathAndScanningOrder[0].path)
 	renderScansAndPathByTimer(scansAndPath)
+	resetEventListeners();
 });
 
 // <^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^>

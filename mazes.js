@@ -76,11 +76,13 @@ function recursiveDivisionMaze() {
     let newWallPosition = parseInt((Math.random() * width).toFixed(0));
     let startVal = 1 // start at y=1
     let endVal = height - 1 // end at y=height-1
-    while (newWallPosition <= offset || newWallPosition >= width - offset) {
+    let unacceptableStartPosition = newWallPosition <= offset || newWallPosition >= width - offset
+    while (unacceptableStartPosition) {
         newWallPosition = parseInt((Math.random() * width).toFixed(0));
     }
     console.log(newWallPosition, startVal, endVal, true);
     let wallNodes = buildNewWall(newWallPosition, startVal, endVal, true); // "position, startLocation, endLocation, isVertical"
+    let prevWallNodes = wallNodes; // exists so later code can update the val of "wallNodes" w/o overwriting useful info
     console.log("wallNodes 1: " + wallNodes)
     for (let i = 0; i < wallNodes.length; i++) {
         buildSequence.push(wallNodes[i])
@@ -92,21 +94,18 @@ function recursiveDivisionMaze() {
     // make a horizontal(?!) wall in the bigger cell
     console.log("* * * * Building wall 2")
     newWallPosition = parseInt((Math.random() * height).toFixed(0));
-    while (newWallPosition <= offset || newWallPosition >= height - offset) {
+    unacceptableStartPosition = newWallPosition <= offset || newWallPosition >= height - offset
+    while (unacceptableStartPosition) {
         newWallPosition = parseInt((Math.random() * height).toFixed(0))
     }
     if (biggerSegmentIsOnRightSide) { // decide whether to build in the left or right cell
         // get the y value where the wall starts (if the bigger segment is on the top, this is zero)
-        startVal = wallNodes.filter(node => node[1] === newWallPosition)[0][0]
+        startVal = prevWallNodes.filter(node => node[1] === newWallPosition)[0][0]
         // get the y value where the wall ends (if the bigger segment is on the bottom, this is the height of the prev. wall)
-        console.log("inspect:")
-        console.log(newWallPosition)
-        console.log(wallNodes)
-        // NOTE: when building a vertical wall, [0][0] => [0][1], i think
         endVal = width - 1
     } else { // 
         startVal = 1
-        endVal = wallNodes.filter(node => node[1] === newWallPosition)[0][0]
+        endVal = prevWallNodes.filter(node => node[1] === newWallPosition)[0][0]
     }
     console.log(newWallPosition, startVal, endVal, false);
     wallNodes = buildNewWall(newWallPosition, startVal, endVal, false);
@@ -114,34 +113,34 @@ function recursiveDivisionMaze() {
     console.log(wallNodes)
     for (let i = 0; i < wallNodes.length; i++) {
         buildSequence.push(wallNodes[i])
-        console.log("pushing...")
-        console.log(wallNodes[i])
     }
 
-    // // make a horizontal wall in the smaller cell
-    // console.log("* * * * Building wall three")
-    // // use a new random newWallPosition
-    // newWallPosition = parseInt((Math.random() * height).toFixed(0))
-    // while (newWallPosition <= offset || newWallPosition >= height - offset) {
-    //     newWallPosition = parseInt((Math.random() * height).toFixed(0))
-    // }
-    // // reverse the values in the if/else blocks from before because we are doing the other side of the wall
-    // if (biggerSegmentIsOnRightSide) { // build in the cell opposite to the previous one
-    //     startVal = wallNodes.filter(node => node[1] === newWallPosition)[0][1]
-    //     endVal = 1
-    // } else {
-    //     startVal = 1
-    //     endVal = wallNodes.filter(node => node[1] === newWallPosition)[0][1]
-    // }
-    // console.log(newWallPosition, startVal, endVal, false);
-    // wallNodes = buildNewWall(newWallPosition, startVal, endVal, false);
-    // console.log("wallNodes three: ")
-    // console.log(wallNodes)
-    // for (let i = 0; i < wallNodes.length; i++) {
-    //     console.log("PUSH")
-    //     console.log(wallNodes[i])
-    //     buildSequence.push(wallNodes[i])
-    // }
+    // make a horizontal wall in the smaller cell
+    console.log("* * * * Building wall three")
+    // use a new random newWallPosition
+    newWallPosition = parseInt((Math.random() * height).toFixed(0))
+    unacceptableStartPosition = newWallPosition <= offset || newWallPosition >= height - offset
+    while (unacceptableStartPosition) {
+        newWallPosition = parseInt((Math.random() * height).toFixed(0))
+    }
+    // reverse the values in the if/else blocks from before because we are doing the other side of the wall (use !)
+    console.log(prevWallNodes)
+    if (!biggerSegmentIsOnRightSide) { // build in the cell opposite to the previous one
+        startVal = prevWallNodes.filter(node => node[1] === newWallPosition)[0][0]
+        endVal = width - 1
+        console.log("Left: " + startVal)
+    } else {
+        startVal = 1
+        endVal = prevWallNodes.filter(node => node[1] === newWallPosition)[0][0]
+        console.log("Right: " + endVal)
+    }
+    console.log(newWallPosition, startVal, endVal, false);
+    wallNodes = buildNewWall(newWallPosition, startVal, endVal, false);
+    console.log("wallNodes three: ")
+    console.log(wallNodes)
+    for (let i = 0; i < wallNodes.length; i++) {
+        buildSequence.push(wallNodes[i])
+    }
 
 
     // TODO: add: "if cell height or width is = 3, in other words, if there is a 1 node trail to follow, stop recursion"
@@ -151,14 +150,25 @@ function recursiveDivisionMaze() {
 
 function buildNewWall(position, start, end, isVertical) {
     const wallNodesSequence = [];
+    // choose a random position for the gap in the wall
+    const rangeOfPotentialPositions = end - start;
+    const gapPosition = start + parseInt((Math.random() * rangeOfPotentialPositions).toFixed(0))
+
     for (let i = start; i < end; i++) {
-        if (isVertical) {
-            grid[i][position] = WALL_SEGMENT
-            wallNodesSequence.push([position, i])
+        // this if block creates the wall's 1 unit gap
+        if (i === gapPosition) {
+            continue
         } else {
-            grid[position][i] = WALL_SEGMENT
-            wallNodesSequence.push([i, position])
+
+            if (isVertical) {
+                grid[i][position] = WALL_SEGMENT
+                wallNodesSequence.push([position, i])
+            } else {
+                grid[position][i] = WALL_SEGMENT
+                wallNodesSequence.push([i, position])
+            }
         }
     }
+
     return wallNodesSequence
 }

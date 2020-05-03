@@ -17,15 +17,15 @@ class Path {
 class Cell {
     offset = 2;
 
-    constructor(xMin, xMax, yMin, yMax, isHorizontal, isVertical, newWallXCoord, newWallYCoord, prevWallCoords, previousCellObj,
-        top, left, cellNumber) {
-        this.cellNumber = cellNumber ? cellNumber : 0;
-
+    constructor(xMin, xMax, yMin, yMax, isHorizontal, isVertical, newWallXCoord, newWallYCoord, prevWallCoords, parentCell,
+        isTop, isLeft, cellNumber, subdivideFurther) {
+        this.cellNumber = cellNumber;
+        this.recurse = subdivideFurther;
         this.newWallXCoord = newWallXCoord // at which x coord is the | located
         this.newWallYCoord = newWallYCoord // at which y coord is the - located (at which height)
         this.wallStartCoord = newWallXCoord ? yMin : xMin; // "if |, minY, if --, minX" 
         this.wallEndCoord = newWallXCoord ? yMax : xMax; // "if |, maxY, if --, maxX"
-        this.previousWallCoordinates = prevWallCoords;
+        // this.previousWallCoordinates = prevWallCoords;
 
         this.xMin = xMin;
         // value should include the position of the bottom wall because looping will stop at i < this.maxX
@@ -35,19 +35,19 @@ class Cell {
         // value should include the position of the right wall because looping will stop at i < this.maxY
         this.yMax = yMax;
 
-        this.horizontal = isHorizontal;
-        this.vertical = isVertical
+        // this.willSplitHorizontally = isHorizontal;
+        // this.willSplitVertically = isVertical;
 
-        if (previousCellObj) {
-            this.prevWallIsHorizontal = previousCellObj.horizontal;
-            this.prevWallIsVertical = previousCellObj.vertical;
+        if (parentCell) {
+            this.prevWallIsHorizontal = parentCell.horizontal;
+            this.prevWallIsVertical = parentCell.vertical;
         } else {
             this.prevWallIsHorizontal = null;
-            this.prevWallIsVertical = null;
+            this.prevWallIsVertical = true; // because the first wall starts out vertically
         }
 
-        this.isOnTopSideOfPrevWall = top; // boolean arguments
-        this.isOnLeftSideOfPrevWall = left;
+        this.isOnTopSideOfPrevWall = isTop; // boolean arguments
+        this.isOnLeftSideOfPrevWall = isLeft;
 
         this.wallInstructions = [];
 

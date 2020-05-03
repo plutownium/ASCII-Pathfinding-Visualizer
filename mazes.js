@@ -218,23 +218,28 @@ function recursiveDivisionMaze() {
     // constructor(minX, maxX, minY, maxY, isHorizontal, isVertical, newWallXCoord, newWallYCoord, prevWallCoords, previousCellObj)
     const initCell = new Cell(0, width, 0, height, false, true, initWallPosition, null, null, null, CELL_NUMBER)
     let wallNodes = buildNewWall(initCell.newWallXCoord, initCell.yMin, initCell.yMax, true)
-    for (const k in wallNodes) {
-        buildSequence.push(k)
+    for (const coord in wallNodes) {
+        buildSequence.push(wallNodes[coord])
     }
 
     console.log(initCell)
     let splitCells = subdivideCell(initCell)
-    // console.log(splitCells)
-    // for (const cell in splitCells) {
-    //     console.log(splitCells[cell].newWallYCoord, splitCells[cell].minX, splitCells[cell].maxX)
-    //     wallNodes = buildNewWall(splitCells[cell].newWallYCoord, splitCells[cell].minX, splitCells[cell].maxX, false)
-    //     console.log("wall nodes: ")
-    //     console.log(wallNodes)
-    //     // FIXME: wallNodes is coming out []
-    // }
+    console.log("999:")
+    console.log(splitCells)
+    for (const cell in splitCells) {
+        console.log(splitCells[cell].newWallYCoord, splitCells[cell].xMin, splitCells[cell].xMax)
+        wallNodes = buildNewWall(splitCells[cell].newWallYCoord, splitCells[cell].xMin, splitCells[cell].xMax, false)
+        for (const coord in wallNodes) {
+            buildSequence.push(wallNodes[coord])
+        }
+        console.log("wall nodes: ")
+        console.log(wallNodes)
+        // FIXME: wallNodes is coming out []
+    }
 
     // // TODO: add: "if cell height or width is = 3, in other words, if there is a 1 node trail to follow, stop recursion"
     // console.log(grid)
+
     return buildSequence
 }
 
@@ -328,7 +333,7 @@ function subdivideCell(cell) {
     console.log("POS Y: " + horizontalWallPositionY)
     console.log("POS X: " + verticalWallPositionX)
 
-    // step two: calculate the min/max x&y values of the new Cells based on the position & orientation of the new Wall
+    // step two: calculate the min/max x&y values of the new Cells based on the position & orientation of the previous Wall
     let leftCellMinMax;
     let rightCellMinMax;
     let topCellMinMax;
@@ -337,40 +342,59 @@ function subdivideCell(cell) {
     let right = null;
     let top = null;
     let bottom = null;
-    if (verticalWallPositionX) { // if the new Wall cuts vertically, render Left/Right... note, the min/max Y vals stay the same
-        leftCellMinMax = [cell.xMin, cell.xMax - verticalWallPositionX, cell.yMin, cell.yMax]
+    // note: imagine a 10 x 10 box. it has x vals 0 to 10 and y vals 0 to 10.
+    // now draw a vertical line along x = 7. how do you calculate the dimensions of the new left & right box?
+    // the dimensions of the left box are: 
+    // xMin = originalBox.xMin, 
+    // xMax = originalBox.xMax - xPos of the wall. (yMin & max stay same)
+    // the dimensions  of the right box are:
+    // xMin = originalBox.xMin + xPos of the wall. (not the only way to calculate it...)
+    if (cell.prevWallIsVertical) { // if the previous Wall cuts vertically, render Left/Right... note, the min/max Y vals stay the same
+        leftCellMinMax = [cell.xMin, cell.xMax - cell.newWallXCoord, cell.yMin, cell.yMax]
         left = true;        // right Cell has a higher min X value
-        rightCellMinMax = [cell.xMin + verticalWallPositionX, cell.xMax, cell.yMin, cell.yMax]
+        rightCellMinMax = [cell.xMax - cell.newWallXCoord, cell.xMax, cell.yMin, cell.yMax]
         right = false;
-    } else if (horizontalWallPositionY) { // if the new Wall cuts horizontally, render Top/Bottom... note, the min/max X vals stay the same here
+    } else if (cell.prevWallIsHorizontal) { // if the previous Wall cuts horizontally, render Top/Bottom... note, the min/max X vals stay the same here
         // top Cell has a lower max Y value ("the top border stays the same while the bottom border shrinks")
-        topCellMinMax = [cell.xMin, cell.xMax, cell.yMin, cell.yMax - horizontalWallPositionY]
+        topCellMinMax = [cell.xMin, cell.xMax, cell.yMin, cell.yMax - cell.newWallYCoord]
         top = true
         // bottom Cell has a higher min Y value ("the bottom border stays the same while toe top border shrinks")
-        bottomCellMinMax = [cell.xMin, cell.xMax, cell.yMin + horizontalWallPositionY, cell.yMax]
+        bottomCellMinMax = [cell.xMin, cell.xMax, cell.yMax - cell.newWallYCoord, cell.yMax]
         bottom = false;
+    } else if (cell.prevWallIsVertical === null) { // handle the first cell, which has no previous wall
+        console.log("3000:" + horizontalWallPositionY)
+        leftCellMinMax = [cell.xMin, cell.xMax - cell.newWallXCoord, cell.yMin, cell.yMax]
+        left = true;        // right Cell has a higher min X value
+        rightCellMinMax = [cell.xMax - cell.newWallXCoord, cell.xMax, cell.yMin, cell.yMax]
+        right = false;
+    } else {
+        throw "Unexpected situation occurred in subdivideCell"
     }
 
     console.log("+++++++++++++++++++++++++++++++++++")
     console.log(leftCellMinMax, rightCellMinMax, topCellMinMax, bottomCellMinMax) // want [x, y, undef, undef]
     // Cell constructor: 
-    // constructor(minX, minY, maxX, maxY, isHorizontal, isVertical, newWallXCoord, newWallYCoord, prevWallCoords, previousCellObj)
+    // constructor(minX, maxX, minY, maxY, isHorizontal, isVertical, newWallXCoord, newWallYCoord, prevWallCoords, previousCellObj)
     // FIXME: top, left, bottom, right bools are probably messed... I didn't think too hard about how I was placing them
     let firstCell;
     let secondCell;
     if (leftCellMinMax && rightCellMinMax) {
         CELL_NUMBER++;
+        // left cell
         firstCell = new Cell(leftCellMinMax[0], leftCellMinMax[1], leftCellMinMax[2], leftCellMinMax[3], nextWallIsHorizontal, nextWallIsVertical,
             verticalWallPositionX, horizontalWallPositionY, cell.wallInstructions, cell, top, left, CELL_NUMBER);
         CELL_NUMBER++;
+        // right cell
         secondCell = new Cell(rightCellMinMax[0], rightCellMinMax[1], rightCellMinMax[2], rightCellMinMax[3], nextWallIsHorizontal, nextWallIsVertical,
             verticalWallPositionX, horizontalWallPositionY, cell.wallInstructions, cell, bottom, right, CELL_NUMBER);
     }
     if (topCellMinMax && bottomCellMinMax) {
         CELL_NUMBER++;
+        // top cell
         firstCell = new Cell(topCellMinMax[0], topCellMinMax[1], topCellMinMax[2], topCellMinMax[3], nextWallIsHorizontal, nextWallIsVertical,
             verticalWallPositionX, horizontalWallPositionY, cell.wallInstructions, cell, top, left, CELL_NUMBER);
         CELL_NUMBER++;
+        // bottom cell
         secondCell = new Cell(bottomCellMinMax[0], bottomCellMinMax[1], bottomCellMinMax[2], bottomCellMinMax[3], nextWallIsHorizontal, nextWallIsVertical,
             verticalWallPositionX, horizontalWallPositionY, cell.wallInstructions, cell, bottom, right, CELL_NUMBER);
     }

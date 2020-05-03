@@ -17,22 +17,23 @@ class Path {
 class Cell {
     offset = 2;
 
-    constructor(minX, minY, maxX, maxY, isHorizontal, isVertical, newWallXCoord, newWallYCoord, prevWallCoords, previousCellObj,
+    constructor(xMin, xMax, yMin, yMax, isHorizontal, isVertical, newWallXCoord, newWallYCoord, prevWallCoords, previousCellObj,
         top, left, cellNumber) {
         this.cellNumber = cellNumber ? cellNumber : 0;
 
         this.newWallXCoord = newWallXCoord // at which x coord is the | located
         this.newWallYCoord = newWallYCoord // at which y coord is the - located (at which height)
-        this.wallStartCoord = newWallXCoord ? minY : minX; // "if |, minY, if --, minX" 
-        this.wallEndCoord = newWallXCoord ? maxY : maxX; // "if |, maxY, if --, maxX"
+        this.wallStartCoord = newWallXCoord ? yMin : xMin; // "if |, minY, if --, minX" 
+        this.wallEndCoord = newWallXCoord ? yMax : xMax; // "if |, maxY, if --, maxX"
         this.previousWallCoordinates = prevWallCoords;
 
-        this.minX = minX;
-        this.minY = minY;
+        this.xMin = xMin;
         // value should include the position of the bottom wall because looping will stop at i < this.maxX
-        this.maxX = maxX;
+        this.xMax = xMax;
+
+        this.yMin = yMin;
         // value should include the position of the right wall because looping will stop at i < this.maxY
-        this.maxY = maxY;
+        this.yMax = yMax;
 
         this.horizontal = isHorizontal;
         this.vertical = isVertical

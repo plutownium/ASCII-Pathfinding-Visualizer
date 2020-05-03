@@ -194,23 +194,6 @@ function recursiveDivisionMaze() {
     // step 3 is to build the wall.
     // step 4 is to repeat for the next cell.
 
-
-    // summary: what info do I really need to perform a hypothetical createCell() function?
-    // gathered from the creation of walls #2 and #3...
-    // cell number
-    // new Wall X coodinate or new Wall Y coordinate (could be separate values, only 1 filled in for each instance)
-    // "is wall horizontal or vertical?" (alternative to prev line)
-    // is wall position acceptable? **
-    // position of gap in previous wall & 
-    // "is the next wall at the same x/y coordinate as the previous wall?" <---- what does this mean?
-    // is the bigger empty cell on the right or the left, the top or the bottom?
-    // the position of the new wall (x or y)
-    // the start coord of the new wall
-    // the end coord of the new wall
-    // the sequence of wall nodes added to the grid, to be fed into buildSequence
-    // 
-    // and: what data do i need to prepare for the next call of createCell() ? what elements of createCell #2 are used in #3?
-    // 
     // plan: mk func subdivideCell(). it does what it says: takes a cell as an input, returns the two subdivided cells.
     // each Cell has instructions for a Wall and info about the surrounding walls. 
     // after subdivideCell() has been used to create an array of Cells, iterate over the list and extract each Cell's
@@ -223,21 +206,35 @@ function recursiveDivisionMaze() {
     let startVal = 1 // start at y=1
     let endVal = height - 1 // end at y=height-1
 
+    // *#*#*#*#*#*#***#*#*#*#**#*#*#*#*#*#*#*//
+    // HERE BE DRAGONS: Bugs ahead.
+    // *#*#*#*#*#*#***#*#*#*#**#*#*#*#*#*#*#*//
     let unacceptableStartPosition = initWallPosition <= offset || initWallPosition >= width - offset || initWallPosition % 2 === 1
     while (unacceptableStartPosition) {
         initWallPosition = parseInt((Math.random() * width).toFixed(0));
         unacceptableStartPosition = initWallPosition <= offset || initWallPosition >= width - offset || initWallPosition % 2 === 1
     }
     // Cell constructor: 
-    // constructor(minX, minY, maxX, maxY, isHorizontal, isVertical, newWallXCoord, newWallYCoord, prevWallCoords, previousCellObj)
-    const initCell = new Cell(0, 0, width, height, false, true, initWallPosition, null, null, null, CELL_NUMBER)
+    // constructor(minX, maxX, minY, maxY, isHorizontal, isVertical, newWallXCoord, newWallYCoord, prevWallCoords, previousCellObj)
+    const initCell = new Cell(0, width, 0, height, false, true, initWallPosition, null, null, null, CELL_NUMBER)
+    let wallNodes = buildNewWall(initCell.newWallXCoord, initCell.yMin, initCell.yMax, true)
+    for (const k in wallNodes) {
+        buildSequence.push(k)
+    }
 
     console.log(initCell)
     let splitCells = subdivideCell(initCell)
-    console.log(splitCells)
+    // console.log(splitCells)
+    // for (const cell in splitCells) {
+    //     console.log(splitCells[cell].newWallYCoord, splitCells[cell].minX, splitCells[cell].maxX)
+    //     wallNodes = buildNewWall(splitCells[cell].newWallYCoord, splitCells[cell].minX, splitCells[cell].maxX, false)
+    //     console.log("wall nodes: ")
+    //     console.log(wallNodes)
+    //     // FIXME: wallNodes is coming out []
+    // }
 
-    // TODO: add: "if cell height or width is = 3, in other words, if there is a 1 node trail to follow, stop recursion"
-    console.log(grid)
+    // // TODO: add: "if cell height or width is = 3, in other words, if there is a 1 node trail to follow, stop recursion"
+    // console.log(grid)
     return buildSequence
 }
 
@@ -275,76 +272,110 @@ function buildNewWall(position, start, end, isVertical) {
 function subdivideCell(cell) {
     // use properties from one cell to inform the properties of the subdivided cells. One Cell becomes two.
 
-    // switch horizontal & vertical bools
-    const nextWallIsHorizontal = cell.prevWallIsVertical;
-    const nextWallIsVertical = cell.prevWallIsHorizontal;
+    let nextWallIsHorizontal;
+    let nextWallIsVertical;
+    // if init cell:
+    if (cell.prevWallIsHorizontal === null && cell.prevWallIsVertical === null) {
+        nextWallIsHorizontal = true;
+        nextWallIsVertical = false;
+    } else {
+        // switch horizontal & vertical bools
+        nextWallIsHorizontal = cell.prevWallIsVertical;
+        nextWallIsVertical = cell.prevWallIsHorizontal;
+    }
 
     // step one: figure out where the new Wall will go based on the dimensions of the current Cell.
-    let positionX;
-    let positionY;
+    let verticalWallPositionX;
+    let horizontalWallPositionY;
     let unacceptableStartPosition;
-    if (cell.prevWallIsVertical) {
+    // console.log("TESTING: ", nextWallIsHorizontal, nextWallIsVertical)
+    if (nextWallIsHorizontal) {
         // random a y value that doesn't touch any of the previous walls
-        positionY = parseInt(Math.random() * cell.maxY).toFixed(0)
-        unacceptableStartPosition = // if any of these conditions are true, it is an unacceptable start position
-            positionY <= cell.minX + cell.offset ||
-            positionY >= cell.maxX - cell.offset ||
-            positionY % 2 === 1
+        horizontalWallPositionY = parseInt(Math.random() * cell.yMax).toFixed(0)
+        unacceptableStartPosition =
+            horizontalWallPositionY < cell.yMin + cell.offset ||
+            horizontalWallPositionY > cell.yMax - cell.offset ||
+            horizontalWallPositionY % 2 === 1
         while (unacceptableStartPosition) { // reroll if the start position is unacceptable
-            positionY = parseInt(Math.random() * cell.maxY).toFixed(0)
+            horizontalWallPositionY = parseInt(Math.random() * cell.yMax).toFixed(0)
             unacceptableStartPosition =
-                positionY <= cell.minX + cell.offset ||
-                positionY >= cell.maxX - cell.offset ||
-                positionY % 2 === 1
+                horizontalWallPositionY < cell.yMin + cell.offset ||
+                horizontalWallPositionY > cell.yMax - cell.offset ||
+                horizontalWallPositionY % 2 === 1
         }
     } else {
         // random a x value that doesn't touch any of the previous walls
-        positionX = parseInt(Math.random() * cell.maxX).toFixed(0)
+        verticalWallPositionX = parseInt(Math.random() * cell.xMax).toFixed(0)
         unacceptableStartPosition =
-            positionX <= cell.minY + cell.offset ||
-            positionX >= cell.maxY - cell.offset ||
-            positionX % 2 === 1
+            verticalWallPositionX < cell.xMin + cell.offset ||
+            verticalWallPositionX > cell.xMax - cell.offset ||
+            verticalWallPositionX % 2 === 1
+        console.log(unacceptableStartPosition)
         while (unacceptableStartPosition) {
-            positionX = parseInt(Math.random() * cell.maxY).toFixed(0)
+            verticalWallPositionX = parseInt(Math.random() * cell.xMax).toFixed(0)
             unacceptableStartPosition =
-                positionX <= cell.minY + cell.offset ||
-                positionX >= cell.maxY - cell.offset ||
-                positionX % 2 === 1
+                verticalWallPositionX < cell.xMin + cell.offset ||
+                verticalWallPositionX > cell.xMax - cell.offset ||
+                verticalWallPositionX % 2 === 1
         }
     }
 
+    if (verticalWallPositionX) { // because newWallXCoord was coming out as string in the two new cells...
+        verticalWallPositionX = parseInt(verticalWallPositionX)
+    } else {
+        horizontalWallPositionY = parseInt(horizontalWallPositionY)
+    }
+    console.log("POS Y: " + horizontalWallPositionY)
+    console.log("POS X: " + verticalWallPositionX)
+
     // step two: calculate the min/max x&y values of the new Cells based on the position & orientation of the new Wall
-    let cellOneMinMax;
-    let cellTwoMinMax;
+    let leftCellMinMax;
+    let rightCellMinMax;
+    let topCellMinMax;
+    let bottomCellMinMax;
     let left = null;
     let right = null;
     let top = null;
     let bottom = null;
-    if (positionX) { // if the new Wall cuts vertically, render Left/Right... note, the min/max Y vals stay the same
-        // left Cell has a lower max X value
-        cellOneMinMax = [cell.minX, cell.maxX - positionX, cell.minY, cell.maxY]
-        left = true;
-        // right Cell has a higher min X value
-        cellTwoMinMax = [cell.minX + positionX, cell.maxX, cell.minY, cell.maxY]
+    if (verticalWallPositionX) { // if the new Wall cuts vertically, render Left/Right... note, the min/max Y vals stay the same
+        leftCellMinMax = [cell.xMin, cell.xMax - verticalWallPositionX, cell.yMin, cell.yMax]
+        left = true;        // right Cell has a higher min X value
+        rightCellMinMax = [cell.xMin + verticalWallPositionX, cell.xMax, cell.yMin, cell.yMax]
         right = false;
-    } else { // if the new Wall cuts horizontally, render Top/Bottom... note, the min/max X vals stay the same here
+    } else if (horizontalWallPositionY) { // if the new Wall cuts horizontally, render Top/Bottom... note, the min/max X vals stay the same here
         // top Cell has a lower max Y value ("the top border stays the same while the bottom border shrinks")
-        cellOneMinMax = [cell.minX, cell.maxX, cell.minY, cell.maxY - positionY]
+        topCellMinMax = [cell.xMin, cell.xMax, cell.yMin, cell.yMax - horizontalWallPositionY]
         top = true
         // bottom Cell has a higher min Y value ("the bottom border stays the same while toe top border shrinks")
-        cellTwoMinMax = [cell.minX, cell.maxX, cell.minY + positionY, cell.maxY]
+        bottomCellMinMax = [cell.xMin, cell.xMax, cell.yMin + horizontalWallPositionY, cell.yMax]
         bottom = false;
     }
 
+    console.log("+++++++++++++++++++++++++++++++++++")
+    console.log(leftCellMinMax, rightCellMinMax, topCellMinMax, bottomCellMinMax) // want [x, y, undef, undef]
     // Cell constructor: 
     // constructor(minX, minY, maxX, maxY, isHorizontal, isVertical, newWallXCoord, newWallYCoord, prevWallCoords, previousCellObj)
-    // FIXME: top, left, bottom, right bools are probably messed...
-    CELL_NUMBER++;
-    let cellOne = new Cell(cellOneMinMax[0], cellOneMinMax[1], cellOneMinMax[2], cellOneMinMax[3], nextWallIsHorizontal, nextWallIsVertical,
-        positionX, positionY, cell.wallInstructions, cell, top, left, CELL_NUMBER);
-    CELL_NUMBER++;
-    let cellTwo = new Cell(cellTwoMinMax[0], cellTwoMinMax[1], cellTwoMinMax[2], cellTwoMinMax[3], nextWallIsHorizontal, nextWallIsVertical,
-        positionX, positionY, cell.wallInstructions, cell, bottom, right, CELL_NUMBER);
+    // FIXME: top, left, bottom, right bools are probably messed... I didn't think too hard about how I was placing them
+    let firstCell;
+    let secondCell;
+    if (leftCellMinMax && rightCellMinMax) {
+        CELL_NUMBER++;
+        firstCell = new Cell(leftCellMinMax[0], leftCellMinMax[1], leftCellMinMax[2], leftCellMinMax[3], nextWallIsHorizontal, nextWallIsVertical,
+            verticalWallPositionX, horizontalWallPositionY, cell.wallInstructions, cell, top, left, CELL_NUMBER);
+        CELL_NUMBER++;
+        secondCell = new Cell(rightCellMinMax[0], rightCellMinMax[1], rightCellMinMax[2], rightCellMinMax[3], nextWallIsHorizontal, nextWallIsVertical,
+            verticalWallPositionX, horizontalWallPositionY, cell.wallInstructions, cell, bottom, right, CELL_NUMBER);
+    }
+    if (topCellMinMax && bottomCellMinMax) {
+        CELL_NUMBER++;
+        firstCell = new Cell(topCellMinMax[0], topCellMinMax[1], topCellMinMax[2], topCellMinMax[3], nextWallIsHorizontal, nextWallIsVertical,
+            verticalWallPositionX, horizontalWallPositionY, cell.wallInstructions, cell, top, left, CELL_NUMBER);
+        CELL_NUMBER++;
+        secondCell = new Cell(bottomCellMinMax[0], bottomCellMinMax[1], bottomCellMinMax[2], bottomCellMinMax[3], nextWallIsHorizontal, nextWallIsVertical,
+            verticalWallPositionX, horizontalWallPositionY, cell.wallInstructions, cell, bottom, right, CELL_NUMBER);
+    }
 
-    return [cellOne, cellTwo]
+    console.log(firstCell, secondCell)
+
+    return [firstCell, secondCell]
 }

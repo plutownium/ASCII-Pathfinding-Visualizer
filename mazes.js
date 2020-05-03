@@ -67,7 +67,7 @@ function recursiveDivisionMaze() {
 
     // recursively divide rooms by building a wall with a path through it
     let offset = 2
-
+    const cells = [];
 
     // make a vertical(?!) wall at a random height
     // NOTE: I originally believed this code would build a *horizontal* wall... a vertical one is just as good but...
@@ -89,8 +89,10 @@ function recursiveDivisionMaze() {
         buildSequence.push(wallNodes[i])
     }
     let biggerSegmentIsOnRightSide = newWallXCoord >= (width / 2) // TESTED: this seems to pass 100% of the time
+    cells.push()
 
-
+    // ### ### ### ### 
+    // now recursion yields 2 new cells
 
     // make a horizontal(?!) wall in the bigger cell
     console.log("...................................")
@@ -116,7 +118,8 @@ function recursiveDivisionMaze() {
         // startVal = prevWallNodes.filter(node => node[1] === newWallYCoord)[0][0]
         console.log(prevWallNodes, newWallYCoord)
         if (gapIsAtHeightOfNewWall) {
-            startVal = prevWallNodes[0][0] + 1
+            startVal = prevWallNodes[0][0] + 2
+            console.log("status code: 1")
         } else {
             startVal = prevWallNodes[0][0]
         }
@@ -130,7 +133,7 @@ function recursiveDivisionMaze() {
         // endVal = prevWallNodes.filter(node => node[1] === newWallYCoord)[0][0]
         if (gapIsAtHeightOfNewWall) {
             endVal = prevWallNodes[0][0] - 1
-
+            console.log("status code: 2")
         } else {
             endVal = prevWallNodes[0][0]
         }
@@ -158,7 +161,8 @@ function recursiveDivisionMaze() {
     if (!biggerSegmentIsOnRightSide) { // build in the cell opposite to the previous one
         console.log(prevWallNodes, newWallYCoord)
         if (gapIsAtHeightOfNewWall) {
-            startVal = prevWallNodes[0][0] + 1
+            console.log("status code: 3")
+            startVal = prevWallNodes[0][0] + 2
         } else {
             startVal = prevWallNodes[0][0]
         }
@@ -167,6 +171,7 @@ function recursiveDivisionMaze() {
         console.log(prevWallNodes, newWallYCoord)
         startVal = 1
         if (gapIsAtHeightOfNewWall) {
+            console.log("status code: 4")
             endVal = prevWallNodes[0][0] - 1 // success for 1 test, i think
         } else {
             endVal = prevWallNodes[0][0]
@@ -178,12 +183,36 @@ function recursiveDivisionMaze() {
         buildSequence.push(wallNodes[i])
     }
 
-    // todo: mk walls land on even numbered index values CHECK
-    // fixme: buildNewWall() occasionally removes the same value used by newWallYCoord in the .filter()ing check.
-    // causes Uncaught TypeError: Cannot read property '0' of undefined at recursiveDivisionMaze(mazes.js: 144)
+    // summary: what info do I really need to perform a hypothetical createCell() function?
+    // gathered from the creation of walls #2 and #3...
+    // cell number
+    // new Wall X coodinate or new Wall Y coordinate (could be separate values, only 1 filled in for each instance)
+    // "is wall horizontal or vertical?" (alternative to prev line)
+    // is wall position acceptable?
+    // position of gap in previous wall & "is the next wall at the same x/y coordinate as the previous wall?"
+    // is the bigger empty cell on the right or the left, the top or the bottom?
+    // the position of the new wall
+    // the start coord of the new wall
+    // the end coord of the new wall
+    // the sequence of wall nodes added to the grid, to be fed into buildSequence
+    // 
+    // and: what data do i need to prepare for the next call of createCell() ? what elements of createCell #2 are used in #3?
+    // 
+    // plan: mk func subdivideCell(). it does what it says: takes a cell as an input, returns the two subdivided cells.
+    // each Cell has instructions for a Wall and info about the surrounding walls. 
+    // after subdivideCell() has been used to create an array of Cells, iterate over the list and extract each Cell's
+    // .wallInstructions property, building as you go.
+
+
+    // ### ### ### ### 
+    // now recursion yields FOUR new cells... step 1 is to determine whether they're horizontal or vertical 
+    // (based on whether) the prev cycle put vertical or horizontal walls. we alternate.
+    // step 2 is to determine their start and end coordinates
+    // step 3 is to build the wall.
+    // step 4 is to repeat for the next cell.
 
     // TODO: add: "if cell height or width is = 3, in other words, if there is a 1 node trail to follow, stop recursion"
-
+    console.log(grid)
     return buildSequence
 }
 
@@ -192,14 +221,17 @@ function buildNewWall(position, start, end, isVertical) {
     const endValWasOneTooLongForThis = end - 1
     // choose a random position for the gap in the wall
     const rangeOfPotentialPositions = endValWasOneTooLongForThis - start;
-    const gapPosition = start + parseInt((Math.random() * rangeOfPotentialPositions).toFixed(0))
+    let gapPosition = start + parseInt((Math.random() * rangeOfPotentialPositions).toFixed(0))
+    while (gapPosition === start) {
+        gapPosition = start + parseInt((Math.random() * rangeOfPotentialPositions).toFixed(0))
+    }
 
     for (let i = start; i < end; i++) {
         // this if block creates the wall's 1 unit gap
         if (i === gapPosition) {
             console.log("start: " + start)
-            console.log("end: " + end)
             console.log("gap position: " + gapPosition)
+            console.log("end: " + endValWasOneTooLongForThis)
             continue
         } else {
             if (isVertical) {

@@ -16,6 +16,12 @@ class Path {
 
 class Cell {
     constructor() {
+        this.minX
+        this.minY
+        this.maxX
+        this.maxY
+        this.horizontal
+        this.vertical
 
     }
 }

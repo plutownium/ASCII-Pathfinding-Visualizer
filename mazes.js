@@ -1,3 +1,5 @@
+let CELL_NUMBER = 0;
+
 function generateRandomMaze() {
     const width = grid[0].length - 1;
     const height = grid.length - 1;
@@ -184,6 +186,15 @@ function recursiveDivisionMaze() {
         //     buildSequence.push(wallNodes[i])
         // }
     }
+
+    // ### ### ### ### 
+    // now recursion yields FOUR new cells... step 1 is to determine whether they're horizontal or vertical 
+    // (based on whether) the prev cycle put vertical or horizontal walls. we alternate.
+    // step 2 is to determine their start and end coordinates
+    // step 3 is to build the wall.
+    // step 4 is to repeat for the next cell.
+
+
     // summary: what info do I really need to perform a hypothetical createCell() function?
     // gathered from the creation of walls #2 and #3...
     // cell number
@@ -205,13 +216,25 @@ function recursiveDivisionMaze() {
     // after subdivideCell() has been used to create an array of Cells, iterate over the list and extract each Cell's
     // .wallInstructions property, building as you go.
 
+    // Step 1: initialize Room size Cell
+    const offset = 2;
 
-    // ### ### ### ### 
-    // now recursion yields FOUR new cells... step 1 is to determine whether they're horizontal or vertical 
-    // (based on whether) the prev cycle put vertical or horizontal walls. we alternate.
-    // step 2 is to determine their start and end coordinates
-    // step 3 is to build the wall.
-    // step 4 is to repeat for the next cell.
+    let initWallPosition = parseInt((Math.random() * width).toFixed(0)); // the location of the wall as an x coord
+    let startVal = 1 // start at y=1
+    let endVal = height - 1 // end at y=height-1
+
+    let unacceptableStartPosition = initWallPosition <= offset || initWallPosition >= width - offset || initWallPosition % 2 === 1
+    while (unacceptableStartPosition) {
+        initWallPosition = parseInt((Math.random() * width).toFixed(0));
+        unacceptableStartPosition = initWallPosition <= offset || initWallPosition >= width - offset || initWallPosition % 2 === 1
+    }
+    // Cell constructor: 
+    // constructor(minX, minY, maxX, maxY, isHorizontal, isVertical, newWallXCoord, newWallYCoord, prevWallCoords, previousCellObj)
+    const initCell = new Cell(0, 0, width, height, false, true, initWallPosition, null, null, null, CELL_NUMBER)
+
+    console.log(initCell)
+    let splitCells = subdivideCell(initCell)
+    console.log(splitCells)
 
     // TODO: add: "if cell height or width is = 3, in other words, if there is a 1 node trail to follow, stop recursion"
     console.log(grid)
@@ -293,26 +316,35 @@ function subdivideCell(cell) {
     // step two: calculate the min/max x&y values of the new Cells based on the position & orientation of the new Wall
     let cellOneMinMax;
     let cellTwoMinMax;
-    let onTopOrLeft;
-    let onBottomOrRight;
+    let left = null;
+    let right = null;
+    let top = null;
+    let bottom = null;
     if (positionX) { // if the new Wall cuts vertically, render Left/Right... note, the min/max Y vals stay the same
         // left Cell has a lower max X value
         cellOneMinMax = [cell.minX, cell.maxX - positionX, cell.minY, cell.maxY]
+        left = true;
         // right Cell has a higher min X value
         cellTwoMinMax = [cell.minX + positionX, cell.maxX, cell.minY, cell.maxY]
+        right = false;
     } else { // if the new Wall cuts horizontally, render Top/Bottom... note, the min/max X vals stay the same here
         // top Cell has a lower max Y value ("the top border stays the same while the bottom border shrinks")
         cellOneMinMax = [cell.minX, cell.maxX, cell.minY, cell.maxY - positionY]
+        top = true
         // bottom Cell has a higher min Y value ("the bottom border stays the same while toe top border shrinks")
         cellTwoMinMax = [cell.minX, cell.maxX, cell.minY + positionY, cell.maxY]
+        bottom = false;
     }
 
     // Cell constructor: 
     // constructor(minX, minY, maxX, maxY, isHorizontal, isVertical, newWallXCoord, newWallYCoord, prevWallCoords, previousCellObj)
-    let cellOne = [cellOneMinMax[0], cellOneMinMax[1], cellOneMinMax[2], cellOneMinMax[3], nextWallIsHorizontal, nextWallIsVertical,
-        positionX, positionY, cell.wallInstructions, cell];
-    let cellTwo = [cellTwoMinMax[0], cellTwoMinMax[1], cellTwoMinMax[2], cellTwoMinMax[3], nextWallIsHorizontal, nextWallIsVertical,
-        positionX, positionY, cell.wallInstructions, cell];
+    // FIXME: top, left, bottom, right bools are probably messed...
+    CELL_NUMBER++;
+    let cellOne = new Cell(cellOneMinMax[0], cellOneMinMax[1], cellOneMinMax[2], cellOneMinMax[3], nextWallIsHorizontal, nextWallIsVertical,
+        positionX, positionY, cell.wallInstructions, cell, top, left, CELL_NUMBER);
+    CELL_NUMBER++;
+    let cellTwo = new Cell(cellTwoMinMax[0], cellTwoMinMax[1], cellTwoMinMax[2], cellTwoMinMax[3], nextWallIsHorizontal, nextWallIsVertical,
+        positionX, positionY, cell.wallInstructions, cell, bottom, right, CELL_NUMBER);
 
     return [cellOne, cellTwo]
 }

@@ -288,19 +288,31 @@ function subdivideCell(cell) {
                 positionX >= cell.maxY - cell.offset ||
                 positionX % 2 === 1
         }
-        // finally...
-        positionX = positionX;
     }
 
-    // step two: assign values of new Cells' min/max values... and determine if the new Cells are top/bottom oriented or left/right
+    // step two: calculate the min/max x&y values of the new Cells based on the position & orientation of the new Wall
+    let cellOneMinMax;
+    let cellTwoMinMax;
+    let onTopOrLeft;
+    let onBottomOrRight;
+    if (positionX) { // if the new Wall cuts vertically, render Left/Right... note, the min/max Y vals stay the same
+        // left Cell has a lower max X value
+        cellOneMinMax = [cell.minX, cell.maxX - positionX, cell.minY, cell.maxY]
+        // right Cell has a higher min X value
+        cellTwoMinMax = [cell.minX + positionX, cell.maxX, cell.minY, cell.maxY]
+    } else { // if the new Wall cuts horizontally, render Top/Bottom... note, the min/max X vals stay the same here
+        // top Cell has a lower max Y value ("the top border stays the same while the bottom border shrinks")
+        cellOneMinMax = [cell.minX, cell.maxX, cell.minY, cell.maxY - positionY]
+        // bottom Cell has a higher min Y value ("the bottom border stays the same while toe top border shrinks")
+        cellTwoMinMax = [cell.minX, cell.maxX, cell.minY + positionY, cell.maxY]
+    }
 
-
-    let cellOne = [positionX, positionY, nextWallIsHorizontal, nextWallIsVertical];
-    let cellTwo = [positionX, positionY, nextWallIsHorizontal, nextWallIsVertical];
-
-    // const cellOne = new Cell();
-    // const cellTwo = new Cell();
-
+    // Cell constructor: 
+    // constructor(minX, minY, maxX, maxY, isHorizontal, isVertical, newWallXCoord, newWallYCoord, prevWallCoords, previousCellObj)
+    let cellOne = [cellOneMinMax[0], cellOneMinMax[1], cellOneMinMax[2], cellOneMinMax[3], nextWallIsHorizontal, nextWallIsVertical,
+        positionX, positionY, cell.wallInstructions, cell];
+    let cellTwo = [cellTwoMinMax[0], cellTwoMinMax[1], cellTwoMinMax[2], cellTwoMinMax[3], nextWallIsHorizontal, nextWallIsVertical,
+        positionX, positionY, cell.wallInstructions, cell];
 
     return [cellOne, cellTwo]
 }

@@ -17,8 +17,8 @@ class Path {
 class Cell {
     offset = 2;
 
-    constructor(xMin, xMax, yMin, yMax, isHorizontal, isVertical, newWallXCoord, newWallYCoord, parentCell,
-        isTop, isLeft, cellNumber, subdivideFurther) {
+    constructor(xMin, xMax, yMin, yMax, isHorizontal, isVertical, newWallXCoord, newWallYCoord, parentCell, cellNumber,
+        subdivideFurther) {
         this.cellNumber = cellNumber;
         this.recurse = subdivideFurther;
         this.newWallXCoord = newWallXCoord // at which x coord is the | located
@@ -42,9 +42,6 @@ class Cell {
             this.prevWallIsHorizontal = null;
             this.prevWallIsVertical = true; // because the first wall starts out vertically
         }
-
-        this.isOnTopSideOfPrevWall = isTop; // boolean arguments
-        this.isOnLeftSideOfPrevWall = isLeft;
 
         this.wallInstructions = [];
     }

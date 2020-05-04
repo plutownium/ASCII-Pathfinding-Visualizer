@@ -43,6 +43,6 @@ class Cell {
             this.prevWallIsVertical = true; // because the first wall starts out vertically
         }
 
-        this.wallInstructions = [];
+        // this.wallInstructions = [];
     }
 }

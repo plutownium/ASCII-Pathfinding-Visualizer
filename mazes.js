@@ -444,11 +444,11 @@ function seriesSubdivideCells(cell) {
         CELL_NUMBER++;
         const leftCell =
             new Cell(leftCellMinMax[0], leftCellMinMax[1], leftCellMinMax[2], leftCellMinMax[3], horizontalSplit, verticalSplit,
-                verticalWallPositionX, verticalWallPositionX, null, cell, CELL_NUMBER, leftCellDivides)
+                verticalWallPositionX, null, cell, CELL_NUMBER, leftCellDivides)
         CELL_NUMBER++;
         const rightCell =
             new Cell(rightCellMinMax[0], rightCellMinMax[1], rightCellMinMax[2], rightCellMinMax[3], horizontalSplit, verticalSplit,
-                verticalWallPositionX, verticalWallPositionX, null, cell, CELL_NUMBER, rightCellDivides)
+                verticalWallPositionX, null, cell, CELL_NUMBER, rightCellDivides)
         console.log(leftCell, rightCell)
         return [leftCell, rightCell]
     } else if (horizontalSplit) { // yields a top & bottom cell
@@ -494,11 +494,11 @@ function seriesSubdivideCells(cell) {
         CELL_NUMBER++;
         const topCell =
             new Cell(topCellMinMax[0], topCellMinMax[1], topCellMinMax[2], topCellMinMax[3], horizontalSplit, verticalSplit,
-                verticalWallPositionX, null, horizontalWallPositionY, cell, CELL_NUMBER, topCellDivides)
+                verticalWallPositionX, null, cell, CELL_NUMBER, topCellDivides)
         CELL_NUMBER++;
         const bottomCell =
             new Cell(bottomCellMinMax[0], bottomCellMinMax[1], bottomCellMinMax[2], bottomCellMinMax[3], horizontalSplit, verticalSplit,
-                verticalWallPositionX, null, horizontalWallPositionY, cell, CELL_NUMBER, bottomCellDivides)
+                verticalWallPositionX, null, cell, CELL_NUMBER, bottomCellDivides)
 
         console.log(topCell, bottomCell)
         return [topCell, bottomCell]

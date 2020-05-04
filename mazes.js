@@ -205,26 +205,29 @@ function recursiveDivisionMaze() {
         unacceptableStartPosition = initWallPosition <= offset || initWallPosition >= width - offset || initWallPosition % 2 === 1
     }
     // Cell constructor: 
-    // constructor(minX, maxX, minY, maxY, isHorizontal, isVertical, newWallXCoord, newWallYCoord, prevWallCoords, previousCellObj)
-    const initCell = new Cell(0, width, 0, height, false, true, initWallPosition, null, null, null, CELL_NUMBER, true)
+    // constructor(xMin, xMax, yMin, yMax, isHorizontal, isVertical, newWallXCoord, newWallYCoord, //prevWallCoords, parentCell,
+    //     isTop, isLeft, cellNumber, subdivideFurther)
+    const initCell = new Cell(0, width, 0, height, false, true, initWallPosition, null, null, null, null, CELL_NUMBER, true)
     let wallNodes = buildNewWall(initCell.newWallXCoord, initCell.yMin, initCell.yMax, true)
     for (const coord in wallNodes) {
         buildSequence.push(wallNodes[coord])
     }
 
-    // step 2: recursively divide Cells...
-    let splitCells = seriesSubdivideCells(initCell)
-    for (const cell in splitCells) {
-        wallNodes = buildNewWall(splitCells[cell].newWallYCoord, splitCells[cell].xMin, splitCells[cell].xMax, false)
+    // step 2: recursively divide Cells... (these ones have a horizontal wall)
+    // 2 cells
+    let cellStorage = seriesSubdivideCells(initCell)
+    for (const cell in cellStorage) {
+        wallNodes = buildNewWall(cellStorage[cell].newWallYCoord, cellStorage[cell].xMin, cellStorage[cell].xMax, false)
         for (const coord in wallNodes) {
             buildSequence.push(wallNodes[coord])
         }
     }
 
-    // step 3: subdivide again, repeat process...
-    for (const cell in splitCells) {
+    // step 3: subdivide again, repeat process... (these ones have a vertical wall)
+    // 4 cells;
+    for (const cell in cellStorage) {
         console.log("SUBDIVIDING! magic is happening!")
-        let dividedCells = seriesSubdivideCells(splitCells[cell])
+        let dividedCells = seriesSubdivideCells(cellStorage[cell])
         for (const cell in dividedCells) { // flip values in buildNewWall since we are alternating between vertical and horizontal
             // e.g. .newWallYCoord => .newWallXCoord, xMin&xMax => yMin&yMax, false => true
             wallNodes = buildNewWall(dividedCells[cell].newWallXCoord, dividedCells[cell].yMin, dividedCells[cell].yMax, true)
@@ -232,7 +235,15 @@ function recursiveDivisionMaze() {
                 buildSequence.push(wallNodes[node])
             }
         }
+        cellStorage = [];
+        for (const cell in dividedCells) {
+            cellStorage.push(dividedCells[cell])
+        }
     }
+
+    // step 4: subdivide again, repeat process (these ones have a horizontal wall)
+    // 8 cells
+
 
 
     // TODO: figure out how to recursively call subdivideCell() and buildNewWall() until either:
@@ -419,7 +430,7 @@ function subdivideCell(cell) {
 
     // step four: create the new Cells.
     // Cell constructor: 
-    // constructor(minX, maxX, minY, maxY, isHorizontal, isVertical, newWallXCoord, newWallYCoord, prevWallCoords, previousCellObj)
+    // constructor(minX, maxX, minY, maxY, isHorizontal, isVertical, newWallXCoord, newWallYCoord, parentCell, isTop, isLeft, cellNumber, subdivideFurther)
     // FIXME: top, left, bottom, right bools are probably messed... I didn't think too hard about how I was placing them
     let firstCell;
     let secondCell;
@@ -452,14 +463,23 @@ function subdivideCell(cell) {
 
 function seriesSubdivideCells(cell) {
     // in this function we split the logic of division up into series instead of as parallel.
+    console.log(cell)
 
     // step 0: check if this is the end of the cell's subdivision
     if (cell.recurse === false) {
         return // stop recursion
     }
 
-    const verticalSplit = cell.prevWallIsVertical;
-    const horizontalSplit = cell.prevWallIsHorizontal;
+    // "are we going to split the cell vertically or horizontally?"
+    let verticalSplit;
+    let horizontalSplit;
+    if (cell.cellNumber === 0) {
+        verticalSplit = true;
+        horizontalSplit = false;
+    } else {
+        verticalSplit = cell.prevWallIsVertical;
+        horizontalSplit = cell.prevWallIsHorizontal;
+    }
 
     let horizontalWallPositionY;
     let verticalWallPositionX;
@@ -508,18 +528,16 @@ function seriesSubdivideCells(cell) {
         const rightCellDivides = verticalGapGreaterThanThree && horizontalGapGreaterThanThree;
 
         // ### step four: create the new Cells and return them.
-        // NOTE: TESTING DISABLING SOME CELL ARGUMENTS. // indicates they are disabled in the classes.js file. supply 'em w/ null.
-        // constructor(xMin, xMax, yMin, yMax, //isHorizontal, //isVertical, newWallXCoord, newWallYCoord, //prevWallCoords, parentCell,
+        // constructor(xMin, xMax, yMin, yMax, isHorizontal, isVertical, newWallXCoord, newWallYCoord, parentCell,
         // isTop, isLeft, cellNumber, subdivideFurther) 
         CELL_NUMBER++;
         const leftCell =
-            new Cell(leftCellMinMax[0], leftCellMinMax[1], leftCellMinMax[2], leftCellMinMax[3], null, null, verticalWallPositionX,
-                horizontalWallPositionY, null, cell, left, null, CELL_NUMBER, leftCellDivides)
-            )
+            new Cell(leftCellMinMax[0], leftCellMinMax[1], leftCellMinMax[2], leftCellMinMax[3], horizontalSplit, verticalSplit,
+                verticalWallPositionX, horizontalWallPositionY, null, cell, left, null, CELL_NUMBER, leftCellDivides)
         CELL_NUMBER++;
         const rightCell =
-            new Cell(rightCellMinMax[0], rightCellMinMax[1], rightCellMinMax[2], rightCellMinMax[3], null, null, verticalWallPositionX,
-                horizontalWallPositionY, null, cell, right, null, CELL_NUMBER, rightCellDivides)
+            new Cell(rightCellMinMax[0], rightCellMinMax[1], rightCellMinMax[2], rightCellMinMax[3], horizontalSplit, verticalSplit,
+                verticalWallPositionX, horizontalWallPositionY, null, cell, right, null, CELL_NUMBER, rightCellDivides)
 
         return [leftCell, rightCell]
     } else if (horizontalSplit) { // yields a top & bottom cell
@@ -560,21 +578,20 @@ function seriesSubdivideCells(cell) {
         const bottomCellDivides = verticalGapGreaterThanThree && horizontalGapGreaterThanThree;
 
         // ### step four: create the new Cells and return them.
-        // NOTE: TESTING DISABLING SOME CELL ARGUMENTS. // indicates they are disabled in the classes.js file. supply 'em w/ null.
-        // constructor(xMin, xMax, yMin, yMax, //isHorizontal, //isVertical, newWallXCoord, newWallYCoord, //prevWallCoords, parentCell,
+        // constructor(xMin, xMax, yMin, yMax, isHorizontal, isVertical, newWallXCoord, newWallYCoord, parentCell,
         // isTop, isLeft, cellNumber, subdivideFurther)
         CELL_NUMBER++;
         const topCell =
-            new Cell(topCellMinMax[0], topCellMinMax[1], topCellMinMax[2], topCellMinMax[3], null, null, verticalWallPositionX,
-                horizontalWallPositionY, null, cell, top, null, CELL_NUMBER, topCellDivides)
-            )
+            new Cell(topCellMinMax[0], topCellMinMax[1], topCellMinMax[2], topCellMinMax[3], horizontalSplit, verticalSplit,
+                verticalWallPositionX, horizontalWallPositionY, null, cell, top, null, CELL_NUMBER, topCellDivides)
         CELL_NUMBER++;
         const bottomCell =
-            new Cell(bottomCellMinMax[0], bottomCellMinMax[1], bottomCellMinMax[2], bottomCellMinMax[3], null, null, verticalWallPositionX,
-                horizontalWallPositionY, null, cell, bottom, null, CELL_NUMBER, bottomCellDivides)
+            new Cell(bottomCellMinMax[0], bottomCellMinMax[1], bottomCellMinMax[2], bottomCellMinMax[3], horizontalSplit, verticalSplit,
+                verticalWallPositionX, horizontalWallPositionY, null, cell, bottom, null, CELL_NUMBER, bottomCellDivides)
 
         return [topCell, bottomCell]
     } else {
+        console.log(verticalSplit, horizontalSplit)
         throw "This should never happen"
     }
 }

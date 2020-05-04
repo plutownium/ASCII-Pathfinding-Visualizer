@@ -39,3 +39,16 @@
 
 // console.log(isArrayInArray(twoDee, sample2))
 
+// test 3:
+
+let verticalSplit;
+let horizontalSplit;
+if (true) {
+    verticalSplit = true;
+    horizontalSplit = false;
+} else {
+    verticalSplit = false
+    horizontalSplit = true
+}
+console.log("W.T.FFFFFFFFFFFF")
+console.log(verticalSplit, horizontalSplit)

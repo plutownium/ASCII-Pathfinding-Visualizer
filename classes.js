@@ -17,12 +17,12 @@ class Path {
 class Cell {
     offset = 2;
 
-    constructor(xMin, xMax, yMin, yMax, isHorizontal, isVertical, newWallXCoord, newWallYCoord, parentCell, cellNumber,
+    constructor(xMin, xMax, yMin, yMax, isHorizontal, isVertical, verticalWallXCoord, horizontalWallYCoord, parentCell, cellNumber,
         subdivideFurther) {
         this.cellNumber = cellNumber;
         this.recurse = subdivideFurther;
-        this.verticalWallXCoord = newWallXCoord // at which x coord is the | located
-        this.horizontalWallYCoord = newWallYCoord // at which y coord is the - located (at which height)
+        this.verticalWallXCoord = verticalWallXCoord // at which x coord is the | located
+        this.horizontalWallYCoord = horizontalWallYCoord // at which y coord is the - located (at which height)
 
         this.xMin = xMin;
         // value should include the position of the bottom wall because looping will stop at i < this.maxX

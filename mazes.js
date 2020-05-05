@@ -89,8 +89,6 @@ function recursiveDivisionMaze() {
     // constructor(xMin, xMax, yMin, yMax, isHorizontal, isVertical, newWallXCoord, newWallYCoord, parentCell, cellNumber, 
     // subdivideFurther) {
     const initCell = new Cell(0, width, 0, height, false, true, initWallPosition, null, null, CELL_NUMBER, true)
-    console.log("TEST 3000: ")
-    console.log(initCell.verticalWallXCoord, initCell.yMin, initCell.yMax, true)
     let wallNodes = buildNewWall(initCell.verticalWallXCoord, initCell.yMin, initCell.yMax, true)
     for (const coord in wallNodes) {
         buildSequence.push(wallNodes[coord])
@@ -110,20 +108,18 @@ function recursiveDivisionMaze() {
     // step 2: recursively divide Cells... (these ones have a horizontal wall)
     // 2 cells
     for (let i = startingCell; i < endingCell; i++) {
-        const subdividedCells = seriesSubdivideCells(cellStorage[i])
+        const subdividedCells = subdivideLeftRightVerticalWall(cellStorage[i])
         cellStorage.push(subdividedCells[0])
         cellStorage.push(subdividedCells[1])
-        console.log("TEST (TOP AND BOTTOM): ")
-        console.log(cellStorage[i])
-        // FIXME: null 0 40 false <--- null should be an int
-        console.log(cellStorage[i].horizontalWallYCoord, cellStorage[i].xMin, cellStorage[i].xMax, false)
     }
     // update start & end indices to loop over cellStorage, building walls out of those new cells
     startingCell = endingCell
     endingCell = cellStorage.length
     for (let i = startingCell; i < endingCell; i++) {
+        // console.log("TEST (TOP AND BOTTOM): ")
+        // console.log(cellStorage[i])
+        // console.log(cellStorage[i].horizontalWallYCoord, cellStorage[i].xMin, cellStorage[i].xMax, false)
         wallNodes = buildNewWall(cellStorage[i].horizontalWallYCoord, cellStorage[i].xMin, cellStorage[i].xMax, false)
-        // FIXME: cellStorage[i].horizontalWallYCoord is null.
         for (const coord in wallNodes) {
             buildSequence.push(wallNodes[coord])
         }
@@ -131,7 +127,7 @@ function recursiveDivisionMaze() {
     // step 3: subdivide again, repeat process... (these ones have a vertical wall)
     // 4 cells;
     for (let i = startingCell; i < endingCell; i++) {
-        const subdividedCells = seriesSubdivideCells(cellStorage[i])
+        const subdividedCells = subdivideTopBottomHorizontalWall(cellStorage[i])
         cellStorage.push(subdividedCells[0])
         cellStorage.push(subdividedCells[1])
     }
@@ -139,13 +135,33 @@ function recursiveDivisionMaze() {
     endingCell = cellStorage.length
     for (let i = startingCell; i < endingCell; i++) {
         wallNodes = buildNewWall(cellStorage[i].verticalWallXCoord, cellStorage[i].yMin, cellStorage[i].yMax, true)
-        // FIXME: cellStorage[i].horizontalWallYCoord is null.
         for (const coord in wallNodes) {
             buildSequence.push(wallNodes[coord])
         }
     }
+    // step 4: subdivide again, repeat process... (these ones have a horizontal wall)
+    // 8 cells;
+    // for (let i = startingCell; i < endingCell; i++) {
+    //     const subdividedCells = subdivideLeftRightVerticalWall(cellStorage[i])
+    //     cellStorage.push(subdividedCells[0])
+    //     // fixme: mazes.js:146 Uncaught TypeError: Cannot read property '0' of undefined
+    //     // at recursiveDivisionMaze(mazes.js: 146)
+    //     cellStorage.push(subdividedCells[1])
+    // }
+    // startingCell = endingCell
+    // endingCell = cellStorage.length
+    // for (let i = startingCell; i < endingCell; i++) {
+    //     wallNodes = buildNewWall(cellStorage[i].horizontalWallYCoord, cellStorage[i].xMin, cellStorage[i].xMax, false)
+    //     for (const coord in wallNodes) {
+    //         buildSequence.push(wallNodes[coord])
+    //     }
+    // }
 
+    // ***#
+    // FIXME: subdivided walls are getting the same value for their wall position. 
+    // it should be a randomly chosen value on each side. i.e. pairs like a,b, c,d, or even a,a occasionally (where a != b != c != d)
 
+    // FIXME: some walls are only going partway thru the maze... 
 
     return buildSequence
 }
@@ -158,6 +174,11 @@ function buildNewWall(position, start, end, isVertical) {
     let gapPosition = start + parseInt((Math.random() * rangeOfPotentialPositions).toFixed(0))
     while (gapPosition === start) {
         gapPosition = start + parseInt((Math.random() * rangeOfPotentialPositions).toFixed(0))
+    }
+    if (isVertical) {
+        console.log("Building vertical wall...")
+    } else {
+        console.log("insert horizontal wall")
     }
     console.log("POSITION: " + position)
     console.log("start: " + start)
@@ -183,7 +204,6 @@ function buildNewWall(position, start, end, isVertical) {
     return wallNodesSequence
 }
 
-// FIXME: subdivideCell fails to rotate between x and y. inspection:    
 // FIXME: saw a wall appear adjacent to the bottom wall, no gap between the two like ## instead of #.#
 
 function subdivideLeftRightVerticalWall(parentCell) {
@@ -200,30 +220,42 @@ function subdivideLeftRightVerticalWall(parentCell) {
         return
     }
 
-    // "are we going to split the cell vertically or horizontally?"
-    let verticalSplit = true;
-
-    // decide where the wall will go inside of the new cell
-    let horizontalWallPositionY;
+    // ### step 1: decide where the wall will go inside of the new cell.
+    // generate a different wall position for each of the two new cells.
+    let firstHorizontalWallPositionY;
+    let secondHorizontalWallPositionY
     // random a y value that doesn't touch any of the previous walls
-    horizontalWallPositionY = parseInt(parseInt(Math.random() * cell.yMax).toFixed(0))
+    firstHorizontalWallPositionY = parseInt(parseInt(Math.random() * parentCell.yMax).toFixed(0))
     unacceptableStartPosition =
-        horizontalWallPositionY < cell.yMin + cell.offset ||
-        horizontalWallPositionY > cell.yMax - cell.offset ||
-        horizontalWallPositionY % 2 === 1
+        firstHorizontalWallPositionY < parentCell.yMin + parentCell.offset ||
+        firstHorizontalWallPositionY > parentCell.yMax - parentCell.offset - 1 ||
+        firstHorizontalWallPositionY % 2 === 1
     while (unacceptableStartPosition) { // reroll if the start position is unacceptable
-        horizontalWallPositionY = parseInt(parseInt(Math.random() * cell.yMax).toFixed(0))
+        firstHorizontalWallPositionY = parseInt(parseInt(Math.random() * parentCell.yMax).toFixed(0))
         unacceptableStartPosition =
-            horizontalWallPositionY < cell.yMin + cell.offset ||
-            horizontalWallPositionY > cell.yMax - cell.offset ||
-            horizontalWallPositionY % 2 === 1
+            firstHorizontalWallPositionY < parentCell.yMin + parentCell.offset ||
+            firstHorizontalWallPositionY > parentCell.yMax - parentCell.offset - 1 ||
+            firstHorizontalWallPositionY % 2 === 1
+    }
+    secondHorizontalWallPositionY = parseInt(parseInt(Math.random() * parentCell.yMax).toFixed(0))
+    unacceptableStartPosition =
+        secondHorizontalWallPositionY < parentCell.yMin + parentCell.offset ||
+        secondHorizontalWallPositionY > parentCell.yMax - parentCell.offset - 1 ||
+        secondHorizontalWallPositionY % 2 === 1
+    while (unacceptableStartPosition) { // reroll if the start position is unacceptable
+        secondHorizontalWallPositionY = parseInt(parseInt(Math.random() * parentCell.yMax).toFixed(0))
+        unacceptableStartPosition =
+            secondHorizontalWallPositionY < parentCell.yMin + parentCell.offset ||
+            secondHorizontalWallPositionY > parentCell.yMax - parentCell.offset - 1 ||
+            secondHorizontalWallPositionY % 2 === 1
     }
 
     // ### step two: calculate the min/max x&y values of the new Cells based on the position & orientation of the previous Wall
 
-    const leftCellMinMax = [cell.xMin, cell.xMax - cell.verticalWallXCoord, cell.yMin, cell.yMax]
+    // FIXME: min/max values are ALL recalculated, do not stay the same as in parentCell .. ???? is this rly a problem?
+    const leftCellMinMax = [parentCell.xMin, parentCell.xMin + parentCell.verticalWallXCoord, parentCell.yMin, parentCell.yMax]
     const left = true;        // right Cell has a higher min X value
-    const rightCellMinMax = [cell.xMax - cell.verticalWallXCoord, cell.xMax, cell.yMin, cell.yMax]
+    const rightCellMinMax = [parentCell.xMin + parentCell.verticalWallXCoord, parentCell.xMax, parentCell.yMin, parentCell.yMax]
     const right = false;
 
     // ### step three: With the dimensions of the new Cells decided, calculate whether each one will subdivide further, or stop.
@@ -238,17 +270,19 @@ function subdivideLeftRightVerticalWall(parentCell) {
     // ### step four: create the new Cells and return them.
     // constructor(xMin, xMax, yMin, yMax, isHorizontal, isVertical, 
     // newWallXCoord, newWallYCoord, parentCell, cellNumber, subdivideFurther)
-    console.log("WALL POSITIONS in L/R cells ")
-    console.log(verticalWallPositionX, horizontalWallPositionY)
     CELL_NUMBER++;
     const leftCell =
-        new Cell(leftCellMinMax[0], leftCellMinMax[1], leftCellMinMax[2], leftCellMinMax[3], horizontalSplit, verticalSplit,
-            verticalWallPositionX, horizontalWallPositionY, cell, CELL_NUMBER, leftCellDivides)
+        new Cell(leftCellMinMax[0], leftCellMinMax[1], leftCellMinMax[2], leftCellMinMax[3], true, false,
+            null, firstHorizontalWallPositionY, parentCell, CELL_NUMBER, leftCellDivides)
     CELL_NUMBER++;
     const rightCell =
-        new Cell(rightCellMinMax[0], rightCellMinMax[1], rightCellMinMax[2], rightCellMinMax[3], horizontalSplit, verticalSplit,
-            verticalWallPositionX, horizontalWallPositionY, cell, CELL_NUMBER, rightCellDivides)
+        new Cell(rightCellMinMax[0], rightCellMinMax[1], rightCellMinMax[2], rightCellMinMax[3], true, false,
+            null, secondHorizontalWallPositionY, parentCell, CELL_NUMBER, rightCellDivides)
+    console.log("LEFT AND RIGHT:")
     console.log(leftCell, rightCell)
+    console.log(leftCellMinMax[0], leftCellMinMax[1], leftCellMinMax[2], leftCellMinMax[3])
+    console.log(rightCellMinMax[0], rightCellMinMax[1], rightCellMinMax[2], rightCellMinMax[3])
+    console.log("wall height: ", firstHorizontalWallPositionY, secondHorizontalWallPositionY)
     return [leftCell, rightCell]
 }
 
@@ -266,33 +300,47 @@ function subdivideTopBottomHorizontalWall(parentCell) {
         return
     }
 
-    let horizontalSplit = true;
-
-    // decide where the wall will go inside of the new cell
-    let verticalWallPositionX;
+    // ### step 1: decide where the wall will go inside of the new cell.
+    // generate a different wall position for each of the two new cells.
+    let firstVerticalWallPositionX;
+    let secondVerticalWallPositionX;
     // random a x value that doesn't touch any of the previous walls
-    verticalWallPositionX = parseInt(parseInt(Math.random() * cell.xMax).toFixed(0))
+    firstVerticalWallPositionX = parseInt(parseInt(Math.random() * parentCell.xMax).toFixed(0))
     unacceptableStartPosition =
-        verticalWallPositionX < cell.xMin + cell.offset ||
-        verticalWallPositionX > cell.xMax - cell.offset ||
-        verticalWallPositionX % 2 === 1
+        firstVerticalWallPositionX < parentCell.xMin + parentCell.offset ||
+        firstVerticalWallPositionX > parentCell.xMax - parentCell.offset - 1 ||
+        firstVerticalWallPositionX % 2 === 1
     console.log(unacceptableStartPosition)
     while (unacceptableStartPosition) {
-        verticalWallPositionX = parseInt(parseInt(Math.random() * cell.xMax).toFixed(0))
+        firstVerticalWallPositionX = parseInt(parseInt(Math.random() * parentCell.xMax).toFixed(0))
         unacceptableStartPosition =
-            verticalWallPositionX < cell.xMin + cell.offset ||
-            verticalWallPositionX > cell.xMax - cell.offset ||
-            verticalWallPositionX % 2 === 1
+            firstVerticalWallPositionX < parentCell.xMin + parentCell.offset ||
+            firstVerticalWallPositionX > parentCell.xMax - parentCell.offset - 1 ||
+            firstVerticalWallPositionX % 2 === 1
+    }
+    secondVerticalWallPositionX = parseInt(parseInt(Math.random() * parentCell.xMax).toFixed(0))
+    unacceptableStartPosition =
+        secondVerticalWallPositionX < parentCell.xMin + parentCell.offset ||
+        secondVerticalWallPositionX > parentCell.xMax - parentCell.offset - 1 ||
+        secondVerticalWallPositionX % 2 === 1
+    console.log(unacceptableStartPosition)
+    while (unacceptableStartPosition) {
+        secondVerticalWallPositionX = parseInt(parseInt(Math.random() * parentCell.xMax).toFixed(0))
+        unacceptableStartPosition =
+            secondVerticalWallPositionX < parentCell.xMin + parentCell.offset ||
+            secondVerticalWallPositionX > parentCell.xMax - parentCell.offset - 1 ||
+            secondVerticalWallPositionX % 2 === 1
     }
 
     // ### step two: calculate the min/max x&y values of the new Cells based on the position & orientation of the previous Wall
 
     //  the previous Wall cuts horizontally, so render Top/Bottom... note, the min/max X vals stay the same here
     // top Cell has a lower max Y value ("the top border stays the same while the bottom border shrinks")
-    const topCellMinMax = [cell.xMin, cell.xMax, cell.yMin, cell.yMax - cell.horizontalWallYCoord]
+    // FIXME: min/max values are ALL recalculated, do not stay the same as in parentCell
+    const topCellMinMax = [parentCell.xMin, parentCell.xMax, parentCell.yMin, parentCell.yMin + parentCell.horizontalWallYCoord]
     const top = true
     // bottom Cell has a higher min Y value ("the bottom border stays the same while toe top border shrinks")
-    const bottomCellMinMax = [cell.xMin, cell.xMax, cell.yMax - cell.horizontalWallYCoord, cell.yMax]
+    const bottomCellMinMax = [parentCell.xMin, parentCell.xMax, parentCell.yMin + parentCell.horizontalWallYCoord, parentCell.yMax]
     const bottom = false;
 
     // ### step three: With the dimensions of the new Cells decided, calculate whether each one will subdivide further, or stop.
@@ -307,23 +355,20 @@ function subdivideTopBottomHorizontalWall(parentCell) {
     // ### step four: create the new Cells and return them.
     // constructor(xMin, xMax, yMin, yMax, isHorizontal, isVertical, 
     // newWallXCoord, newWallYCoord, parentCell, cellNumber, subdivideFurther)
-    console.log("WALL POSITIONS in TOP/BOTTOM cells")
-    console.log(verticalWallPositionX, horizontalWallPositionY)
     CELL_NUMBER++;
     const topCell =
-        new Cell(topCellMinMax[0], topCellMinMax[1], topCellMinMax[2], topCellMinMax[3], horizontalSplit, verticalSplit,
-            verticalWallPositionX, horizontalWallPositionY, cell, CELL_NUMBER, topCellDivides)
+        new Cell(topCellMinMax[0], topCellMinMax[1], topCellMinMax[2], topCellMinMax[3], false, true,
+            firstVerticalWallPositionX, null, parentCell, CELL_NUMBER, topCellDivides)
     CELL_NUMBER++;
     const bottomCell =
-        new Cell(bottomCellMinMax[0], bottomCellMinMax[1], bottomCellMinMax[2], bottomCellMinMax[3], horizontalSplit, verticalSplit,
-            verticalWallPositionX, horizontalWallPositionY, cell, CELL_NUMBER, bottomCellDivides)
+        new Cell(bottomCellMinMax[0], bottomCellMinMax[1], bottomCellMinMax[2], bottomCellMinMax[3], false, true,
+            secondVerticalWallPositionX, null, parentCell, CELL_NUMBER, bottomCellDivides)
 
+    console.log("top and bottom: ")
     console.log(topCell, bottomCell)
+    console.log(topCellMinMax[0], topCellMinMax[1], topCellMinMax[2], topCellMinMax[3])
+    console.log(bottomCellMinMax[0], bottomCellMinMax[1], bottomCellMinMax[2], bottomCellMinMax[3])
+    console.log("wall x position: ", firstVerticalWallPositionX, secondVerticalWallPositionX)
     return [topCell, bottomCell]
 }
 
-    // TODO: figure out how to recursively call subdivideCell() and buildNewWall() until either:
-    // a) a cell has a height or width of 3 (only 1 space for a path)
-    // ... wait doesn't that take care of all of it?
-    // // TODO: add: "if cell height or width is = 3, in other words, if there is a 1 node trail to follow, stop recursion"
-    // console.log(grid)

@@ -171,6 +171,7 @@ function recursiveDivisionMaze() {
     // it should be a randomly chosen value on each side. i.e. pairs like a,b, c,d, or even a,a occasionally (where a != b != c != d)
 
     // FIXME: some walls are only going partway thru the maze... 
+    console.log("Returning...")
     return buildSequence
 }
 
@@ -230,56 +231,12 @@ function subdivideLeftRightVerticalWall(parentCell) {
 
     // ### step 1: decide where the wall will go inside of the new cell.
     // generate a different wall position for each of the two new cells.
-    let firstHorizontalWallPositionY;
-    let secondHorizontalWallPositionY
-    let counterOne = 0; // use counters to prevent infinite loop
-    let counterTwo = 0;
+    const minVal = parentCell.yMin + parentCell.offset
+    const maxVal = parentCell.yMax - parentCell.offset - 1
     // random a y value that doesn't touch any of the previous walls
-    firstHorizontalWallPositionY = parseInt(parseInt(Math.random() * parentCell.yMax).toFixed(0))
-    // TODO: Refactor this nasty, repetitive 20 line garbage to this:
-    // https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range
-    unacceptablePosition =
-        firstHorizontalWallPositionY < parentCell.yMin + parentCell.offset ||
-        firstHorizontalWallPositionY > parentCell.yMax - parentCell.offset - 1 ||
-        firstHorizontalWallPositionY % 2 === 1
-    while (unacceptablePosition) { // reroll if the start position is unacceptable
-        console.log("watch me loop... One")
-        firstHorizontalWallPositionY = parseInt(parseInt(Math.random() * parentCell.yMax).toFixed(0))
-        unacceptablePosition =
-            firstHorizontalWallPositionY < parentCell.yMin + parentCell.offset ||
-            firstHorizontalWallPositionY > parentCell.yMax - parentCell.offset - 1 ||
-            firstHorizontalWallPositionY % 2 === 1
-        counterOne++;
-        if (counterOne == 10) {
-            // firstHorizontalWallPositionY = parentCell.yMax - 2;
-            console.log(parentCell.yMin, parentCell.yMax)
-            firstHorizontalWallPositionY = parentCell.yMax / 2;
-            break
-        }
+    const firstHorizontalWallPositionY = getRandomEvenCoordinate(minVal, maxVal);
+    const secondHorizontalWallPositionY = getRandomEvenCoordinate(minVal, maxVal);
 
-    }
-    secondHorizontalWallPositionY = parseInt(parseInt(Math.random() * parentCell.yMax).toFixed(0))
-    unacceptablePosition =
-        secondHorizontalWallPositionY < parentCell.yMin + parentCell.offset ||
-        secondHorizontalWallPositionY > parentCell.yMax - parentCell.offset - 1 ||
-        secondHorizontalWallPositionY % 2 === 1
-    while (unacceptablePosition) { // reroll if the start position is unacceptable
-        console.log("watch me loop... 2")
-        secondHorizontalWallPositionY = parseInt(parseInt(Math.random() * parentCell.yMax).toFixed(0))
-        unacceptablePosition =
-            secondHorizontalWallPositionY < parentCell.yMin + parentCell.offset ||
-            secondHorizontalWallPositionY > parentCell.yMax - parentCell.offset - 1 ||
-            secondHorizontalWallPositionY % 2 === 1
-        counterTwo++;
-        if (counterTwo == 10) {
-            // secondHorizontalWallPositionY = parentCell.yMax - 2;
-            console.log(parentCell.yMin, parentCell.yMax)
-            secondHorizontalWallPositionY = parentCell.yMax / 2;
-            break
-        }
-    }
-    console.log("No infinite loop...")
-    console.log(firstHorizontalWallPositionY, secondHorizontalWallPositionY)
     // ### step two: calculate the min/max x&y values of the new Cells based on the position & orientation of the previous Wall
 
     const leftCellMinMax = [parentCell.xMin, parentCell.xMin + parentCell.verticalWallXCoord, parentCell.yMin, parentCell.yMax]
@@ -330,57 +287,12 @@ function subdivideTopBottomHorizontalWall(parentCell) {
 
     // ### step 1: decide where the wall will go inside of the new cell.
     // generate a different wall position for each of the two new cells.
-    let firstVerticalWallPositionX;
-    let secondVerticalWallPositionX;
-    let counterOne = 0; // use counters to prevent infinite loop
-    let counterTwo = 0;
+    const minVal = parentCell.xMin + parentCell.offset;
+    const maxVal = parentCell.xMax - parentCell.offset - 1;
     // random a x value that doesn't touch any of the previous walls
-    firstVerticalWallPositionX = parseInt(parseInt(Math.random() * parentCell.xMax).toFixed(0))
-    unacceptablePosition =
-        firstVerticalWallPositionX < parentCell.xMin + parentCell.offset ||
-        firstVerticalWallPositionX > parentCell.xMax - parentCell.offset - 1 ||
-        firstVerticalWallPositionX % 2 === 1
-    console.log(unacceptablePosition)
-    while (unacceptablePosition) {
-        console.log("watch me loop... three")
-        firstVerticalWallPositionX = parseInt(parseInt(Math.random() * parentCell.xMax).toFixed(0))
-        unacceptablePosition =
-            firstVerticalWallPositionX < parentCell.xMin + parentCell.offset ||
-            firstVerticalWallPositionX > parentCell.xMax - parentCell.offset - 1 ||
-            firstVerticalWallPositionX % 2 === 1
-        counterOne++;
-        if (counterOne == 10) {
-            // firstVerticalWallPositionX = parentCell.xMax - 2;
-            console.log(parentCell.xMin, parentCell.xMax)
-            firstVerticalWallPositionX = parentCell.xMax - 2;
-            break
-        }
-    }
-    secondVerticalWallPositionX = parseInt(parseInt(Math.random() * parentCell.xMax).toFixed(0))
-    // TODO: Refactor this nasty, repetitive 20 line garbage to this:
-    // https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range
-    unacceptablePosition =
-        // i think this should be: position < parentCell.xMin + 1 so 2 > (0 + 1)
-        secondVerticalWallPositionX < parentCell.xMin + parentCell.offset ||
-        secondVerticalWallPositionX > parentCell.xMax - parentCell.offset - 1 ||
-        secondVerticalWallPositionX % 2 === 1
-    while (unacceptablePosition) {
-        console.log("watch me loop... FOUR")
-        secondVerticalWallPositionX = parseInt(parseInt(Math.random() * parentCell.xMax).toFixed(0))
-        unacceptablePosition =
-            secondVerticalWallPositionX < parentCell.xMin + 1 ||
-            secondVerticalWallPositionX > parentCell.xMax - parentCell.offset - 1 ||
-            secondVerticalWallPositionX % 2 === 1
-        counterTwo++;
-        if (counterTwo == 10) {
-            // secondVerticalWallPositionX = parentCell.xMax - 2;
-            console.log(parentCell.xMin, parentCell.xMax)
-            secondVerticalWallPositionX = parentCell.xMax - 2;
-            break
-        }
-    }
-    console.log("No infinite loop...")
-    console.log(firstVerticalWallPositionX, secondVerticalWallPositionX)
+    const firstVerticalWallPositionX = getRandomEvenCoordinate(minVal, maxVal);
+    const secondVerticalWallPositionX = getRandomEvenCoordinate(minVal, maxVal);
+
     // ### step two: calculate the min/max x&y values of the new Cells based on the position & orientation of the previous Wall
 
     //  the previous Wall cuts horizontally, so render Top/Bottom... note, the min/max X vals stay the same here

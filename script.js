@@ -13,11 +13,28 @@ const VISITED_NODE = "o";
 const VISITED_AFTER_BOMB = "O";
 const SHORTEST_PATH_NODE = "+"
 
+// get browser width so script can calculate width of the grid
+let browserWidthInPixels = getBrowserWidth()
+const eightyPercentOfScreen = Math.floor(browserWidthInPixels * 0.80)
+console.log(eightyPercentOfScreen)
+
+let widthInNodes;
+let heightInNodes;
+if (eightyPercentOfScreen < 300) { // for smaller screens, use the whole width of the screen, no whitespace left or right
+	widthInNodes = Math.floor(eightyPercentOfScreen * 0.065)
+	heightInNodes = Math.floor(widthInNodes / 1.2) // use a taller board on smaller screens
+	console.log(widthInNodes, heightInNodes)
+} else { // for bigger screens
+	widthInNodes = Math.floor(eightyPercentOfScreen * 0.045)
+	heightInNodes = Math.floor(widthInNodes / 2)
+	console.log(widthInNodes, heightInNodes)
+}
+
 // generate a n by m grid of .'s
 const grid = [];
-for (let m = 0; m < 20; m++) {
+for (let m = 0; m < heightInNodes; m++) { // formerly "m < 20"
 	const row = [];
-	for (let n = 0; n < 40; n++) {
+	for (let n = 0; n < widthInNodes; n++) { // formerly "n < 40"
 		row.push(".");
 	}
 	grid.push(row);
@@ -115,8 +132,6 @@ binaryTreeBtn.addEventListener("click", () => {
 // todo: Add "Mazes & Patterns" selector & generators (how?)
 
 // TODO: Add "generate board width by browser width"
-// TODO: Add a random maze generator option...! Yikes.
-// TODO: add Horizontal Skew Maze generator. YIKES
 // TODO: Add a "bomb node" option... Also yikes!
 
 // FIXME: add a "reset Grid and board" func and call it before animateMaze() for every "create maze" button *IMPORTANT* 
@@ -487,6 +502,17 @@ function resetEventListeners() {
 			});
 		}
 	}
+}
+
+function getBrowserWidth() {
+	// added 5/5/2020 from jQuery source code (found via stackOverflow)
+	return Math.max(
+		document.body.scrollWidth,
+		document.documentElement.scrollWidth,
+		document.body.offsetWidth,
+		document.documentElement.offsetWidth,
+		document.documentElement.clientWidth
+	);
 }
 
 function fixBoardInstantlyFillsOnClickBug() {

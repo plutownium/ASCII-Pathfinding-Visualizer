@@ -80,10 +80,10 @@ function recursiveDivisionMaze() {
 
     let initWallPosition = parseInt((Math.random() * width).toFixed(0)); // the location of the wall as an x coord
 
-    let unacceptableStartPosition = initWallPosition <= offset || initWallPosition >= width - offset || initWallPosition % 2 === 1
-    while (unacceptableStartPosition) {
+    let unacceptablePosition = initWallPosition <= offset || initWallPosition >= width - offset || initWallPosition % 2 === 1
+    while (unacceptablePosition) {
         initWallPosition = parseInt((Math.random() * width).toFixed(0));
-        unacceptableStartPosition = initWallPosition <= offset || initWallPosition >= width - offset || initWallPosition % 2 === 1
+        unacceptablePosition = initWallPosition <= offset || initWallPosition >= width - offset || initWallPosition % 2 === 1
     }
     // Cell constructor: 
     // constructor(xMin, xMax, yMin, yMax, isHorizontal, isVertical, newWallXCoord, newWallYCoord, parentCell, cellNumber, 
@@ -97,15 +97,9 @@ function recursiveDivisionMaze() {
     let startingCell = 0;
     let endingCell = cellStorage.length
 
-    // summary: for each division, I need to...
-    // 1) iterate over the last batch of cells, dividing each one, adding the newly divided cells to an array 'cellStorage'
-    // 2) walk thru the array repeating:
-    //          - build wall for each cell 
-    //                 * NOTE: Alternate between | and - inputs. horizontalWallYCoord, xmin, xmax, false; .verticalWallXcoord, ymin, ymax, true
-    //          - push the wall for each cell to the BuildSequence
-    // 3) figure out how to indicate the starting and ending index of the cellStorage array for the next division
-
+    // ############################################ ############################################ 
     // step 2: recursively divide Cells... (these ones have a horizontal wall)
+    console.log("step 2")
     // 2 cells
     for (let i = startingCell; i < endingCell; i++) {
         const subdividedCells = subdivideLeftRightVerticalWall(cellStorage[i])
@@ -124,12 +118,21 @@ function recursiveDivisionMaze() {
             buildSequence.push(wallNodes[coord])
         }
     }
+
+    // ############################################ ############################################ 
     // step 3: subdivide again, repeat process... (these ones have a vertical wall)
+    console.log("step three")
     // 4 cells;
     for (let i = startingCell; i < endingCell; i++) {
-        const subdividedCells = subdivideTopBottomHorizontalWall(cellStorage[i])
-        cellStorage.push(subdividedCells[0])
-        cellStorage.push(subdividedCells[1])
+        if (cellStorage[i].recurse) { // move the check, "does this cell subdivide further?" outside of the function
+            const subdividedCells = subdivideTopBottomHorizontalWall(cellStorage[i])
+            cellStorage.push(subdividedCells[0])
+            // fixme: mazes.js:146 Uncaught TypeError: Cannot read property '0' of undefined
+            // at recursiveDivisionMaze(mazes.js: 146)
+            cellStorage.push(subdividedCells[1])
+        } else {
+            // ?
+        }
     }
     startingCell = endingCell
     endingCell = cellStorage.length
@@ -140,22 +143,28 @@ function recursiveDivisionMaze() {
         }
     }
     // step 4: subdivide again, repeat process... (these ones have a horizontal wall)
+    console.log("step 4: ", cellStorage.length)
     // 8 cells;
-    // for (let i = startingCell; i < endingCell; i++) {
-    //     const subdividedCells = subdivideLeftRightVerticalWall(cellStorage[i])
-    //     cellStorage.push(subdividedCells[0])
-    //     // fixme: mazes.js:146 Uncaught TypeError: Cannot read property '0' of undefined
-    //     // at recursiveDivisionMaze(mazes.js: 146)
-    //     cellStorage.push(subdividedCells[1])
-    // }
-    // startingCell = endingCell
-    // endingCell = cellStorage.length
-    // for (let i = startingCell; i < endingCell; i++) {
-    //     wallNodes = buildNewWall(cellStorage[i].horizontalWallYCoord, cellStorage[i].xMin, cellStorage[i].xMax, false)
-    //     for (const coord in wallNodes) {
-    //         buildSequence.push(wallNodes[coord])
-    //     }
-    // }
+    for (let i = startingCell; i < endingCell; i++) {
+        if (cellStorage[i].recurse) { // move the check, "does this cell subdivide further?" outside of the function
+            const subdividedCells = subdivideLeftRightVerticalWall(cellStorage[i])
+            cellStorage.push(subdividedCells[0])
+            // fixme: mazes.js:146 Uncaught TypeError: Cannot read property '0' of undefined
+            // at recursiveDivisionMaze(mazes.js: 146)
+            cellStorage.push(subdividedCells[1])
+        } else {
+            // ?
+        }
+        // const subdividedCells = subdivideLeftRightVerticalWall(cellStorage[i])
+    }
+    startingCell = endingCell
+    endingCell = cellStorage.length
+    for (let i = startingCell; i < endingCell; i++) {
+        wallNodes = buildNewWall(cellStorage[i].horizontalWallYCoord, cellStorage[i].xMin, cellStorage[i].xMax, false)
+        for (const coord in wallNodes) {
+            buildSequence.push(wallNodes[coord])
+        }
+    }
 
     // ***#
     // FIXME: subdivided walls are getting the same value for their wall position. 
@@ -212,51 +221,62 @@ function subdivideLeftRightVerticalWall(parentCell) {
     if (!parentCell.splitsVertically) {
         console.log("LEFT/RIGHT split attempted...")
         console.log(parentCell)
-        throw "Wrong kind of cell passed into function."  // fail early
+        throw "Wrong kind of cell passed into function. Or else you used the wrong function."  // fail early
     }
 
     // end cell subdivision if .recurse=false
     if (parentCell.recurse === false) {
-        return
+        console.log(parentCell)
+        throw "Recurse was false and you didn't catch it early enough."
     }
 
     // ### step 1: decide where the wall will go inside of the new cell.
     // generate a different wall position for each of the two new cells.
     let firstHorizontalWallPositionY;
     let secondHorizontalWallPositionY
+    let counterOne = 0; // use counters to prevent infinite loop
+    let counterTwo = 0;
     // random a y value that doesn't touch any of the previous walls
     firstHorizontalWallPositionY = parseInt(parseInt(Math.random() * parentCell.yMax).toFixed(0))
-    unacceptableStartPosition =
+    unacceptablePosition =
         firstHorizontalWallPositionY < parentCell.yMin + parentCell.offset ||
         firstHorizontalWallPositionY > parentCell.yMax - parentCell.offset - 1 ||
         firstHorizontalWallPositionY % 2 === 1
-    while (unacceptableStartPosition) { // reroll if the start position is unacceptable
+    while (unacceptablePosition && counterOne < 10) { // reroll if the start position is unacceptable
         firstHorizontalWallPositionY = parseInt(parseInt(Math.random() * parentCell.yMax).toFixed(0))
-        unacceptableStartPosition =
+        unacceptablePosition =
             firstHorizontalWallPositionY < parentCell.yMin + parentCell.offset ||
             firstHorizontalWallPositionY > parentCell.yMax - parentCell.offset - 1 ||
             firstHorizontalWallPositionY % 2 === 1
+        counterTwo++;
+        if (counterOne == 10) {
+            firstHorizontalWallPositionY = parentCell.yMax - parentCell.xMin;
+            break
+        }
+
     }
     secondHorizontalWallPositionY = parseInt(parseInt(Math.random() * parentCell.yMax).toFixed(0))
-    unacceptableStartPosition =
+    unacceptablePosition =
         secondHorizontalWallPositionY < parentCell.yMin + parentCell.offset ||
         secondHorizontalWallPositionY > parentCell.yMax - parentCell.offset - 1 ||
         secondHorizontalWallPositionY % 2 === 1
-    while (unacceptableStartPosition) { // reroll if the start position is unacceptable
+    while (unacceptablePosition && counterTwo < 10) { // reroll if the start position is unacceptable
         secondHorizontalWallPositionY = parseInt(parseInt(Math.random() * parentCell.yMax).toFixed(0))
-        unacceptableStartPosition =
+        unacceptablePosition =
             secondHorizontalWallPositionY < parentCell.yMin + parentCell.offset ||
             secondHorizontalWallPositionY > parentCell.yMax - parentCell.offset - 1 ||
             secondHorizontalWallPositionY % 2 === 1
+        counterTwo++;
+        if (counterTwo == 10) {
+            secondHorizontalWallPositionY = parentCell.yMax - parentCell.xMin;
+            break
+        }
     }
-
+    console.log("No infinite loop...")
     // ### step two: calculate the min/max x&y values of the new Cells based on the position & orientation of the previous Wall
 
-    // FIXME: min/max values are ALL recalculated, do not stay the same as in parentCell .. ???? is this rly a problem?
     const leftCellMinMax = [parentCell.xMin, parentCell.xMin + parentCell.verticalWallXCoord, parentCell.yMin, parentCell.yMax]
-    const left = true;        // right Cell has a higher min X value
     const rightCellMinMax = [parentCell.xMin + parentCell.verticalWallXCoord, parentCell.xMax, parentCell.yMin, parentCell.yMax]
-    const right = false;
 
     // ### step three: With the dimensions of the new Cells decided, calculate whether each one will subdivide further, or stop.
     // use these constants to inform the new cells' "subdivideFurther" arguments.
@@ -292,56 +312,65 @@ function subdivideTopBottomHorizontalWall(parentCell) {
     if (!parentCell.splitsHorizontally) {
         console.log("TOP/BOT split attempted...")
         console.log(parentCell)
-        throw "Wrong kind of cell passed into function!" // fail early
+        throw "Wrong kind of cell passed into function. Or else you used the wrong function."  // fail early
     }
 
     // end cell subdivision if .recurse=false
     if (parentCell.recurse === false) {
-        return
+        console.log(parentCell)
+        throw "Recurse was false and you didn't catch it early enough."
     }
 
     // ### step 1: decide where the wall will go inside of the new cell.
     // generate a different wall position for each of the two new cells.
     let firstVerticalWallPositionX;
     let secondVerticalWallPositionX;
+    let counterOne = 0; // use counters to prevent infinite loop
+    let counterTwo = 0;
     // random a x value that doesn't touch any of the previous walls
     firstVerticalWallPositionX = parseInt(parseInt(Math.random() * parentCell.xMax).toFixed(0))
-    unacceptableStartPosition =
+    unacceptablePosition =
         firstVerticalWallPositionX < parentCell.xMin + parentCell.offset ||
         firstVerticalWallPositionX > parentCell.xMax - parentCell.offset - 1 ||
         firstVerticalWallPositionX % 2 === 1
-    console.log(unacceptableStartPosition)
-    while (unacceptableStartPosition) {
+    console.log(unacceptablePosition)
+    while (unacceptablePosition) {
         firstVerticalWallPositionX = parseInt(parseInt(Math.random() * parentCell.xMax).toFixed(0))
-        unacceptableStartPosition =
+        unacceptablePosition =
             firstVerticalWallPositionX < parentCell.xMin + parentCell.offset ||
             firstVerticalWallPositionX > parentCell.xMax - parentCell.offset - 1 ||
             firstVerticalWallPositionX % 2 === 1
+        counterOne++;
+        if (counterOne == 10) {
+            firstVerticalWallPositionX = parentCell.xMax - parentCell.xMin;
+            break
+        }
     }
     secondVerticalWallPositionX = parseInt(parseInt(Math.random() * parentCell.xMax).toFixed(0))
-    unacceptableStartPosition =
+    unacceptablePosition =
         secondVerticalWallPositionX < parentCell.xMin + parentCell.offset ||
         secondVerticalWallPositionX > parentCell.xMax - parentCell.offset - 1 ||
         secondVerticalWallPositionX % 2 === 1
-    console.log(unacceptableStartPosition)
-    while (unacceptableStartPosition) {
+    while (unacceptablePosition) {
         secondVerticalWallPositionX = parseInt(parseInt(Math.random() * parentCell.xMax).toFixed(0))
-        unacceptableStartPosition =
+        unacceptablePosition =
             secondVerticalWallPositionX < parentCell.xMin + parentCell.offset ||
             secondVerticalWallPositionX > parentCell.xMax - parentCell.offset - 1 ||
             secondVerticalWallPositionX % 2 === 1
+        counterTwo++;
+        if (counterTwo == 10) {
+            secondVerticalWallPositionX = parentCell.xMax - parentCell.xMin;
+            break
+        }
     }
-
+    console.log("No infinite loop...")
     // ### step two: calculate the min/max x&y values of the new Cells based on the position & orientation of the previous Wall
 
     //  the previous Wall cuts horizontally, so render Top/Bottom... note, the min/max X vals stay the same here
     // top Cell has a lower max Y value ("the top border stays the same while the bottom border shrinks")
-    // FIXME: min/max values are ALL recalculated, do not stay the same as in parentCell
     const topCellMinMax = [parentCell.xMin, parentCell.xMax, parentCell.yMin, parentCell.yMin + parentCell.horizontalWallYCoord]
-    const top = true
     // bottom Cell has a higher min Y value ("the bottom border stays the same while toe top border shrinks")
     const bottomCellMinMax = [parentCell.xMin, parentCell.xMax, parentCell.yMin + parentCell.horizontalWallYCoord, parentCell.yMax]
-    const bottom = false;
 
     // ### step three: With the dimensions of the new Cells decided, calculate whether each one will subdivide further, or stop.
     // use these constants to inform the new cells' "subdivideFurther" arguments.
@@ -364,11 +393,14 @@ function subdivideTopBottomHorizontalWall(parentCell) {
         new Cell(bottomCellMinMax[0], bottomCellMinMax[1], bottomCellMinMax[2], bottomCellMinMax[3], false, true,
             secondVerticalWallPositionX, null, parentCell, CELL_NUMBER, bottomCellDivides)
 
-    console.log("top and bottom: ")
-    console.log(topCell, bottomCell)
-    console.log(topCellMinMax[0], topCellMinMax[1], topCellMinMax[2], topCellMinMax[3])
-    console.log(bottomCellMinMax[0], bottomCellMinMax[1], bottomCellMinMax[2], bottomCellMinMax[3])
-    console.log("wall x position: ", firstVerticalWallPositionX, secondVerticalWallPositionX)
+    // console.log("top and bottom: ")
+    // console.log(topCell, bottomCell)
+    // console.log(topCellMinMax[0], topCellMinMax[1], topCellMinMax[2], topCellMinMax[3])
+    // console.log(bottomCellMinMax[0], bottomCellMinMax[1], bottomCellMinMax[2], bottomCellMinMax[3])
+    // console.log("wall x position: ", firstVerticalWallPositionX, secondVerticalWallPositionX)
     return [topCell, bottomCell]
 }
 
+// FIXME: script.js:137 Uncaught TypeError: Cannot read property 'children' of undefined
+// at getLocationByCoordinates(script.js: 137)
+// at updateCoordsWithWall(script.js: 463)

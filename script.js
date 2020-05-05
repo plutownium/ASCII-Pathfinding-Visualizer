@@ -444,6 +444,7 @@ function clearBoard() {
 			grid[j][i] = EMPTY_SPACE;
 		}
 	}
+	resetAllClasses();
 	rerenderGrid();
 	resetEventListeners();
 }
@@ -503,6 +504,21 @@ function resetEventListeners() {
 			targetColumnRows[y].addEventListener("click", () => {
 				replaceWithWall(x, y);
 			});
+		}
+	}
+}
+
+function resetAllClasses() {
+	const columnDivs = mainDiv.children;
+	for (let x = 0; x < numOfColumns; x++) {
+		// iterate through the columns, getting a list of their children
+		const targetColumnRows = columnDivs[x].children;
+		for (let y = 0; y < numOfRows; y++) {
+			// iterate through the row divs in the columns.
+			// To remove all event listeners, clone the node, and replace it with the clone.
+			const targetDiv = targetColumnRows[y]
+			targetDiv.classList.remove("animateScan")
+			targetDiv.classList.remove("animatePath")
 		}
 	}
 }

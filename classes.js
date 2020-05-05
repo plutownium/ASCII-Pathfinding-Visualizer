@@ -21,8 +21,8 @@ class Cell {
         subdivideFurther) {
         this.cellNumber = cellNumber;
         this.recurse = subdivideFurther;
-        this.newWallXCoord = newWallXCoord // at which x coord is the | located
-        this.newWallYCoord = newWallYCoord // at which y coord is the - located (at which height)
+        this.verticalWallXCoord = newWallXCoord // at which x coord is the | located
+        this.horizontalWallYCoord = newWallYCoord // at which y coord is the - located (at which height)
 
         this.xMin = xMin;
         // value should include the position of the bottom wall because looping will stop at i < this.maxX

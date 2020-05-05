@@ -47,6 +47,32 @@ span {
 	/* text-align: center; */
 }
 
+.animateScan {
+	animation-name: scan;
+  	animation-duration: 2s;
+}
+
+@keyframes scan {
+  0%   {background-color: rgb(4, 226, 246);}
+  100% {background-color: rgb(4, 246, 36);}
+}
+
+.animatePath {
+	font-weight: bold;
+	background-color: rgb(242, 246, 4);
+	animation-name: path;
+	animation-duration: 3s;
+}
+
+@keyframes path {
+  0%   {background-color: rgb(4, 246, 36);}
+  100% {background-color: rgb(242, 246, 4);}
+}
+
+/*                                       */
+/* from a site w/ simple button stylings */
+/*                                       */
+
 .button.green, .button.red, .button.blue {
   color: #fff;
   text-shadow: 0 1px 0 rgba(0,0,0,.2);

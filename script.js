@@ -135,6 +135,7 @@ binaryTreeBtn.addEventListener("click", () => {
 // todo: Add "Mazes" selector (how?)
 
 // FIXME: add a "reset Grid and board" func and call it before animateMaze() for every "create maze" button *IMPORTANT* 
+
 // TODO: animate grid with CSS transitions (colors, KISS)
 // TODO: Style the page...
 // NOTE: It's more important to make it LOOK good than add lots of diff pathfinding algos (all basically the same)
@@ -234,13 +235,15 @@ function updateCoordinatesWithTrailMarker(xCoord, yCoord) {
 	grid[yCoord][xCoord] = SHORTEST_PATH_NODE;
 	const targetDiv = getLocationByCoordinates(xCoord, yCoord);
 	targetDiv.innerHTML = grid[yCoord][xCoord];
-
+	targetDiv.classList.remove("animateScan")
+	targetDiv.classList.add("animatePath")
 }
 
 function updateCoordinatesWithScanMarker(xCoord, yCoord) {
 	grid[yCoord][xCoord] = VISITED_NODE;
 	const targetDiv = getLocationByCoordinates(xCoord, yCoord);
 	targetDiv.innerHTML = grid[yCoord][xCoord];
+	targetDiv.classList.add("animateScan")
 
 }
 

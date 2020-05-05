@@ -177,13 +177,9 @@ function recursiveDivisionMaze() {
 
 function buildNewWall(position, start, end, isVertical) {
     const wallNodesSequence = [];
-    const endValWasOneTooLongForThis = end - 1
     // choose a random position for the gap in the wall
-    const rangeOfPotentialPositions = endValWasOneTooLongForThis - start;
-    let gapPosition = start + parseInt((Math.random() * rangeOfPotentialPositions).toFixed(0))
-    while (gapPosition === start) {
-        gapPosition = start + parseInt((Math.random() * rangeOfPotentialPositions).toFixed(0))
-    }
+    const gapPosition = getGap(start, end)
+
     // if (isVertical) {
     //     console.log("Building vertical wall...")
     // } else {
@@ -192,7 +188,7 @@ function buildNewWall(position, start, end, isVertical) {
     // console.log("POSITION: " + position)
     // console.log("start: " + start)
     // console.log("gap position: " + gapPosition)
-    // console.log("end: " + endValWasOneTooLongForThis)
+    // console.log("end: " + end)
 
     for (let i = start; i < end; i++) {
         // this if block creates the wall's 1 unit gap
@@ -239,8 +235,18 @@ function subdivideLeftRightVerticalWall(parentCell) {
 
     // ### step two: calculate the min/max x&y values of the new Cells based on the position & orientation of the previous Wall
 
-    const leftCellMinMax = [parentCell.xMin, parentCell.xMin + parentCell.verticalWallXCoord, parentCell.yMin, parentCell.yMax]
-    const rightCellMinMax = [parentCell.xMin + parentCell.verticalWallXCoord, parentCell.xMax, parentCell.yMin, parentCell.yMax]
+    const leftCellMinMax = [parentCell.xMin, parentCell.verticalWallXCoord, parentCell.yMin, parentCell.yMax]
+    const rightCellMinMax = [parentCell.verticalWallXCoord, parentCell.xMax, parentCell.yMin, parentCell.yMax]
+
+    if (leftCellMinMax[0] === leftCellMinMax[1] || leftCellMinMax[2] === leftCellMinMax[3]) {
+        console.log(parentCell.xMin, parentCell.xMax, parentCell.verticalWallXCoord)
+        throw "Left Cell: Min was equal to max"
+    } else if (rightCellMinMax[0] === rightCellMinMax[1] || rightCellMinMax[2] === rightCellMinMax[3]) {
+        console.log(parentCell.xMin, parentCell.xMax, parentCell.verticalWallXCoord)
+        throw "Right Cell: Min was equal to max"
+    } else {
+        console.log("Min & Max OK")
+    }
 
     // ### step three: With the dimensions of the new Cells decided, calculate whether each one will subdivide further, or stop.
     // use these constants to inform the new cells' "subdivideFurther" arguments.
@@ -262,11 +268,6 @@ function subdivideLeftRightVerticalWall(parentCell) {
     const rightCell =
         new Cell(rightCellMinMax[0], rightCellMinMax[1], rightCellMinMax[2], rightCellMinMax[3], true, false,
             null, secondHorizontalWallPositionY, parentCell, CELL_NUMBER, rightCellDivides)
-    // console.log("LEFT AND RIGHT:")
-    // console.log(leftCell, rightCell)
-    // console.log(leftCellMinMax[0], leftCellMinMax[1], leftCellMinMax[2], leftCellMinMax[3])
-    // console.log(rightCellMinMax[0], rightCellMinMax[1], rightCellMinMax[2], rightCellMinMax[3])
-    // console.log("wall height: ", firstHorizontalWallPositionY, secondHorizontalWallPositionY)
     return [leftCell, rightCell]
 }
 
@@ -301,6 +302,16 @@ function subdivideTopBottomHorizontalWall(parentCell) {
     // bottom Cell has a higher min Y value ("the bottom border stays the same while toe top border shrinks")
     const bottomCellMinMax = [parentCell.xMin, parentCell.xMax, parentCell.yMin + parentCell.horizontalWallYCoord, parentCell.yMax]
 
+    if (topCellMinMax[0] === topCellMinMax[1] || topCellMinMax[2] === topCellMinMax[3]) {
+        console.log(parentCell.yMin, parentCell.yMax, parentCell.horizontalWallYCoord)
+        throw "Top Cell: Min was equal to max"
+    } else if (bottomCellMinMax[0] === bottomCellMinMax[1] || bottomCellMinMax[2] === bottomCellMinMax[3]) {
+        console.log(parentCell.yMin, parentCell.yMax, parentCell.horizontalWallYCoord)
+        throw "Bottom Cell: Min was equal to max"
+    } else {
+        console.log("Min & Max OK")
+    }
+
     // ### step three: With the dimensions of the new Cells decided, calculate whether each one will subdivide further, or stop.
     // use these constants to inform the new cells' "subdivideFurther" arguments.
     let verticalGapGreaterThanThree = topCellMinMax[3] - topCellMinMax[2] > 3
@@ -321,12 +332,6 @@ function subdivideTopBottomHorizontalWall(parentCell) {
     const bottomCell =
         new Cell(bottomCellMinMax[0], bottomCellMinMax[1], bottomCellMinMax[2], bottomCellMinMax[3], false, true,
             secondVerticalWallPositionX, null, parentCell, CELL_NUMBER, bottomCellDivides)
-
-    // console.log("top and bottom: ")
-    // console.log(topCell, bottomCell)
-    // console.log(topCellMinMax[0], topCellMinMax[1], topCellMinMax[2], topCellMinMax[3])
-    // console.log(bottomCellMinMax[0], bottomCellMinMax[1], bottomCellMinMax[2], bottomCellMinMax[3])
-    // console.log("wall x position: ", firstVerticalWallPositionX, secondVerticalWallPositionX)
     return [topCell, bottomCell]
 }
 
@@ -339,9 +344,20 @@ function getRandomEvenCoordinate(min, max) {
     let random;
     let noDecimals;
     do {
+        // console.log("Looping: ", min, max)
         random = Math.random() * (max - min) + min;
         noDecimals = parseInt(random.toFixed(0))
     } while (noDecimals % 2 == 1);
 
     return noDecimals
+}
+
+function getGap(min, max) {
+    // untested. It should generate random even nums between min and max.
+    const oneLessThanEndValue = max - 1 // because the gap can't be the value of the end wall
+    const oneMoreThanStartValue = min + 1 // because the gap can't be the value of the start wall
+    // TODO: refactor so the values being input into min,max are always OK without the +/- 1
+    const gapPosition = Math.floor(Math.random() * (oneLessThanEndValue - oneMoreThanStartValue)) + oneMoreThanStartValue;
+
+    return gapPosition
 }

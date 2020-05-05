@@ -15,9 +15,9 @@ const SHORTEST_PATH_NODE = "+"
 
 // generate a n by m grid of .'s
 const grid = [];
-for (let m = 0; m < 20; m++) {
+for (let m = 0; m < 10; m++) {
 	const row = [];
-	for (let n = 0; n < 40; n++) {
+	for (let n = 0; n < 20; n++) {
 		row.push(".");
 	}
 	grid.push(row);

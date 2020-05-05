@@ -85,11 +85,11 @@ moveTargetBtn.addEventListener("click", () => {
 	nextClickMovesTarget();
 });
 
-// ### Let user add a Bomb
-const moveBombBtn = document.getElementById("moveBombBtn");
-moveBombBtn.addEventListener("click", () => {
-	nextClickMovesBomb();
-});
+// // ### Let user add a Bomb
+// const moveBombBtn = document.getElementById("moveBombBtn");
+// moveBombBtn.addEventListener("click", () => {
+// 	nextClickMovesBomb();
+// });
 
 // ### Let user remove a wall segment
 const removeWallBtn = document.getElementById("removeWallBtn");
@@ -117,6 +117,7 @@ recursiveDivisonBtn.addEventListener("click", () => {
 	animateMaze(sequence);
 })
 
+// ### Let user generate a maze via Binary Tree Division
 const binaryTreeBtn = document.getElementById("binaryTreeBtn")
 binaryTreeBtn.addEventListener("click", () => {
 	// step 1: modify the grid
@@ -127,12 +128,11 @@ binaryTreeBtn.addEventListener("click", () => {
 
 // todo: make Dijkstra's find its way to the bomb first if there is a bomb
 // todo: make Dijkstra's path from the bomb to the target
-// todo: visualize all the spaces "searched" by Dijkstra's. o's and O's
-// todo: Add "Speed" selector
-// todo: Add "Mazes & Patterns" selector & generators (how?)
-
-// TODO: Add "generate board width by browser width"
 // TODO: Add a "bomb node" option... Also yikes!
+// todo: visualize all the spaces "searched" by Dijkstra's. o's and O's
+
+// todo: Add "Speed" selector
+// todo: Add "Mazes" selector (how?)
 
 // FIXME: add a "reset Grid and board" func and call it before animateMaze() for every "create maze" button *IMPORTANT* 
 // TODO: animate grid with CSS transitions (colors, KISS)
@@ -530,16 +530,9 @@ function fixBoardInstantlyFillsOnClickBug() {
 	}
 }
 
-// a button for printing the grid's current first 4 values
-const testButton = document.getElementById("printGrid");
-testButton.addEventListener("click", () => {
-	for (i = 0; i < 4; i++) {
-		console.log(grid[i]);
-	}
-});
-
-const inspect = document.getElementById("inspect");
-inspect.addEventListener("click", () => {
+// "ready, set, go...!!!"
+const visualize = document.getElementById("go");
+visualize.addEventListener("click", () => {
 	const shortestPathAndScanningOrder = dijkstras(grid);
 	if (shortestPathAndScanningOrder === false) {
 		throw "ERROR: No path from START_NODE to TARGET_NODE. Remove a Wall Segment and try again!"

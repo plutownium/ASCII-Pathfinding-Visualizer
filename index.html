@@ -32,15 +32,18 @@
 	<div>
 		<span>* Start Node (Origin)</span>
 		<span>X Target Node</span>
-		<span>% Bomb Node</span>
+		<!-- <span>% Bomb Node</span> -->
 		<span>. Unvisited Node</span>
-		<span>o O Visited Nodes</span>
+		<span>o Visited Nodes</span>
 		<span>+ Shortest Path Node</span>
 		<span># Wall Node</span>
 	</div>
+	<div id="debuggingStuff">
+		<button id="inspect">Inspect Dijkstra's</button>
+	</div>
 	<button id="moveStartBtn">Place Start Node</button>
 	<button id="moveTargetBtn">Place Target Node</button>
-	<button id="moveBombBtn">Place Bomb Node</button>
+	<!-- <button id="moveBombBtn">Place Bomb Node</button> -->
 	<button id="removeWallBtn">Remove Wall Segment</button>
 	<button id="clearBoardBtn">Clear Board</button>
 	<button id="randomMazeBtn">Generate Random Maze</button>
@@ -54,10 +57,7 @@
 	<div id="jumbotron">
 		<div id="main"></div>
 	</div>
-	<div id="debuggingStuff">
-		<button id="printGrid">Print Grid</button>
-		<button id="inspect">Inspect Dijkstra's</button>
-	</div>
+
 </body>
 
 </html>

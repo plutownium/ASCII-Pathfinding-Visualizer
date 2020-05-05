@@ -238,6 +238,7 @@ function subdivideLeftRightVerticalWall(parentCell) {
     const leftCellMinMax = [parentCell.xMin, parentCell.verticalWallXCoord, parentCell.yMin, parentCell.yMax]
     const rightCellMinMax = [parentCell.verticalWallXCoord, parentCell.xMax, parentCell.yMin, parentCell.yMax]
 
+    // this block helps the code "fail early"
     if (leftCellMinMax[0] === leftCellMinMax[1] || leftCellMinMax[2] === leftCellMinMax[3]) {
         console.log(parentCell.xMin, parentCell.xMax, parentCell.verticalWallXCoord)
         throw "Left Cell: Min was equal to max"
@@ -298,10 +299,11 @@ function subdivideTopBottomHorizontalWall(parentCell) {
 
     //  the previous Wall cuts horizontally, so render Top/Bottom... note, the min/max X vals stay the same here
     // top Cell has a lower max Y value ("the top border stays the same while the bottom border shrinks")
-    const topCellMinMax = [parentCell.xMin, parentCell.xMax, parentCell.yMin, parentCell.yMin + parentCell.horizontalWallYCoord]
+    const topCellMinMax = [parentCell.xMin, parentCell.xMax, parentCell.yMin, parentCell.horizontalWallYCoord]
     // bottom Cell has a higher min Y value ("the bottom border stays the same while toe top border shrinks")
-    const bottomCellMinMax = [parentCell.xMin, parentCell.xMax, parentCell.yMin + parentCell.horizontalWallYCoord, parentCell.yMax]
+    const bottomCellMinMax = [parentCell.xMin, parentCell.xMax, parentCell.horizontalWallYCoord, parentCell.yMax]
 
+    // this block helps the code "fail early"
     if (topCellMinMax[0] === topCellMinMax[1] || topCellMinMax[2] === topCellMinMax[3]) {
         console.log(parentCell.yMin, parentCell.yMax, parentCell.horizontalWallYCoord)
         throw "Top Cell: Min was equal to max"

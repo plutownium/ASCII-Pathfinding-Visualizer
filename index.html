@@ -29,29 +29,40 @@
 		<!-- Speed Selector -->
 		<ul></ul>
 	</div>
-	<div>
-		<span>* Start Node (Origin)</span>
-		<span>X Target Node</span>
-		<!-- <span>% Bomb Node</span> -->
-		<span>. Unvisited Node</span>
-		<span>o Visited Nodes</span>
-		<span>+ Shortest Path Node</span>
-		<span># Wall Node</span>
-	</div>
-	<div id="debuggingStuff">
+
+	<!-- <div id="debuggingStuff">
 		<button id="inspect">Inspect Dijkstra's</button>
+	</div> -->
+	<div class="container">
+		<div id="legend">
+			<span>* Start Node (Origin)</span><br />
+			<span>X Target Node</span><br />
+			<!-- <span>% Bomb Node</span> -->
+			<span>. Unvisited Node</span><br />
+			<span>o Visited Nodes</span><br />
+			<span>+ Shortest Path Node</span><br />
+			<span># Wall Node</span>
+		</div>
 	</div>
-	<button id="moveStartBtn">Place Start Node</button>
-	<button id="moveTargetBtn">Place Target Node</button>
-	<!-- <button id="moveBombBtn">Place Bomb Node</button> -->
-	<button id="removeWallBtn">Remove Wall Segment</button>
-	<button id="clearBoardBtn">Clear Board</button>
-	<button id="randomMazeBtn">Generate Random Maze</button>
-	<button id="recursiveDivisonBtn">Generate Recursive Division Maze</button>
-	<button id="binaryTreeBtn">Generate Binary Tree Maze</button>
-	<button id="go">Visualize Dijkstra's</button>
-	<div id="messageBar">
-		<p>Add a Start Node and a Target Node. Get creative adding some Wall Segments!</p>
+	<div class="container">
+		<div id="buttons">
+			<button id="moveStartBtn" class="button green">Place Start Node</button>
+			<button id="moveTargetBtn" class="button green">Place Target Node</button><br />
+
+			<!-- <button id="moveBombBtn">Place Bomb Node</button> -->
+			<button id="removeWallBtn" class="button red">Remove Wall Segment</button>
+			<button id="clearBoardBtn" class="button red">Clear Board</button><br />
+
+			<button id="randomMazeBtn" class="button blue">Generate Random Maze</button><br />
+			<button id="recursiveDivisonBtn" class="button blue">Generate Recursive Division Maze</button><br />
+			<button id="binaryTreeBtn" class="button blue">Generate Binary Tree Maze</button><br />
+			<button id="go" class="button green">Visualize Dijkstra's</button>
+		</div>
+	</div>
+	<div class="container">
+		<div id="messageBar">
+			<p>Add a Start Node and a Target Node. Get creative adding some Wall Segments!</p>
+		</div>
 	</div>
 
 	<div id="jumbotron">

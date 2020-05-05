@@ -159,9 +159,7 @@ function recursiveDivisionMaze() {
         }
     }
 
-    // TODO: Insert code that says, 
-    // "If Cell min value is 3 or less spaces away fromt he bottom or right border, do not build any wall"
-
+    // FIXME: cell walls sometimes insert at the gap value of a previous cell
     console.log("Returning...")
     return buildSequence
 }
@@ -170,12 +168,12 @@ function buildNewWall(position, start, end, isVertical) {
     const wallNodesSequence = [];
     // summary: "if the position of the wall is touching the right border or the bottom border, skip building a wall here."
     if (isVertical) { // if the wall is vertical |
-        console.log(position == grid[0].length - 2)
+        // console.log(position == grid[0].length - 2)
         if (position == grid[0].length - 2) { // check if the | is against the right border ||
             return wallNodesSequence;
         }
     } else { // if the wall is horizontal -
-        console.log(position == grid.length - 2)
+        // console.log(position == grid.length - 2)
         if (position == grid.length - 2) { // check if the - is against the bottom border =
             return wallNodesSequence;
         }
@@ -183,17 +181,17 @@ function buildNewWall(position, start, end, isVertical) {
     // choose a random position for the gap in the wall
     const gapPosition = getGap(start, end)
 
-    if (isVertical) {
-        console.log("Building vertical wall...")
-    } else {
-        console.log("insert horizontal wall")
-    }
-    console.log("POSITION: " + position)
-    console.log("start: " + start)
-    console.log("gap position: " + gapPosition)
-    console.log("end: " + end)
+    // if (isVertical) {
+    //     console.log("Building vertical wall...")
+    // } else {
+    //     console.log("insert horizontal wall")
+    // }
+    // console.log("POSITION: " + position)
+    // console.log("start: " + start)
+    // console.log("gap position: " + gapPosition)
+    // console.log("end: " + end)
 
-    for (let i = start; i < end; i++) {
+    for (let i = start + 1; i < end - 1; i++) {
         // this if block creates the wall's 1 unit gap
         if (i === gapPosition) {
 

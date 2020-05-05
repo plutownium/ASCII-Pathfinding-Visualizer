@@ -86,9 +86,10 @@ function recursiveDivisionMaze() {
         unacceptableStartPosition = initWallPosition <= offset || initWallPosition >= width - offset || initWallPosition % 2 === 1
     }
     // Cell constructor: 
-    // constructor(xMin, xMax, yMin, yMax, isHorizontal, isVertical, newWallXCoord, newWallYCoord, parentCell,
-    //     isTop, isLeft, cellNumber, subdivideFurther)
-    const initCell = new Cell(0, width, 0, height, false, true, initWallPosition, null, null, null, null, CELL_NUMBER, true)
+    // constructor(xMin, xMax, yMin, yMax, isHorizontal, isVertical, newWallXCoord, newWallYCoord, parentCell, cellNumber, 
+    // subdivideFurther) {
+    const initCell = new Cell(0, width, 0, height, false, true, initWallPosition, null, null, CELL_NUMBER, true)
+    console.log("TEST 3000: ")
     console.log(initCell.newWallXCoord, initCell.yMin, initCell.yMax, true)
     let wallNodes = buildNewWall(initCell.newWallXCoord, initCell.yMin, initCell.yMax, true)
     for (const coord in wallNodes) {
@@ -96,6 +97,7 @@ function recursiveDivisionMaze() {
     }
     cellStorage.push(initCell)
     let startingCell = 0;
+    let endingCell = cellStorage.length
 
     // summary: for each division, I need to...
     // 1) iterate over the last batch of cells, dividing each one, adding the newly divided cells to an array 'cellStorage'
@@ -107,56 +109,41 @@ function recursiveDivisionMaze() {
 
     // step 2: recursively divide Cells... (these ones have a horizontal wall)
     // 2 cells
-    let endingCell = cellStorage.length
     for (let i = startingCell; i < endingCell; i++) {
         const subdividedCells = seriesSubdivideCells(cellStorage[i])
         cellStorage.push(subdividedCells[0])
         cellStorage.push(subdividedCells[1])
+        console.log("TEST (TOP AND BOTTOM): ")
+        console.log(cellStorage[i])
+        // FIXME: null 0 40 false <--- null should be an int
         console.log(cellStorage[i].newWallYCoord, cellStorage[i].xMin, cellStorage[i].xMax, false)
+    }
+    // update start & end indices to loop over cellStorage, building walls out of those new cells
+    startingCell = endingCell
+    endingCell = cellStorage.length
+    for (let i = startingCell; i < endingCell; i++) {
         wallNodes = buildNewWall(cellStorage[i].newWallYCoord, cellStorage[i].xMin, cellStorage[i].xMax, false)
         // FIXME: cellStorage[i].newWallYCoord is null.
         for (const coord in wallNodes) {
             buildSequence.push(wallNodes[coord])
         }
     }
-    startingCell = endingCell - startingCell; // i think this works... FIXME tho
-    // ...
-
     // step 3: subdivide again, repeat process... (these ones have a vertical wall)
     // 4 cells;
-    endingCell = cellStorage.length;
     for (let i = startingCell; i < endingCell; i++) {
         const subdividedCells = seriesSubdivideCells(cellStorage[i])
         cellStorage.push(subdividedCells[0])
         cellStorage.push(subdividedCells[1])
+    }
+    startingCell = endingCell
+    endingCell = cellStorage.length
+    for (let i = startingCell; i < endingCell; i++) {
         wallNodes = buildNewWall(cellStorage[i].newWallXCoord, cellStorage[i].yMin, cellStorage[i].yMax, true)
+        // FIXME: cellStorage[i].newWallYCoord is null.
         for (const coord in wallNodes) {
             buildSequence.push(wallNodes[coord])
         }
     }
-    startingCell = endingCell - startingCell
-
-    // [[[draft code]]]
-    // for (const cell in cellStorage) {
-    //     console.log("SUBDIVIDING! magic is happening!")
-    //     let dividedCells = seriesSubdivideCells(cellStorage[cell])
-    //     for (const cell in dividedCells) { // flip values in buildNewWall since we are alternating between vertical and horizontal
-    //         // e.g. .newWallYCoord => .newWallXCoord, xMin&xMax => yMin&yMax, false => true
-    //         wallNodes = buildNewWall(dividedCells[cell].newWallXCoord, dividedCells[cell].yMin, dividedCells[cell].yMax, true)
-    //         for (const node in wallNodes) {
-    //             buildSequence.push(wallNodes[node])
-    //         }
-    //     }
-    //     cellStorage = [];
-    //     for (const cell in dividedCells) {
-    //         cellStorage.push(dividedCells[cell])
-    //     }
-    // }
-
-    // step 4: subdivide again, repeat process (these ones have a horizontal wall)
-    // 8 cells
-
-
 
 
 
@@ -187,7 +174,6 @@ function buildNewWall(position, start, end, isVertical) {
                 grid[i][position] = WALL_SEGMENT
                 wallNodesSequence.push([position, i])
             } else {
-                console.log(grid[position])
                 grid[position][i] = WALL_SEGMENT
                 wallNodesSequence.push([i, position])
             }
@@ -400,18 +386,19 @@ function seriesSubdivideCells(cell) {
         // ### step one: figure out where the new Wall will go based on the dimensions of the current Cell.
 
         // random a y value that doesn't touch any of the previous walls
-        horizontalWallPositionY = parseInt(Math.random() * cell.yMax).toFixed(0)
+        horizontalWallPositionY = parseInt(parseInt(Math.random() * cell.yMax).toFixed(0))
         unacceptableStartPosition =
             horizontalWallPositionY < cell.yMin + cell.offset ||
             horizontalWallPositionY > cell.yMax - cell.offset ||
             horizontalWallPositionY % 2 === 1
         while (unacceptableStartPosition) { // reroll if the start position is unacceptable
-            horizontalWallPositionY = parseInt(Math.random() * cell.yMax).toFixed(0)
+            horizontalWallPositionY = parseInt(parseInt(Math.random() * cell.yMax).toFixed(0))
             unacceptableStartPosition =
                 horizontalWallPositionY < cell.yMin + cell.offset ||
                 horizontalWallPositionY > cell.yMax - cell.offset ||
                 horizontalWallPositionY % 2 === 1
         }
+
 
         // ### step two: calculate the min/max x&y values of the new Cells based on the position & orientation of the previous Wall
 
@@ -439,35 +426,38 @@ function seriesSubdivideCells(cell) {
         const rightCellDivides = verticalGapGreaterThanThree && horizontalGapGreaterThanThree;
 
         // ### step four: create the new Cells and return them.
-        // constructor(xMin, xMax, yMin, yMax, isHorizontal, isVertical, newWallXCoord, newWallYCoord, parentCell, cellNumber,
-        //     subdivideFurther)
+        // constructor(xMin, xMax, yMin, yMax, isHorizontal, isVertical, 
+        // newWallXCoord, newWallYCoord, parentCell, cellNumber, subdivideFurther)
+        console.log("WALL POSITIONS in L/R cells ")
+        console.log(verticalWallPositionX, horizontalWallPositionY)
         CELL_NUMBER++;
         const leftCell =
             new Cell(leftCellMinMax[0], leftCellMinMax[1], leftCellMinMax[2], leftCellMinMax[3], horizontalSplit, verticalSplit,
-                verticalWallPositionX, null, cell, CELL_NUMBER, leftCellDivides)
+                verticalWallPositionX, horizontalWallPositionY, cell, CELL_NUMBER, leftCellDivides)
         CELL_NUMBER++;
         const rightCell =
             new Cell(rightCellMinMax[0], rightCellMinMax[1], rightCellMinMax[2], rightCellMinMax[3], horizontalSplit, verticalSplit,
-                verticalWallPositionX, null, cell, CELL_NUMBER, rightCellDivides)
+                verticalWallPositionX, horizontalWallPositionY, cell, CELL_NUMBER, rightCellDivides)
         console.log(leftCell, rightCell)
         return [leftCell, rightCell]
     } else if (horizontalSplit) { // yields a top & bottom cell
         // ### step one: figure out where the new Wall will go based on the dimensions of the current Cell.
 
         // random a x value that doesn't touch any of the previous walls
-        verticalWallPositionX = parseInt(Math.random() * cell.xMax).toFixed(0)
+        verticalWallPositionX = parseInt(parseInt(Math.random() * cell.xMax).toFixed(0))
         unacceptableStartPosition =
             verticalWallPositionX < cell.xMin + cell.offset ||
             verticalWallPositionX > cell.xMax - cell.offset ||
             verticalWallPositionX % 2 === 1
         console.log(unacceptableStartPosition)
         while (unacceptableStartPosition) {
-            verticalWallPositionX = parseInt(Math.random() * cell.xMax).toFixed(0)
+            verticalWallPositionX = parseInt(parseInt(Math.random() * cell.xMax).toFixed(0))
             unacceptableStartPosition =
                 verticalWallPositionX < cell.xMin + cell.offset ||
                 verticalWallPositionX > cell.xMax - cell.offset ||
                 verticalWallPositionX % 2 === 1
         }
+
 
         // ### step two: calculate the min/max x&y values of the new Cells based on the position & orientation of the previous Wall
 
@@ -489,16 +479,18 @@ function seriesSubdivideCells(cell) {
         const bottomCellDivides = verticalGapGreaterThanThree && horizontalGapGreaterThanThree;
 
         // ### step four: create the new Cells and return them.
-        // constructor(xMin, xMax, yMin, yMax, isHorizontal, isVertical, newWallXCoord, newWallYCoord, parentCell, cellNumber,
-        // subdivideFurther)
+        // constructor(xMin, xMax, yMin, yMax, isHorizontal, isVertical, 
+        // newWallXCoord, newWallYCoord, parentCell, cellNumber, subdivideFurther)
+        console.log("WALL POSITIONS in TOP/BOTTOM cells")
+        console.log(verticalWallPositionX, horizontalWallPositionY)
         CELL_NUMBER++;
         const topCell =
             new Cell(topCellMinMax[0], topCellMinMax[1], topCellMinMax[2], topCellMinMax[3], horizontalSplit, verticalSplit,
-                verticalWallPositionX, null, cell, CELL_NUMBER, topCellDivides)
+                verticalWallPositionX, horizontalWallPositionY, cell, CELL_NUMBER, topCellDivides)
         CELL_NUMBER++;
         const bottomCell =
             new Cell(bottomCellMinMax[0], bottomCellMinMax[1], bottomCellMinMax[2], bottomCellMinMax[3], horizontalSplit, verticalSplit,
-                verticalWallPositionX, null, cell, CELL_NUMBER, bottomCellDivides)
+                verticalWallPositionX, horizontalWallPositionY, cell, CELL_NUMBER, bottomCellDivides)
 
         console.log(topCell, bottomCell)
         return [topCell, bottomCell]

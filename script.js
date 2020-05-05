@@ -111,15 +111,14 @@ binaryTreeBtn.addEventListener("click", () => {
 // todo: make Dijkstra's find its way to the bomb first if there is a bomb
 // todo: make Dijkstra's path from the bomb to the target
 // todo: visualize all the spaces "searched" by Dijkstra's. o's and O's
-// todo: Add "Speed" selector
-// todo: Add "Mazes & Patterns" selector & generators (how?)
+// todo: Optimize animation speed for Search and Path animation
+// todo: Add "Mazes & Patterns" selector (how?)
 
-// TODO: Add "generate board width by browser width"
-// TODO: Add a random maze generator option...! Yikes.
-// TODO: add Horizontal Skew Maze generator. YIKES
-// TODO: Add a "bomb node" option... Also yikes!
+// TODO: Add "generate board width by browser width" -> Browser width determines grid size
 
 // FIXME: add a "reset Grid and board" func and call it before animateMaze() for every "create maze" button *IMPORTANT* 
+// note: why is this FIXME here? I don't understand its purpose
+
 // TODO: animate grid with CSS transitions (colors, KISS)
 // TODO: Style the page...
 // NOTE: It's more important to make it LOOK good than add lots of diff pathfinding algos (all basically the same)

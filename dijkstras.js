@@ -1,9 +1,12 @@
 function dijkstras(finishedGrid) {
 	// step 1: confirm there is both a Start Node and a Target Node & get start coordinates
 	let startNodeExists = false;
+	let bombNodeExists = false;
 	let targetNodeExists = false;
 	let startCoordinates;
+	let bombNodeCoordinates;
 	let origin;
+
 	for (let x = 0; x < finishedGrid[0].length; x++) {
 		for (let y = 0; y < finishedGrid.length; y++) {
 			if (finishedGrid[y][x] === START_NODE) {
@@ -11,15 +14,20 @@ function dijkstras(finishedGrid) {
 				startCoordinates = [x, y]
 				origin = [x, y]
 			}
+			if (finishedGrid[y][x] === BOMB_NODE) {
+				bombNodeExists = true;
+				bombNodeCoordinates = [x, y]
+			}
 			if (finishedGrid[y][x] === TARGET_NODE) {
 				targetNodeExists = true;
 			}
 		}
 	}
 	if (startNodeExists === false || targetNodeExists === false) {
-		console.log("Place start node & target node");
-		return "Place start node & target node";
-		// FIXME: update msg to user with appropriate msg ("Place start node & target node first")
+		console.log("Place both the start node & the target node.");
+		const messageBarParagraphTag = document.getElementById("messageBar").children[0]
+		messageBarParagraphTag.innerHTML = "Place both the start node & the target node."
+		return "Place both the start node & the target node.";
 	}
 
 	// step 2: get list of adjacent nodes that have not yet been visited. 
@@ -47,6 +55,125 @@ function dijkstras(finishedGrid) {
 	let content;
 	let iteration = 0;
 
+	// TODO: mk dijkstras search for bomb node first if it exists
+	// todo: when dijkstras finds the bomb node (if it exists), select the Path obj that goes to that bomb node, and 
+	// make it the start of a new set of Path objects. Path objects from bomb node -> target node simply add onto the .path
+	if (bombNodeExists) {
+		while (true) {
+			let index;
+			// for the first iteration, startValueX and startValueY were already given values up on the previous lines.
+			if (iteration > 0) {
+				index = iteration - 1;
+				startCoordinates = nextVisitsList[index]
+				if (typeof startCoordinates == 'undefined') {
+					console.log("ERROR")
+					const messageBarParagraphTag = document.getElementById("messageBar").children[0]
+					messageBarParagraphTag.innerHTML = "No path available! Remove a Wall Segment and try again!"
+					return false
+				}
+			}
+
+			startValueX = startCoordinates[0]
+			startValueY = startCoordinates[1]
+
+			// Step 3 in documentation...
+			// ### get the node directly to the right
+			let adjacentNode = [startValueX + 1, startValueY]
+			// confirm the adjacentNode is on the grid and therefore will exist.
+			let isOnTheGrid =
+				adjacentNode[0] <= maxXValue && adjacentNode[0] >= minXValue &&
+				adjacentNode[1] <= maxYValue && adjacentNode[1] >= minYValue
+			// don't put a node on nextVisitsList twice.
+			let notPlanningToVisit = !isArrayInArray(nextVisitsList, adjacentNode)
+			if (isOnTheGrid && notPlanningToVisit) {
+				// use finishedGrid[y-coord][x-coord] as arg because we're pulling out the # symbol if it is there
+				content = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates, visitsWithPathList)
+				nextVisitsList = content[0]
+				visitsWithPathList = content[1]
+			}
+
+			// ### get the node directly to the left
+			adjacentNode = [startValueX - 1, startValueY]
+			isOnTheGrid =
+				adjacentNode[0] <= maxXValue && adjacentNode[0] >= minXValue &&
+				adjacentNode[1] <= maxYValue && adjacentNode[1] >= minYValue
+			notPlanningToVisit = !isArrayInArray(nextVisitsList, adjacentNode)
+			if (isOnTheGrid && notPlanningToVisit) {
+				content = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates, visitsWithPathList)
+				nextVisitsList = content[0]
+				visitsWithPathList = content[1]
+			}
+
+			// ### get the node directly above
+			adjacentNode = [startValueX, startValueY + 1]
+			isOnTheGrid =
+				adjacentNode[0] <= maxXValue && adjacentNode[0] >= minXValue &&
+				adjacentNode[1] <= maxYValue && adjacentNode[1] >= minYValue
+			notPlanningToVisit = !isArrayInArray(nextVisitsList, adjacentNode)
+			if (isOnTheGrid && notPlanningToVisit) {
+				content = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates, visitsWithPathList)
+				nextVisitsList = content[0]
+				visitsWithPathList = content[1]
+			}
+
+			// ### get the node directly below
+			adjacentNode = [startValueX, startValueY - 1]
+			isOnTheGrid =
+				adjacentNode[0] <= maxXValue && adjacentNode[0] >= minXValue &&
+				adjacentNode[1] <= maxYValue && adjacentNode[1] >= minYValue
+			notPlanningToVisit = !isArrayInArray(nextVisitsList, adjacentNode)
+			if (isOnTheGrid && notPlanningToVisit) {
+				content = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates, visitsWithPathList)
+				nextVisitsList = content[0]
+				visitsWithPathList = content[1]
+
+			}
+
+			// Step 4 in documentation...
+			// add Current Node to the list of Visited Nodes so the program knows to not go back here...
+			// but only add Current Node if it ISN'T already on the list...
+			const currentNodeIsInVisitedNodesList = isArrayInArray(visitedNodesList, [startCoordinates[0], startCoordinates[1]])
+			if (!currentNodeIsInVisitedNodesList) {
+				visitedNodesList.push(startCoordinates)
+			}
+
+			// Step 5... Record the distance from the Starting Node to the Current node & record the path used to get there...
+			if (iteration == 0) { // while iteration==0, STARTING_NODE===CurrentNode, so it's unique: There is no path to get there.
+				const firstEntry = [startValueX, startValueY]
+				const initPath = new Path(0, [], firstEntry, false)
+
+				potentialPaths.push(initPath)
+			} else { // block summary: generate a new Path to add to potentialPaths
+				const previousNodeCoordinates = [visitsWithPathList[index][2], visitsWithPathList[index][3]]
+
+				const pathToNode = locatePathToCurrentNode(potentialPaths, previousNodeCoordinates)
+				const isTarget = finishedGrid[startValueY][startValueX] === TARGET_NODE;
+				const currentPath = [...pathToNode.path]
+				const newPath = new Path(pathToNode.distance + 1, currentPath, [startValueX, startValueY], isTarget)
+				potentialPaths.push(newPath)
+			}
+
+			// Step 6: if the CurrentNode is not the TargetNode, change it from . to o in the Grid, then cycle back to step 2
+			if (finishedGrid[startValueY][startValueX] === BOMB_NODE) {
+				break
+			} else {
+				if (finishedGrid[startValueY][startValueX] !== START_NODE && finishedGrid[startValueY][startValueX] !== TARGET_NODE) {
+					// replace empty space with "VISITED" marker
+					finishedGrid[startValueY][startValueX] = VISITED_NODE;
+				}
+				iteration = iteration + 1;
+			}
+		}
+	}
+	// reset iteration counter
+	iteration = 0;
+
+	// reset startCoordinates if bomb_node was searched for, so the second while loop still works...
+	if (bombNodeExists) {
+		// without these lines, while loop 2 would attempt to set startValueX/Y to startCoordinates[0] & [1], and get a bug
+		startCoordinates = bombNodeCoordinates
+	}
+
 	// [cycle start] start cycling through adjacent nodes
 	// removed while(nodeContent !== TARGET_NODE) because there is an if/break block at the end that takes care of exiting loop
 	while (true) { // sub out iteration < 30 to test
@@ -65,14 +192,6 @@ function dijkstras(finishedGrid) {
 				messageBarParagraphTag.innerHTML = "No path available! Remove a Wall Segment and try again!"
 				return false
 			}
-			// try {
-			// 	startCoordinates = nextVisitsList[index]
-			// } catch (err) {
-			// 	console.log("ERROR: " + err)
-			// 	const messageBarParagraphTag = document.getElementById("messageBar").children[0]
-			// 	messageBarParagraphTag.innerHTML = "No path available! Remove a Wall Segment and try again!"
-			// 	return
-			// }
 		}
 
 		startValueX = startCoordinates[0]
@@ -140,11 +259,19 @@ function dijkstras(finishedGrid) {
 		}
 
 		// Step 5... Record the distance from the Starting Node to the Current node & record the path used to get there...
-		if (iteration == 0) { // while iteration==0, STARTING_NODE===CurrentNode, so it's unique: There is no path to get there.
+		if (iteration == 0 && bombNodeExists == false) { // while iteration==0, STARTING_NODE===CurrentNode, so it's unique: There is no path to get there.
 			const firstEntry = [startValueX, startValueY]
 			const initPath = new Path(0, [], firstEntry, false)
 
 			potentialPaths.push(initPath)
+
+			// if there is a bomb node, the first iteration is different...
+			// } else if (iteration == 0 && bombNodeExists == true) {
+			// 	const pathToBomb = potentialPaths[potentialPaths.length - 1]
+			// 	const isTarget = finishedGrid[startValueY][startValueX] === TARGET_NODE;
+			// 	const currentPath = [...pathToBomb.path] // the path leading to the bomb
+			// 	const pathFromBomb = new Path(pathToBomb.distance + 1, currentPath, [startValueX, startValueY], isTarget)
+			// 	potentialPaths = [pathFromBomb] // make all future paths use pathFromBomb as the basis for their pathfinding
 		} else { // block summary: generate a new Path to add to potentialPaths
 			const previousNodeCoordinates = [visitsWithPathList[index][2], visitsWithPathList[index][3]]
 
@@ -154,6 +281,7 @@ function dijkstras(finishedGrid) {
 			const newPath = new Path(pathToNode.distance + 1, currentPath, [startValueX, startValueY], isTarget)
 			potentialPaths.push(newPath)
 		}
+		// TODO: I think this needs some modification for "if (bombNodeExists)". something like:
 
 		// Step 6: if the CurrentNode is not the TargetNode, change it from . to o in the Grid, then cycle back to step 2
 		if (finishedGrid[startValueY][startValueX] === TARGET_NODE) {

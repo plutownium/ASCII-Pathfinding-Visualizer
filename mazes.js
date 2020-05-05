@@ -209,8 +209,6 @@ function buildNewWall(position, start, end, isVertical) {
     return wallNodesSequence
 }
 
-// FIXME: saw a wall appear adjacent to the bottom wall, no gap between the two like ## instead of #.#
-
 function subdivideLeftRightVerticalWall(parentCell) {
     // check the right kind of cell was passed into the function. 
     // since the cells are Left / Right, we expect the parentCell.splitsVertically to be true.
@@ -351,7 +349,6 @@ function getGap(min, max) {
     // untested. It should generate random even nums between min and max.
     const oneLessThanEndValue = max - 1 // because the gap can't be the value of the end wall
     const oneMoreThanStartValue = min + 1 // because the gap can't be the value of the start wall
-    // TODO: refactor so the values being input into min,max are always OK without the +/- 1
     const gapPosition = Math.floor(Math.random() * (oneLessThanEndValue - oneMoreThanStartValue)) + oneMoreThanStartValue;
 
     return gapPosition

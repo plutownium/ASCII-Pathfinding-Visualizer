@@ -110,9 +110,6 @@ function recursiveDivisionMaze() {
     startingCell = endingCell
     endingCell = cellStorage.length
     for (let i = startingCell; i < endingCell; i++) {
-        // console.log("TEST (TOP AND BOTTOM): ")
-        // console.log(cellStorage[i])
-        // console.log(cellStorage[i].horizontalWallYCoord, cellStorage[i].xMin, cellStorage[i].xMax, false)
         wallNodes = buildNewWall(cellStorage[i].horizontalWallYCoord, cellStorage[i].xMin, cellStorage[i].xMax, false)
         for (const coord in wallNodes) {
             buildSequence.push(wallNodes[coord])
@@ -127,8 +124,6 @@ function recursiveDivisionMaze() {
         if (cellStorage[i].recurse) { // move the check, "does this cell subdivide further?" outside of the function
             const subdividedCells = subdivideTopBottomHorizontalWall(cellStorage[i])
             cellStorage.push(subdividedCells[0])
-            // fixme: mazes.js:146 Uncaught TypeError: Cannot read property '0' of undefined
-            // at recursiveDivisionMaze(mazes.js: 146)
             cellStorage.push(subdividedCells[1])
         } else {
             // ?
@@ -149,8 +144,6 @@ function recursiveDivisionMaze() {
         if (cellStorage[i].recurse) { // move the check, "does this cell subdivide further?" outside of the function
             const subdividedCells = subdivideLeftRightVerticalWall(cellStorage[i])
             cellStorage.push(subdividedCells[0])
-            // fixme: mazes.js:146 Uncaught TypeError: Cannot read property '0' of undefined
-            // at recursiveDivisionMaze(mazes.js: 146)
             cellStorage.push(subdividedCells[1])
         } else {
             // ?
@@ -166,29 +159,39 @@ function recursiveDivisionMaze() {
         }
     }
 
-    // ***#
-    // FIXME: subdivided walls are getting the same value for their wall position. 
-    // it should be a randomly chosen value on each side. i.e. pairs like a,b, c,d, or even a,a occasionally (where a != b != c != d)
+    // TODO: Insert code that says, 
+    // "If Cell min value is 3 or less spaces away fromt he bottom or right border, do not build any wall"
 
-    // FIXME: some walls are only going partway thru the maze... 
     console.log("Returning...")
     return buildSequence
 }
 
 function buildNewWall(position, start, end, isVertical) {
     const wallNodesSequence = [];
+    // summary: "if the position of the wall is touching the right border or the bottom border, skip building a wall here."
+    if (isVertical) { // if the wall is vertical |
+        console.log(position == grid[0].length - 2)
+        if (position == grid[0].length - 2) { // check if the | is against the right border ||
+            return wallNodesSequence;
+        }
+    } else { // if the wall is horizontal -
+        console.log(position == grid.length - 2)
+        if (position == grid.length - 2) { // check if the - is against the bottom border =
+            return wallNodesSequence;
+        }
+    }
     // choose a random position for the gap in the wall
     const gapPosition = getGap(start, end)
 
-    // if (isVertical) {
-    //     console.log("Building vertical wall...")
-    // } else {
-    //     console.log("insert horizontal wall")
-    // }
-    // console.log("POSITION: " + position)
-    // console.log("start: " + start)
-    // console.log("gap position: " + gapPosition)
-    // console.log("end: " + end)
+    if (isVertical) {
+        console.log("Building vertical wall...")
+    } else {
+        console.log("insert horizontal wall")
+    }
+    console.log("POSITION: " + position)
+    console.log("start: " + start)
+    console.log("gap position: " + gapPosition)
+    console.log("end: " + end)
 
     for (let i = start; i < end; i++) {
         // this if block creates the wall's 1 unit gap
@@ -245,8 +248,6 @@ function subdivideLeftRightVerticalWall(parentCell) {
     } else if (rightCellMinMax[0] === rightCellMinMax[1] || rightCellMinMax[2] === rightCellMinMax[3]) {
         console.log(parentCell.xMin, parentCell.xMax, parentCell.verticalWallXCoord)
         throw "Right Cell: Min was equal to max"
-    } else {
-        console.log("Min & Max OK")
     }
 
     // ### step three: With the dimensions of the new Cells decided, calculate whether each one will subdivide further, or stop.
@@ -310,8 +311,6 @@ function subdivideTopBottomHorizontalWall(parentCell) {
     } else if (bottomCellMinMax[0] === bottomCellMinMax[1] || bottomCellMinMax[2] === bottomCellMinMax[3]) {
         console.log(parentCell.yMin, parentCell.yMax, parentCell.horizontalWallYCoord)
         throw "Bottom Cell: Min was equal to max"
-    } else {
-        console.log("Min & Max OK")
     }
 
     // ### step three: With the dimensions of the new Cells decided, calculate whether each one will subdivide further, or stop.
@@ -336,10 +335,6 @@ function subdivideTopBottomHorizontalWall(parentCell) {
             secondVerticalWallPositionX, null, parentCell, CELL_NUMBER, bottomCellDivides)
     return [topCell, bottomCell]
 }
-
-// FIXME: script.js:137 Uncaught TypeError: Cannot read property 'children' of undefined
-// at getLocationByCoordinates(script.js: 137)
-// at updateCoordsWithWall(script.js: 463)
 
 function getRandomEvenCoordinate(min, max) {
     // untested. It should generate random even nums between min and max.

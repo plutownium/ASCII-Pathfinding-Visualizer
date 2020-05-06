@@ -21,14 +21,14 @@ console.log(eightyPercentOfScreen)
 
 let widthInNodes;
 let heightInNodes;
-if (eightyPercentOfScreen < 300) { // for smaller screens, use the whole width of the screen, no whitespace left or right
+if (eightyPercentOfScreen < 330) { // for smaller screens, use the whole width of the screen, no whitespace left or right
 	widthInNodes = Math.floor(eightyPercentOfScreen * 0.065)
 	heightInNodes = Math.floor(widthInNodes / 1.2) // use a taller board on smaller screens
 	ANIMATION_SPEED = 50;
 	console.log(widthInNodes, heightInNodes)
 } else { // for bigger screens
 	widthInNodes = Math.floor(eightyPercentOfScreen * 0.045)
-	heightInNodes = Math.floor(widthInNodes / 2)
+	heightInNodes = Math.floor(widthInNodes / 2.6)
 	ANIMATION_SPEED = 80;
 	console.log(widthInNodes, heightInNodes)
 }

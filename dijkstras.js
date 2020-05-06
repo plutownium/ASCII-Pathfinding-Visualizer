@@ -17,8 +17,10 @@ function dijkstras(finishedGrid) {
 		}
 	}
 	if (startNodeExists === false || targetNodeExists === false) {
-		console.log("Place start node & target node");
-		return "Place start node & target node";
+		console.log("Place both the start node & the target node.");
+		const messageBarParagraphTag = document.getElementById("messageBar").children[0]
+		messageBarParagraphTag.innerHTML = "Place both the start node & the target node."
+		return "Place both the start node & the target node";
 		// FIXME: update msg to user with appropriate msg ("Place start node & target node first")
 	}
 

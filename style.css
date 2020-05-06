@@ -44,16 +44,16 @@ span {
 .container {
 	width: 100%;
 	/* border: 3px solid blue; */
-	/* text-align: center; */
+	text-align: center;
 }
 
 .animateScan {
 	animation-name: scan;
-  	animation-duration: 2s;
+  	animation-duration: 3s;
 }
 
 @keyframes scan {
-  0%   {background-color: rgb(4, 226, 246);}
+  0%   {background-color: rgb(4, 177, 246);}
   100% {background-color: rgb(4, 246, 36);}
 }
 
@@ -67,6 +67,18 @@ span {
 @keyframes path {
   0%   {background-color: rgb(4, 246, 36);}
   100% {background-color: rgb(242, 246, 4);}
+}
+
+.wallColor {
+	font-weight: bold;
+	background-color: #DDD;
+	animation-name: insertWall;
+	animation-duration: 4s;
+}
+
+@keyframes insertWall {
+	0% {background-color: #FFF;}
+	100% {background-color: #DDD;}
 }
 
 /*                                       */

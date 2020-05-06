@@ -29,7 +29,7 @@ if (eightyPercentOfScreen < 300) { // for smaller screens, use the whole width o
 } else { // for bigger screens
 	widthInNodes = Math.floor(eightyPercentOfScreen * 0.045)
 	heightInNodes = Math.floor(widthInNodes / 2)
-	ANIMATION_SPEED = 100;
+	ANIMATION_SPEED = 80;
 	console.log(widthInNodes, heightInNodes)
 }
 
@@ -226,11 +226,11 @@ function renderScansAndPathByTimer(algoPath) {
 		} else if (numOfAnimations > 50 && algoPath[frameNum][2] !== "path") {
 			setTimeout(function () {
 				renderIn()
-			}, ANIMATION_SPEED * 3); // speed up the animation if the numOfAnimations is > 50 
+			}, ANIMATION_SPEED * 2); // speed up the animation if the numOfAnimations is > 50 
 		} else {
 			setTimeout(function () {
 				renderIn()
-			}, ANIMATION_SPEED * 5);
+			}, ANIMATION_SPEED * 3);
 		}
 
 	}
@@ -491,7 +491,7 @@ function animateMaze(sequence) {
 		// Schedule the next frame for rendering
 		setTimeout(function () {
 			renderIn()
-		}, ANIMATION_SPEED / 5); // TEMP: changed from 100 down to 10 so I cna see results of my coding faster
+		}, Math.floor(ANIMATION_SPEED / 15)); // TEMP: changed from 100 down to 10 so I cna see results of my coding faster
 	}
 	// Render first frame
 	renderIn()
@@ -501,6 +501,7 @@ function updateCoordsWithWall(xCoord, yCoord) {
 	grid[yCoord][xCoord] = WALL_SEGMENT;
 	const targetDiv = getLocationByCoordinates(xCoord, yCoord);
 	targetDiv.innerHTML = grid[yCoord][xCoord];
+	targetDiv.classList.add("wallColor")
 }
 
 
@@ -543,9 +544,6 @@ function resetAllClasses() {
 	}
 }
 
-// FIXME: clicking "Remove Wall" after receiving a "No path from START_NODE to TARGET_NODE" 
-// msg causes the failedScan to animate instantly.
-// TODO: mk Search animation speed increase with size of board.
 // TODO: mk WALL_NODEs have a light grey background, something to help differentiate them from other nodes
 // TODO: also mk WALL_NODEs bold
 

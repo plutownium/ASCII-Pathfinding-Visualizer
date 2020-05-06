@@ -72,13 +72,6 @@ span {
 .wallColor {
 	font-weight: bold;
 	background-color: #DDD;
-	animation-name: insertWall;
-	animation-duration: 4s;
-}
-
-@keyframes insertWall {
-	0% {background-color: #FFF;}
-	100% {background-color: #DDD;}
 }
 
 /*                                       */

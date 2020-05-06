@@ -295,6 +295,8 @@ function addStartNode(x, y) {
 	}
 	// Step 2: Set the new Start Node
 	grid[y][x] = START_NODE;
+	const targetDiv = getLocationByCoordinates(x, y);
+	targetDiv.classList.add("startNodeColor")
 	rerenderGrid();
 	resetEventListeners();
 }
@@ -340,6 +342,8 @@ function addTargetNode(x, y) {
 	}
 	// Step 2: Set the new Target Node
 	grid[y][x] = TARGET_NODE;
+	const targetDiv = getLocationByCoordinates(x, y);
+	targetDiv.classList.add("targetNodeColor")
 	rerenderGrid();
 	resetEventListeners();
 }

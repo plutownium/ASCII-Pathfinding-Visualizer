@@ -69,16 +69,19 @@ span {
   100% {background-color: rgb(242, 246, 4);}
 }
 
+.startNodeColor {
+	background-color: rgb(255, 175, 1);
+	font-weight: bold;
+}
+
+.targetNodeColor {
+	background-color: red;
+	font-weight: bold
+}
+
 .wallColor {
 	font-weight: bold;
 	background-color: #DDD;
-	animation-name: insertWall;
-	animation-duration: 4s;
-}
-
-@keyframes insertWall {
-	0% {background-color: #FFF;}
-	100% {background-color: #DDD;}
 }
 
 /*                                       */

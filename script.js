@@ -12,6 +12,7 @@ const TARGET_NODE = "X";
 const VISITED_NODE = "o";
 const VISITED_AFTER_BOMB = "O";
 const SHORTEST_PATH_NODE = "+"
+let ANIMATION_SPEED;
 
 // get browser width so script can calculate width of the grid
 let browserWidthInPixels = getBrowserWidth()
@@ -23,10 +24,12 @@ let heightInNodes;
 if (eightyPercentOfScreen < 300) { // for smaller screens, use the whole width of the screen, no whitespace left or right
 	widthInNodes = Math.floor(eightyPercentOfScreen * 0.065)
 	heightInNodes = Math.floor(widthInNodes / 1.2) // use a taller board on smaller screens
+	ANIMATION_SPEED = 50;
 	console.log(widthInNodes, heightInNodes)
 } else { // for bigger screens
 	widthInNodes = Math.floor(eightyPercentOfScreen * 0.045)
 	heightInNodes = Math.floor(widthInNodes / 2)
+	ANIMATION_SPEED = 100;
 	console.log(widthInNodes, heightInNodes)
 }
 
@@ -94,6 +97,10 @@ moveTargetBtn.addEventListener("click", () => {
 // ### Let user remove a wall segment
 const removeWallBtn = document.getElementById("removeWallBtn");
 removeWallBtn.addEventListener("click", () => {
+	// rerenderGrid(); // hotfix
+	// removeAllScans();
+	// hotfix: previously, clicking "remove wall segment" and then clicking would instnatly animate all scanned nodes
+	// from the failed scan. I plan for removeAllScans() to reset all values from the scan.
 	nextClickRemovesWall();
 })
 
@@ -215,15 +222,15 @@ function renderScansAndPathByTimer(algoPath) {
 		if (numOfAnimations > 120 && algoPath[frameNum][2] !== "path") {
 			setTimeout(function () {
 				renderIn()
-			}, 50); // speed up the animation *even more* if the numOfAnimations is > 120
+			}, ANIMATION_SPEED); // speed up the animation *even more* if the numOfAnimations is > 120
 		} else if (numOfAnimations > 50 && algoPath[frameNum][2] !== "path") {
 			setTimeout(function () {
 				renderIn()
-			}, 250); // speed up the animation if the numOfAnimations is > 50 
+			}, ANIMATION_SPEED * 3); // speed up the animation if the numOfAnimations is > 50 
 		} else {
 			setTimeout(function () {
 				renderIn()
-			}, 500);
+			}, ANIMATION_SPEED * 5);
 		}
 
 	}
@@ -431,6 +438,19 @@ function nextClickRemovesWall() {
 
 function removeWallNode(x, y) {
 	grid[y][x] = EMPTY_SPACE;
+	// console.log(grid)
+	// Hotfix: previous to the addition of this for loop, removeWallNode() resulted in unwanted Scanned nodes being rendered
+	// when "remove wall segment" was clicked. We need to go thru the grid and remove all VISITED_NODES before re-rendering.
+	const width = grid[0].length;
+	const height = grid.length;
+
+	for (let i = 0; i < width; i++) {
+		for (let j = 0; j < height; j++) {
+			if (grid[j][i] === VISITED_NODE) {
+				grid[j][i] = EMPTY_SPACE;
+			}
+		}
+	}
 	rerenderGrid();
 	resetEventListeners();
 }
@@ -471,7 +491,7 @@ function animateMaze(sequence) {
 		// Schedule the next frame for rendering
 		setTimeout(function () {
 			renderIn()
-		}, 10); // TEMP: changed from 100 down to 10 so I cna see results of my coding faster
+		}, ANIMATION_SPEED / 5); // TEMP: changed from 100 down to 10 so I cna see results of my coding faster
 	}
 	// Render first frame
 	renderIn()
@@ -522,6 +542,12 @@ function resetAllClasses() {
 		}
 	}
 }
+
+// FIXME: clicking "Remove Wall" after receiving a "No path from START_NODE to TARGET_NODE" 
+// msg causes the failedScan to animate instantly.
+// TODO: mk Search animation speed increase with size of board.
+// TODO: mk WALL_NODEs have a light grey background, something to help differentiate them from other nodes
+// TODO: also mk WALL_NODEs bold
 
 function getBrowserWidth() {
 	// added 5/5/2020 from jQuery source code (found via stackOverflow)

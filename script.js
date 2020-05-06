@@ -283,6 +283,8 @@ function nextClickMovesStart() {
 	messageBarParagraphTag.innerHTML = "Click to add or move a Start Node"
 }
 
+// fixme: hitting "clear board" doesn't remove the grey color from where wall nodes were.
+
 function addStartNode(x, y) {
 	// NOTE: Grid coordinates are y, x not x, y like you'd expect
 	// Step 1: Remove old start node if it exists
@@ -470,6 +472,10 @@ function clearBoard() {
 	for (let i = 0; i < width; i++) {
 		for (let j = 0; j < height; j++) {
 			grid[j][i] = EMPTY_SPACE;
+			const targetDiv = getLocationByCoordinates(i, j);
+			targetDiv.classList.remove("wallColor")
+			targetDiv.classList.remove("startNodeColor")
+			targetDiv.classList.remove("targetNodeColor")
 		}
 	}
 	resetAllClasses();

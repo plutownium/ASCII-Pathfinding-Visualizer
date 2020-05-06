@@ -166,6 +166,8 @@ function replaceWithWall(x, y) {
 	if (grid[y][x] === EMPTY_SPACE) {
 		grid[y][x] = WALL_SEGMENT;
 	}
+	const targetDiv = getLocationByCoordinates(x, y);
+	targetDiv.classList.add("wallColor")
 	rerenderGrid();
 }
 
@@ -455,6 +457,8 @@ function removeWallNode(x, y) {
 			}
 		}
 	}
+	const targetDiv = getLocationByCoordinates(x, y);
+	targetDiv.classList.remove("wallColor")
 	rerenderGrid();
 	resetEventListeners();
 }

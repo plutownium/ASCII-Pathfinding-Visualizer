@@ -15,7 +15,7 @@ class Path {
 }
 
 class Cell {
-    offset = 2;
+    // offset = 2; // commented out 'cause it was causing a SyntaxError somehow
 
     constructor(xMin, xMax, yMin, yMax, isHorizontal, isVertical, verticalWallXCoord, horizontalWallYCoord, parentCell, cellNumber,
         subdivideFurther) {

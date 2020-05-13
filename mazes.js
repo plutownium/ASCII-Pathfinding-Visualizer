@@ -228,8 +228,8 @@ function subdivideLeftRightVerticalWall(parentCell) {
 
     // ### step 1: decide where the wall will go inside of the new cell.
     // generate a different wall position for each of the two new cells.
-    const minVal = parentCell.yMin + parentCell.offset
-    const maxVal = parentCell.yMax - parentCell.offset - 1
+    const minVal = parentCell.yMin + 2 // 2 = offset
+    const maxVal = parentCell.yMax - 2 - 1 // 2 = offset
     // random a y value that doesn't touch any of the previous walls
     const firstHorizontalWallPositionY = getRandomEvenCoordinate(minVal, maxVal);
     const secondHorizontalWallPositionY = getRandomEvenCoordinate(minVal, maxVal);
@@ -288,8 +288,8 @@ function subdivideTopBottomHorizontalWall(parentCell) {
 
     // ### step 1: decide where the wall will go inside of the new cell.
     // generate a different wall position for each of the two new cells.
-    const minVal = parentCell.xMin + parentCell.offset;
-    const maxVal = parentCell.xMax - parentCell.offset - 1;
+    const minVal = parentCell.xMin + 2; // 2 = offset
+    const maxVal = parentCell.xMax - 2 - 1; // 2 = offset
     // random a x value that doesn't touch any of the previous walls
     const firstVerticalWallPositionX = getRandomEvenCoordinate(minVal, maxVal);
     const secondVerticalWallPositionX = getRandomEvenCoordinate(minVal, maxVal);

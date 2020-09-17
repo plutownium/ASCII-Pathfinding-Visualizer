@@ -93,7 +93,7 @@ function dijkstras(finishedGrid) {
 			// use finishedGrid[y-coord][x-coord] as arg because we're pulling out the # symbol if it is there
 			content = updateNextVisitsList(adjacentNode, nextVisitsList, finishedGrid[adjacentNode[1]][adjacentNode[0]], visitedNodesList, startCoordinates, visitsWithPathList)
 			if (content.length !== 2) {
-				throw Error "something messed up"
+				throw Error("something messed up")
 			}
 			nextVisitsList = content[0]
 			visitsWithPathList = content[1]

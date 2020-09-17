@@ -1,0 +1,26 @@
+#main {
+    display: flex;
+}
+
+.dot-container {
+    width: auto;
+    height: 0px;
+}
+
+.dot {
+    background-color: blue;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.block {
+    width: 35px;
+    height: 35px;
+    border: 1px solid #BBB;
+}
+
+.column {
+    width: 35px;
+    height: auto;
+}

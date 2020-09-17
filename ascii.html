@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASCII Version</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="classes.js"></script>
+    <script src="dijkstras.js"></script>
+    <script src="mazes.js"></script>
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+    <div id="dropdown-main">
+        <!-- Algorithms Selector -->
+        <ul></ul>
+        <!-- Mazes & Patterns Selector -->
+        <ul></ul>
+        <!-- Add/remove Bomb Selector -->
+        <ul></ul>
+        <!-- Visualize! Button -->
+        <ul></ul>
+        <!-- Clear Board -->
+        <ul></ul>
+        <!-- Clear Path -->
+        <ul></ul>
+        <!-- Speed Selector -->
+        <ul></ul>
+    </div>
+
+    <!-- <div id="debuggingStuff">
+    		<button id="inspect">Inspect Dijkstra's</button>
+    	</div> -->
+    <div class="container">
+        <div id="legend">
+            <span>* Start Node (Origin)</span><br />
+            <span>X Target Node</span><br />
+            <!-- <span>% Bomb Node</span> -->
+            <span>. Unvisited Node</span><br />
+            <span>o Visited Nodes</span><br />
+            <span>+ Shortest Path Node</span><br />
+            <span># Wall Node</span>
+        </div>
+    </div>
+    <div class="container">
+        <div id="buttons">
+            <button id="moveStartBtn" class="button green">Place Start Node</button>
+            <button id="moveTargetBtn" class="button green">Place Target Node</button><br />
+
+            <!-- <button id="moveBombBtn">Place Bomb Node</button> -->
+            <button id="removeWallBtn" class="button red">Remove Wall Segment</button>
+            <button id="clearBoardBtn" class="button red">Clear Board</button><br />
+
+            <button id="randomMazeBtn" class="button blue">Generate Random Maze</button>
+            <button id="recursiveDivisonBtn" class="button blue">Generate Recursive Division Maze</button>
+            <button id="binaryTreeBtn" class="button blue">Generate Binary Tree Maze</button><br />
+            <button id="go" class="button green">Visualize Dijkstra's</button>
+            <a href="C:\Users\Roland\2020-Coding-Projects\Ascii Pathfinding Visualizer\index.html" id="switch">View
+                Fancy Version</a>
+        </div>
+    </div>
+    <div class="container">
+        <div id="messageBar">
+            <p>Add a Start Node and a Target Node. Get creative adding some Wall Segments!</p>
+        </div>
+    </div>
+
+    <div id="jumbotron">
+        <div id="main"></div>
+    </div>
+</body>
+
+</html>

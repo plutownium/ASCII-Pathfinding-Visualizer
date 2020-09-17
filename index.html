@@ -14,13 +14,11 @@
 
 <body>
 	<div id="dropdown-main">
-		<!-- Algorithms Selector -->
-		<ul></ul>
 		<!-- Mazes & Patterns Selector -->
 		<ul></ul>
-		<!-- Add/remove Bomb Selector -->
-		<ul></ul>
 		<!-- Visualize! Button -->
+		<ul></ul>
+		<!-- Remove Wall Button -->
 		<ul></ul>
 		<!-- Clear Board -->
 		<ul></ul>
@@ -29,11 +27,12 @@
 		<!-- Speed Selector -->
 		<ul></ul>
 	</div>
-
-	<!-- <div id="debuggingStuff">
-		<button id="inspect">Inspect Dijkstra's</button>
-	</div> -->
+	<!-- TODO: float this container left, on top of the board. -->
+	<!-- TODO: Update fonts on whole page -->
 	<div class="container">
+		<div id="headlineContainer">
+			<h1>Pathfinding Visualizer</h1>
+		</div>
 		<div id="legend">
 			<span>* Start Node (Origin)</span><br />
 			<span>X Target Node</span><br />
@@ -45,6 +44,7 @@
 		</div>
 	</div>
 	<div class="container">
+		<!-- TODO: fix this container above the board, as in the drawing -->
 		<div id="buttons">
 			<button id="moveStartBtn" class="button green">Place Start Node</button>
 			<button id="moveTargetBtn" class="button green">Place Target Node</button><br />
@@ -57,12 +57,16 @@
 			<button id="recursiveDivisonBtn" class="button blue">Generate Recursive Division Maze</button>
 			<button id="binaryTreeBtn" class="button blue">Generate Binary Tree Maze</button><br />
 			<button id="go" class="button green">Visualize Dijkstra's</button>
+			<a href="C:\Users\Roland\2020-Coding-Projects\Ascii Pathfinding Visualizer\ascii.html" id="switch">View
+				Ascii Version</a>
 		</div>
 	</div>
 	<div class="container">
 		<div id="messageBar">
 			<p>Add a Start Node and a Target Node. Get creative adding some Wall Segments!</p>
 		</div>
+		<!-- TODO: Invent a new way of getting error messages to the user. 
+			Maybe a div that pops into view for 4 sec, fades out? -->
 	</div>
 
 	<div id="jumbotron">

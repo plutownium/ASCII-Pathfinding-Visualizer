@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .grid-container {
+            display: flex;
+            flex-direction: column;
+            width: 100px;
+            height: 100px;
+            /* border: 1px solid black; */
+        }
+
+        .top-part {
+            width: 99px;
+            height: 95px;
+            /* border: 1px solid pink; */
+            display: flex;
+        }
+
+        .grid-box {
+            width: 90px;
+            height: 95px;
+        }
+
+        .grid-right-wall {
+            width: 1px;
+            height: 95px;
+            border: 1px solid blue;
+        }
+
+        .bottom-part {
+            width: 99px;
+            height: 4px;
+            display: flex;
+            flex-direction: row;
+        }
+
+        .grid-bottom-border {
+            width: 95px;
+            height: 1px;
+            border: 1px solid red;
+        }
+
+        .grid-dot {
+            background-color: blue;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="grid-container">
+        <div class="top-part">
+            <div class="grid-box"></div>
+            <div class="grid-right-wall"></div>
+        </div>
+        <div class="bottom-part">
+            <div class="grid-bottom-border"></div>
+            <div class="grid-dot"></div>
+        </div>
+    </div>
+    <div class="grid-container">
+        <div class="top-part">
+            <div class="grid-box"></div>
+            <div class="grid-right-wall"></div>
+        </div>
+        <div class="bottom-part">
+            <div class="grid-bottom-border"></div>
+            <div class="grid-dot"></div>
+        </div>
+    </div>
+</body>
+
+</html>

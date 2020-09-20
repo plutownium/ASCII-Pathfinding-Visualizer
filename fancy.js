@@ -14,6 +14,68 @@ const VISITED_AFTER_BOMB = "O";
 const SHORTEST_PATH_NODE = "+"
 let ANIMATION_SPEED;
 
+const largeGrid = `
+	<div class="grid-container-lg">
+        <div class="grid-top-part-lg">
+            <div class="grid-tp-box-lg"></div>
+            <div class="grid-tp-container-lg">
+                <div class="grid-tp-buffer-left-lg"></div>
+                <div class="grid-tp-border-lg"></div>
+                <div class="grid-tp-buffer-lg"></div>
+            </div>
+        </div>
+        <div class="grid-bp-lg">
+            <div class="grid-bp-container-lg">
+                <div class="grid-bp-buffer-lg"></div>
+                <div class="grid-bp-border-lg"></div>
+                <div class="grid-bp-buffer-lg"></div>
+            </div>
+            <div class="grid-dot"></div>
+        </div>
+    </div>
+`
+const mediumGrid = `
+	<div class="grid-container">
+        <div class="grid-top-part">
+            <div class="grid-tp-box"></div>
+            <div class="grid-tp-container">
+                <div class="grid-tp-buffer-left"></div>
+                <div class="grid-tp-border"></div>
+                <div class="grid-tp-buffer"></div>
+            </div>
+        </div>
+        <div class="grid-bp">
+            <div class="grid-bp-container">
+                <div class="grid-bp-buffer"></div>
+                <div class="grid-bp-border"></div>
+                <div class="grid-bp-buffer"></div>
+            </div>
+            <div class="grid-dot"></div>
+        </div>
+    </div>
+`
+
+const smallGrid = `
+	<div class="grid-container">
+        <div class="grid-top-part">
+            <div class="grid-tp-box"></div>
+            <div class="grid-tp-container">
+                <div class="grid-tp-buffer-left"></div>
+                <div class="grid-tp-border"></div>
+                <div class="grid-tp-buffer"></div>
+            </div>
+        </div>
+        <div class="grid-bp">
+            <div class="grid-bp-container">
+                <div class="grid-bp-buffer"></div>
+                <div class="grid-bp-border"></div>
+                <div class="grid-bp-buffer"></div>
+            </div>
+            <div class="grid-dot"></div>
+        </div>
+    </div>
+`
+
 // get browser width so script can calculate width of the grid
 let browserWidthInPixels = getBrowserWidth()
 const eightyPercentOfScreen = Math.floor(browserWidthInPixels * 0.80)
@@ -145,20 +207,12 @@ binaryTreeBtn.addEventListener("click", () => {
 	animateMaze(sequence);
 })
 
-// todo: make Dijkstra's find its way to the bomb first if there is a bomb
-// todo: make Dijkstra's path from the bomb to the target
-// TODO: Add a "bomb node" option... Also yikes!
-// todo: visualize all the spaces "searched" by Dijkstra's. o's and O's
-
 // todo: Add "Speed" selector
-// todo: Add "Mazes" selector (how?)
 
 // FIXME: add a "reset Grid and board" func and call it before animateMaze() for every "create maze" button *IMPORTANT* 
 
 // TODO: animate grid with CSS transitions (colors, KISS)
 // TODO: Style the page...
-// NOTE: It's more important to make it LOOK good than add lots of diff pathfinding algos (all basically the same)
-// ...or lots of diff maze algos (two is enough)
 
 // *** ********* *** ********* *** ********* *** ********* *** ********* *** ********* ***
 // *** FUNCTIONS *** FUNCTIONS *** FUNCTIONS *** FUNCTIONS *** FUNCTIONS *** FUNCTIONS ***

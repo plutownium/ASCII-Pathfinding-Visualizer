@@ -4,8 +4,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>TEST</title>
     <style>
+        .grid-bp {
+            width: 100px;
+            height: 10px;
+            display: flex;
+            flex-direction: row;
+        }
+
+        .grid-bp-border {
+            width: 90px;
+            height: 2px;
+            background-color: rgb(230, 241, 252);
+            /* background-color: black; */
+        }
+
+        .grid-bp-buffer {
+            width: 90px;
+            height: 4px;
+            /* border: 1px solid green; */
+        }
+
+        .grid-bp-container {
+            width: 90px;
+            display: flex;
+            flex-direction: column;
+
+        }
+
+        .grid-tp-border {
+            /* right wall */
+            width: 2px;
+            height: 95px;
+            background-color: rgb(230, 241, 252);
+            /* background-color: black; */
+        }
+
+        .grid-tp-box {
+            width: 90px;
+            height: 90px;
+            /* background-color: black; */
+        }
+
+        .grid-tp-buffer {
+            width: 3px;
+            height: 90px;
+        }
+
+        .grid-tp-buffer-left {
+            width: 6px;
+            height: 90px;
+        }
+
+        .grid-tp-container {
+            width: 10px;
+            height: 90px;
+            display: flex;
+            flex-direction: row;
+        }
+
         .grid-container {
             display: flex;
             flex-direction: column;
@@ -14,64 +72,57 @@
             /* border: 1px solid black; */
         }
 
-        .top-part {
+        .grid-dot {
+            background-color: rgb(230, 241, 252);
+            /* background-color: black; */
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .grid-top-part {
             width: 99px;
             height: 95px;
             /* border: 1px solid pink; */
             display: flex;
-        }
-
-        .grid-box {
-            width: 90px;
-            height: 95px;
-        }
-
-        .grid-right-wall {
-            width: 1px;
-            height: 95px;
-            border: 1px solid blue;
-        }
-
-        .bottom-part {
-            width: 99px;
-            height: 4px;
-            display: flex;
-            flex-direction: row;
-        }
-
-        .grid-bottom-border {
-            width: 95px;
-            height: 1px;
-            border: 1px solid red;
-        }
-
-        .grid-dot {
-            background-color: blue;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
         }
     </style>
 </head>
 
 <body>
     <div class="grid-container">
-        <div class="top-part">
-            <div class="grid-box"></div>
-            <div class="grid-right-wall"></div>
+        <div class="grid-top-part">
+            <div class="grid-tp-box"></div>
+            <div class="grid-tp-container">
+                <div class="grid-tp-buffer-left"></div>
+                <div class="grid-tp-border"></div>
+                <div class="grid-tp-buffer"></div>
+            </div>
         </div>
-        <div class="bottom-part">
-            <div class="grid-bottom-border"></div>
+        <div class="grid-bp">
+            <div class="grid-bp-container">
+                <div class="grid-bp-buffer"></div>
+                <div class="grid-bp-border"></div>
+                <div class="grid-bp-buffer"></div>
+            </div>
             <div class="grid-dot"></div>
         </div>
     </div>
     <div class="grid-container">
-        <div class="top-part">
-            <div class="grid-box"></div>
-            <div class="grid-right-wall"></div>
+        <div class="grid-top-part">
+            <div class="grid-tp-box"></div>
+            <div class="grid-tp-container">
+                <div class="grid-tp-buffer-left"></div>
+                <div class="grid-tp-border"></div>
+                <div class="grid-tp-buffer"></div>
+            </div>
         </div>
-        <div class="bottom-part">
-            <div class="grid-bottom-border"></div>
+        <div class="grid-bp">
+            <div class="grid-bp-container">
+                <div class="grid-bp-buffer"></div>
+                <div class="grid-bp-border"></div>
+                <div class="grid-bp-buffer"></div>
+            </div>
             <div class="grid-dot"></div>
         </div>
     </div>

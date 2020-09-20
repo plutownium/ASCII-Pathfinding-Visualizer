@@ -15,27 +15,28 @@
 /* *** *** *** *** *** */
 
 .grid-bp-lg {
-    width: 100px;
+    /* bottom part, main container */
+    width: 75px;
     height: 10px;
     display: flex;
     flex-direction: row;
 }
 
 .grid-bp-border-lg {
-    width: 90px;
+    width: 65px;
     height: 2px;
     background-color: rgb(230, 241, 252);
     /* background-color: black; */
 }
 
 .grid-bp-buffer-lg {
-    width: 90px;
+    width: 65px;
     height: 4px;
     /* border: 1px solid green; */
 }
 
 .grid-bp-container-lg {
-    width: 90px;
+    width: 65px;
     display: flex;
     flex-direction: column;
 
@@ -44,30 +45,30 @@
 .grid-tp-border-lg {
     /* right wall */
     width: 2px;
-    height: 95px;
+    height: 65px;
     background-color: rgb(230, 241, 252);
     /* background-color: black; */
 }
 
 .grid-tp-box-lg {
-    width: 90px;
-    height: 90px;
+    width: 65px;
+    height: 65px;
     /* background-color: black; */
 }
 
 .grid-tp-buffer-lg {
     width: 3px;
-    height: 90px;
+    height: 65px;
 }
 
 .grid-tp-buffer-left-lg {
-    width: 6px;
-    height: 90px;
+    width: 4px;
+    height: 65px;
 }
 
 .grid-tp-container-lg {
     width: 10px;
-    height: 90px;
+    height: 65px;
     display: flex;
     flex-direction: row;
 }
@@ -75,14 +76,14 @@
 .grid-container-lg {
     display: flex;
     flex-direction: column;
-    width: 100px;
-    height: 100px;
+    width: 75px;
+    height: 75px;
     /* border: 1px solid black; */
 }
 
 .grid-top-part-lg {
-    width: 99px;
-    height: 95px;
+    width: 75px;
+    height: 70px;
     /* border: 1px solid pink; */
     display: flex;
 }

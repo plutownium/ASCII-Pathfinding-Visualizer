@@ -122,15 +122,10 @@ const columnDivs = mainDiv.querySelectorAll("div");
 for (let j = 0; j < numOfColumns; j++) {
 	const targetDiv = columnDivs[j];
 	for (let k = 0; k < numOfRows; k++) {
-		const dotContainer = document.createElement("div")
-		dotContainer.classList.add("dot-container")
-		const dot = document.createElement("div")
-		dot.classList.add("dot")
-		dotContainer.appendChild(dot)
-		targetDiv.appendChild(dotContainer);
+
 		const divToAssign = document.createElement("div");
 		divToAssign.id = "row-" + k;
-		divToAssign.classList.add("block");
+		divToAssign.innerHTML = largeGrid;
 		// TODO: make grid size dependent on screen width. smaller screen = smaller blocks. 
 		// min 35px, max 75px.use browserWidthInPixels
 		targetDiv.appendChild(divToAssign);

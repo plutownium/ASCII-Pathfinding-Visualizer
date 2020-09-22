@@ -115,7 +115,7 @@ for (let i = 0; i < numOfColumns; i++) {
 	mainDiv.appendChild(divToAssign);
 }
 
-// TODO: convert grid to FancyGrid
+// FIXME: Make "Generate Maze" buttons work with new grid system.
 
 // iterate over every Column div, inserting numOfRows number of Row divs
 const columnDivs = mainDiv.querySelectorAll("div");
@@ -219,6 +219,8 @@ function getLocationByCoordinates(x, y) {
 	const getMainDiv = document.getElementById("main");
 	const column = getMainDiv.children[x];
 	const target = column.children[y];
+	// console.log(column, target);
+	// throw "hi"
 	return target;
 }
 
@@ -575,8 +577,26 @@ function animateMaze(sequence) {
 function updateCoordsWithWall(xCoord, yCoord) {
 	grid[yCoord][xCoord] = WALL_SEGMENT;
 	const targetDiv = getLocationByCoordinates(xCoord, yCoord);
-	targetDiv.innerHTML = grid[yCoord][xCoord];
-	targetDiv.classList.add("wallColor")
+	console.log("a:", targetDiv)
+
+	// TODO: use the returned targetDiv and update it with an indication that it is a wall.
+	// TODO: use the returned targetDiv and update the CORRECT location with the WALL_SEGMENT.
+
+	// PAST METHOD:
+	// targetDiv.innerHTML = grid[yCoord][xCoord];
+	// targetDiv.classList.add("wallColor")
+
+	// NEW METHOD:
+
+	console.log(targetDiv.childNodes[1])
+	targetDiv.childNodes[1].childNodes[1].childNodes[1].classList.add("test")
+	targetDiv.childNodes[1]
+	throw "hi"
+
+
+	// Fixme: this is it, this is the place. I need to get the right part of the targetDiv and assign it... a class? Maybe?
+	// FIXME, cont'd: need a func like "extractDivsForNewClass"
+
 }
 
 
@@ -618,9 +638,6 @@ function resetAllClasses() {
 		}
 	}
 }
-
-// TODO: mk WALL_NODEs have a light grey background, something to help differentiate them from other nodes
-// TODO: also mk WALL_NODEs bold
 
 function getBrowserWidth() {
 	// added 5/5/2020 from jQuery source code (found via stackOverflow)

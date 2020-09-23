@@ -16,20 +16,12 @@ let ANIMATION_SPEED;
 
 const largeGrid = `
 	<div class="grid-container-lg">
-        <div class="grid-top-part-lg">
+        <div class="grid-tp-lg">
             <div class="grid-tp-box-lg"></div>
-            <div class="grid-tp-container-lg">
-                <div class="grid-tp-buffer-left-lg"></div>
-                <div class="grid-tp-border-lg"></div>
-                <div class="grid-tp-buffer-lg"></div>
-            </div>
+			<div class="grid-tp-border-lg"></div>
         </div>
         <div class="grid-bp-lg">
-            <div class="grid-bp-container-lg">
-                <div class="grid-bp-buffer-lg"></div>
-                <div class="grid-bp-border-lg"></div>
-                <div class="grid-bp-buffer-lg"></div>
-            </div>
+			<div class="grid-bp-border-lg"></div>
             <div class="grid-dot"></div>
         </div>
     </div>
@@ -80,6 +72,8 @@ const smallGrid = `
 let browserWidthInPixels = getBrowserWidth()
 const eightyPercentOfScreen = Math.floor(browserWidthInPixels * 0.80)
 console.log(eightyPercentOfScreen)
+
+// FIXME: Adjust code so that the # of boxes fills the screen (currently, it overflows badly)
 
 let widthInNodes;
 let heightInNodes;
@@ -588,9 +582,11 @@ function updateCoordsWithWall(xCoord, yCoord) {
 
 	// NEW METHOD:
 
-	console.log(targetDiv.childNodes[1])
+	// console.log(targetDiv.childNodes[1])
+	// console.log(targetDiv.childNodes[1].childNodes[3].childNodes)
 	targetDiv.childNodes[1].childNodes[1].childNodes[1].classList.add("test")
-	targetDiv.childNodes[1]
+	// targetDiv.childNodes[1].childNodes[1].childNodes[3].childNodes[1].classList.add("test")
+	// targetDiv.childNodes[1].childNodes[3].childNodes[1].childNodes[1].classList.add("test")
 	throw "hi"
 
 

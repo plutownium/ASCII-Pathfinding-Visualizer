@@ -7,7 +7,6 @@
     /* background-color: black; */
     width: 10px;
     height: 10px;
-    border-radius: 50%;
 }
 
 /* *** *** *** *** *** */
@@ -24,27 +23,14 @@
 
 .grid-bp-border-lg {
     width: 65px;
-    height: 2px;
+    height: 10px;
     background-color: rgb(230, 241, 252);
     /* background-color: black; */
 }
 
-.grid-bp-buffer-lg {
-    width: 65px;
-    height: 4px;
-    /* border: 1px solid green; */
-}
-
-.grid-bp-container-lg {
-    width: 65px;
-    display: flex;
-    flex-direction: column;
-
-}
-
 .grid-tp-border-lg {
     /* right wall */
-    width: 2px;
+    width: 10px;
     height: 65px;
     background-color: rgb(230, 241, 252);
     /* background-color: black; */
@@ -56,34 +42,9 @@
     /* background-color: black; */
 }
 
-.grid-tp-buffer-lg {
-    width: 3px;
-    height: 65px;
-}
-
-.grid-tp-buffer-left-lg {
-    width: 4px;
-    height: 65px;
-}
-
-.grid-tp-container-lg {
-    width: 10px;
-    height: 65px;
-    display: flex;
-    flex-direction: row;
-}
-
-.grid-container-lg {
-    display: flex;
-    flex-direction: column;
+.grid-tp-lg {
     width: 75px;
-    height: 75px;
-    /* border: 1px solid black; */
-}
-
-.grid-top-part-lg {
-    width: 75px;
-    height: 70px;
+    height: 65px;
     /* border: 1px solid pink; */
     display: flex;
 }

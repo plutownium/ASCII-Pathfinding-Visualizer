@@ -1,78 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Pathfinding Visualizer</title>
+        <link rel="stylesheet" href="fancy.css" />
+        <script src="classes.js"></script>
+        <script src="dijkstras.js"></script>
+        <script src="mazes.js"></script>
+        <script src="fancy.js" defer></script>
+    </head>
 
-<head>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>Pathfinding Visualizer</title>
-	<link rel="stylesheet" href="fancy.css" />
-	<script src="classes.js"></script>
-	<script src="dijkstras.js"></script>
-	<script src="mazes.js"></script>
-	<script src="fancy.js" defer></script>
-</head>
+    <body>
+        <div id="dropdown-main">
+            <!-- Mazes & Patterns Selector -->
+            <ul></ul>
+            <!-- Visualize! Button -->
+            <ul></ul>
+            <!-- Remove Wall Button -->
+            <ul></ul>
+            <!-- Clear Board -->
+            <ul></ul>
+            <!-- Clear Path -->
+            <ul></ul>
+            <!-- Speed Selector -->
+            <ul></ul>
+        </div>
+        <!-- TODO: float this container left, on top of the board. -->
+        <!-- TODO: Update fonts on whole page -->
+        <div id="legendContainer" class="container">
+            <div id="headlineContainer">
+                <h1>Pathfinding Visualizer</h1>
+            </div>
+            <div id="legend">
+                <div class="legendLineContainer">
+                    <img src="./icons8-play-26.png" class="legendText">Start Node</span><br />
+                </div>
+                <div class="legendLineContainer">
+                    <span class="legendText">Target Node</span><br />
+                </div>
+                <!-- <span>% Bomb Node</span> -->
+                <div class="legendLineContainer">
+                    <span class="legendText">Unvisited Node</span><br />
+                </div>
+                <div class="legendLineContainer">
+                    <span class="legendText">Visited Nodes</span><br />
+                </div>
+                <div class="legendLineContainer">
+                    <span class="legendText">Shortest Path Node</span><br />
+                </div>
+                <div class="legendLineContainer">
+                    <span class="legendText">Wall Node</span>
+                </div>
+            </div>
+        </div>
+        <div id="board">
+            <div class="container">
+                <!-- TODO: fix this container above the board, as in the drawing -->
+                <div id="buttons">
+                    <button id="moveStartBtn" class="button green">
+                        Place Start Node
+                    </button>
+                    <button id="moveTargetBtn" class="button green">
+                        Place Target Node</button
+                    ><br />
 
-<body>
-	<div id="dropdown-main">
-		<!-- Mazes & Patterns Selector -->
-		<ul></ul>
-		<!-- Visualize! Button -->
-		<ul></ul>
-		<!-- Remove Wall Button -->
-		<ul></ul>
-		<!-- Clear Board -->
-		<ul></ul>
-		<!-- Clear Path -->
-		<ul></ul>
-		<!-- Speed Selector -->
-		<ul></ul>
-	</div>
-	<!-- TODO: float this container left, on top of the board. -->
-	<!-- TODO: Update fonts on whole page -->
-	<div class="container">
-		<div id="headlineContainer">
-			<h1>Pathfinding Visualizer</h1>
-		</div>
-		<div id="legend">
-			<span>* Start Node (Origin)</span><br />
-			<span>X Target Node</span><br />
-			<!-- <span>% Bomb Node</span> -->
-			<span>. Unvisited Node</span><br />
-			<span>o Visited Nodes</span><br />
-			<span>+ Shortest Path Node</span><br />
-			<span># Wall Node</span>
-		</div>
-	</div>
-	<div class="container">
-		<!-- TODO: fix this container above the board, as in the drawing -->
-		<div id="buttons">
-			<button id="moveStartBtn" class="button green">Place Start Node</button>
-			<button id="moveTargetBtn" class="button green">Place Target Node</button><br />
+                    <!-- <button id="moveBombBtn">Place Bomb Node</button> -->
+                    <button id="removeWallBtn" class="button red">
+                        Remove Wall Segment
+                    </button>
+                    <button id="clearBoardBtn" class="button red">
+                        Clear Board</button
+                    ><br />
 
-			<!-- <button id="moveBombBtn">Place Bomb Node</button> -->
-			<button id="removeWallBtn" class="button red">Remove Wall Segment</button>
-			<button id="clearBoardBtn" class="button red">Clear Board</button><br />
-
-			<button id="randomMazeBtn" class="button blue">Generate Random Maze</button>
-			<button id="recursiveDivisonBtn" class="button blue">Generate Recursive Division Maze</button>
-			<button id="binaryTreeBtn" class="button blue">Generate Binary Tree Maze</button><br />
-			<button id="go" class="button green">Visualize Dijkstra's</button>
-			<a href="C:\Users\Roland\2020-Coding-Projects\Ascii Pathfinding Visualizer\ascii.html" id="switch">View
-				Ascii Version</a>
-		</div>
-	</div>
-	<div class="container">
-		<div id="messageBar">
-			<p>Add a Start Node and a Target Node. Get creative adding some Wall Segments!</p>
-		</div>
-		<!-- TODO: Invent a new way of getting error messages to the user. 
+                    <button id="randomMazeBtn" class="button blue">
+                        Generate Random Maze
+                    </button>
+                    <button id="recursiveDivisonBtn" class="button blue">
+                        Generate Recursive Division Maze
+                    </button>
+                    <button id="binaryTreeBtn" class="button blue">
+                        Generate Binary Tree Maze</button
+                    ><br />
+                    <button id="go" class="button green">
+                        Visualize Dijkstra's
+                    </button>
+                    <a
+                        href="C:\Users\Roland\2020-Coding-Projects\Ascii Pathfinding Visualizer\ascii.html"
+                        id="switch"
+                        >View Ascii Version</a
+                    >
+                </div>
+            </div>
+            <div class="container">
+                <div id="messageBar">
+                    <p>
+                        Add a Start Node and a Target Node. Get creative adding
+                        some Wall Segments!
+                    </p>
+                </div>
+                <!-- TODO: Invent a new way of getting error messages to the user. 
 			Maybe a div that pops into view for 4 sec, fades out? -->
-	</div>
+            </div>
 
-	<div id="jumbotron">
-		<div id="main"></div>
-	</div>
-
-</body>
-
+            <div id="jumbotron">
+                <div id="main"></div>
+            </div>
+        </div>
+    </body>
 </html>

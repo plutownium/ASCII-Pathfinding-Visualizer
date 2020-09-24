@@ -12,22 +12,6 @@
     </head>
 
     <body>
-        <div id="dropdown-main">
-            <!-- Mazes & Patterns Selector -->
-            <ul></ul>
-            <!-- Visualize! Button -->
-            <ul></ul>
-            <!-- Remove Wall Button -->
-            <ul></ul>
-            <!-- Clear Board -->
-            <ul></ul>
-            <!-- Clear Path -->
-            <ul></ul>
-            <!-- Speed Selector -->
-            <ul></ul>
-        </div>
-        <!-- TODO: float this container left, on top of the board. -->
-        <!-- TODO: Update fonts on whole page -->
         <div id="legendContainer" class="container">
             <div id="leftSpacer"></div>
             <div id="leftBorder">
@@ -86,7 +70,7 @@
             </div>
         </div>
         <div id="board">
-            <div class="container">
+            <div id="btnContainer" class="container">
                 <!-- TODO: fix this container above the board, as in the drawing -->
                 <div id="buttons">
                     <button id="moveStartBtn" class="button green">
@@ -122,17 +106,18 @@
                         >View Ascii Version</a
                     >
                 </div>
+                <div id="gradient"></div>
             </div>
-            <div class="container">
+            <!-- <div class="container">
                 <div id="messageBar">
                     <p>
                         Add a Start Node and a Target Node. Get creative adding
                         some Wall Segments!
                     </p>
-                </div>
-                <!-- TODO: Invent a new way of getting error messages to the user. 
+                </div> -->
+            <!-- TODO: Invent a new way of getting error messages to the user. 
 			Maybe a div that pops into view for 4 sec, fades out? -->
-            </div>
+            <!-- </div> -->
 
             <div id="jumbotron">
                 <div id="main"></div>

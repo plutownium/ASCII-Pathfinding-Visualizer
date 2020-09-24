@@ -53,24 +53,38 @@ const smallGrid = `
 `;
 
 // get browser width so script can calculate width of the grid
-let browserWidthInPixels = getBrowserWidth();
-const eightyPercentOfScreen = Math.floor(browserWidthInPixels * 0.8);
-console.log(eightyPercentOfScreen);
+// let browserWidthInPixels = getBrowserWidth();
+// const eightyPercentOfScreen = Math.floor(browserWidthInPixels * 0.8);
+let mainWidth = document.getElementById("main").offsetWidth;
+console.log(mainWidth);
 
-// FIXME: Adjust code so that the # of boxes fills the screen (currently, it overflows badly)
+// TODO: Adjust code so that the # of boxes works w/ mid-size browsers
+// TODO: Adjust code for mobile --> make boxes smaller, and fit to screen
+// TODO: mk grid box borders thinner;
+// TODO: At origin, make the play.png appear.
+// TODO: At target, make bullseye.png appear.
+// FIXME: make pathing mechanism work.
+
+// FIXME: vertical scroll bar. remove.
 
 let widthInNodes;
 let heightInNodes;
-if (eightyPercentOfScreen < 330) {
+if (mainWidth < 330) {
     // for smaller screens, use the whole width of the screen, no whitespace left or right
-    widthInNodes = Math.floor(eightyPercentOfScreen * 0.065);
-    heightInNodes = Math.floor(widthInNodes / 1.2); // use a taller board on smaller screens
+    const someMagicNumber = 0.065;
+    widthInNodes = Math.floor(mainWidth * someMagicNumber);
+    const heightAdjustmentMagic = 1.2; // prev 1.2 for the ascii ver
+    heightInNodes = Math.floor(widthInNodes / heightAdjustmentMagic); // use a taller board on smaller screens
     ANIMATION_SPEED = 50;
     console.log(widthInNodes, heightInNodes);
 } else {
     // for bigger screens
-    widthInNodes = Math.floor(eightyPercentOfScreen * 0.045);
-    heightInNodes = Math.floor(widthInNodes / 2.6);
+    const someMagicNumber = 0.045;
+    const widthMagic = 0.015; // TODO: cast widthMagic based on divWidth
+    // FIXME: just do "getDivWidth" here in this block, and in the < 330 block. why not?
+    widthInNodes = Math.floor(mainWidth * widthMagic);
+    const heightAdjustmentMagic = 1.0; // previously 2.6 for the ascii version
+    heightInNodes = Math.floor(widthInNodes / heightAdjustmentMagic);
     ANIMATION_SPEED = 80;
     console.log(widthInNodes, heightInNodes);
 }

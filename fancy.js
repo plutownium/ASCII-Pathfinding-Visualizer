@@ -18,6 +18,10 @@ const startBox = `
 	<img src="./icons8-play-26.png"/>
 `;
 
+const targetBox = `
+	<img src="./bullseye.png"/>
+`;
+
 const largeGrid = `
 	<div class="grid-container-lg">
         <div class="grid-tp-lg">
@@ -238,6 +242,8 @@ function rerenderGrid() {
                 );
             } else if (grid[i][j] === START_NODE) {
                 targetDiv.childNodes[1].childNodes[1].childNodes[1].innerHTML = startBox;
+            } else if (grid[i][j] === TARGET_NODE) {
+                targetDiv.childNodes[1].childNodes[1].childNodes[1].innerHTML = targetBox;
             }
             // console.log("232");
         }
@@ -390,9 +396,10 @@ function nextClickMovesTarget() {
             });
         }
     }
-    const messageBarParagraphTag = document.getElementById("messageBar")
-        .children[0];
-    messageBarParagraphTag.innerHTML = "Click to add or move a Target Node";
+    // TODO: Replace with a new method of giving user instructions, maybe.
+    // const messageBarParagraphTag = document.getElementById("messageBar")
+    //     .children[0];
+    // messageBarParagraphTag.innerHTML = "Click to add or move a Target Node";
 }
 
 function addTargetNode(x, y) {
@@ -400,7 +407,6 @@ function addTargetNode(x, y) {
     // Step 1: Remove old Target node if it exists
     const columnDivs = mainDiv.children;
     for (let xCoord = 0; xCoord < numOfColumns; xCoord++) {
-        const targetColumnRows = columnDivs[xCoord].children;
         for (let yCoord = 0; yCoord < numOfRows; yCoord++) {
             if (grid[yCoord][xCoord] === TARGET_NODE) {
                 grid[yCoord][xCoord] = EMPTY_SPACE;
@@ -409,8 +415,6 @@ function addTargetNode(x, y) {
     }
     // Step 2: Set the new Target Node
     grid[y][x] = TARGET_NODE;
-    const targetDiv = getLocationByCoordinates(x, y);
-    targetDiv.classList.add("targetNodeColor");
     rerenderGrid();
     resetEventListeners();
 }
@@ -490,7 +494,7 @@ function nextClickRemovesWall() {
             }
             // next, add event listeners to nodes that contain a WALL SEGMENT which turn WALL SEGMENTs into unvisited nodes.
             for (let y = 0; y < numOfRows; y++) {
-                if (targetColumnRows[y].innerHTML === WALL_SEGMENT) {
+                if (grid[y][x] === WALL_SEGMENT) {
                     targetColumnRows[y].addEventListener("click", () => {
                         removeWallNode(x, y);
                     });
@@ -498,22 +502,25 @@ function nextClickRemovesWall() {
             }
         }
         // show the user a message letting them know they have to click and remove an event listener to continue
-        const messageBarParagraphTag = document.getElementById("messageBar")
-            .children[0];
-        messageBarParagraphTag.innerHTML = "Click to remove a Wall Segment";
+        // TODO: install new instruction alert to user feature
+        // const messageBarParagraphTag = document.getElementById("messageBar")
+        //     .children[0];
+        // messageBarParagraphTag.innerHTML = "Click to remove a Wall Segment";
 
         return true; // done
     } else {
         // show the user a message letting them know there is no wall segment to remove...
-        const messageBarParagraphTag = document.getElementById("messageBar")
-            .children[0];
-        messageBarParagraphTag.innerHTML = "No wall segment to remove!";
+        // TODO: install new instruction alert to user feature
+        // const messageBarParagraphTag = document.getElementById("messageBar")
+        //     .children[0];
+        // messageBarParagraphTag.innerHTML = "No wall segment to remove!";
 
         return false; // do nothing because there is no wall segment on the grid
     }
 }
 
 function removeWallNode(x, y) {
+    console.log("Updating 523");
     grid[y][x] = EMPTY_SPACE;
     // console.log(grid)
     // Hotfix: previous to the addition of this for loop, removeWallNode() resulted in unwanted Scanned nodes being rendered

@@ -281,6 +281,7 @@ function renderScansAndPathByTimer(algoPath) {
             const xCoordinate = algoPath[frameNum][0];
             const yCoordinate = algoPath[frameNum][1];
             frameNum = frameNum + 1;
+            // FIXME: these 2 functions are clearly broken
             updateCoordinatesWithScanMarker(xCoordinate, yCoordinate);
         } else if (algoPath[frameNum][2] === "path") {
             const xCoordinate = algoPath[frameNum][0];
@@ -312,16 +313,20 @@ function renderScansAndPathByTimer(algoPath) {
 function updateCoordinatesWithTrailMarker(xCoord, yCoord) {
     grid[yCoord][xCoord] = SHORTEST_PATH_NODE;
     const targetDiv = getLocationByCoordinates(xCoord, yCoord);
-    targetDiv.innerHTML = grid[yCoord][xCoord];
-    targetDiv.classList.remove("animateScan");
-    targetDiv.classList.add("animatePath");
+    targetDiv.childNodes[1].childNodes[1].childNodes[1].classList.remove(
+        "animateScan"
+    );
+    targetDiv.childNodes[1].childNodes[1].childNodes[1].classList.add(
+        "animatePath"
+    );
 }
 
 function updateCoordinatesWithScanMarker(xCoord, yCoord) {
     grid[yCoord][xCoord] = VISITED_NODE;
     const targetDiv = getLocationByCoordinates(xCoord, yCoord);
-    targetDiv.innerHTML = grid[yCoord][xCoord];
-    targetDiv.classList.add("animateScan");
+    targetDiv.childNodes[1].childNodes[1].childNodes[1].classList.add(
+        "animateScan"
+    );
 }
 
 function nextClickMovesStart() {

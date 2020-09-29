@@ -188,7 +188,7 @@ h1 {
 }
 
 #legendContainer {
-    width: 340px;
+    width: 380px;
     height: 100vh;
     float: left;
 }
@@ -196,6 +196,14 @@ h1 {
 #singleLink {
     color: black;
     text-decoration: none;
+}
+
+.animatePath {
+    background-color: pink;
+}
+
+.animateScan {
+    background-color: blue;
 }
 
 .button {
@@ -209,7 +217,7 @@ h1 {
 
 .buttonDiv {
     width: fit-content;
-    margin: 0 20px;
+    margin: 0 10px;
 }
 
 .imgContainer {

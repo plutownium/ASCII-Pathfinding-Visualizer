@@ -30,19 +30,19 @@ const largeGrid = `
         </div>
         <div class="grid-bp-lg">
 			<div class="grid-bp-border-lg"></div>
-            <div class="grid-dot"></div>
+            <div class="grid-dot-lg"></div>
         </div>
     </div>
 `;
 const mediumGrid = `
 	<div class="grid-container">
-        <div class="grid-top-part">
-            <div class="grid-tp-box"></div>
-			<div class="grid-tp-border"></div>
+        <div class="grid-tp-med">
+            <div class="grid-tp-box-med"></div>
+			<div class="grid-tp-border-med"></div>
         </div>
-        <div class="grid-bp">
-			<div class="grid-bp-border"></div>
-            <div class="grid-dot"></div>
+        <div class="grid-bp-med">
+			<div class="grid-bp-border-med"></div>
+            <div class="grid-dot-med"></div>
         </div>
     </div>
 `;
@@ -79,6 +79,7 @@ console.log(mainWidth);
 
 let widthInNodes;
 let heightInNodes;
+let selectedGridSize;
 if (mainWidth < 330) {
     // for smaller screens, use the whole width of the screen, no whitespace left or right
     const someMagicNumber = 0.065;
@@ -86,16 +87,27 @@ if (mainWidth < 330) {
     const heightAdjustmentMagic = 1.2; // prev 1.2 for the ascii ver
     heightInNodes = Math.floor(widthInNodes / heightAdjustmentMagic); // use a taller board on smaller screens
     ANIMATION_SPEED = 50;
+    selectedGridSize = smallGrid;
     console.log(widthInNodes, heightInNodes);
+} else if (mainWidth >= 330 && mainWidth < 550) {
+    const someMagicNumber = 0.055;
+    widthInNodes = Math.floor(mainWidth * someMagicNumber);
+    const heightAdjustmentMagic = 1.1; // prev 1.2 for the ascii ver
+    heightInNodes = Math.floor(widthInNodes / heightAdjustmentMagic);
+    ANIMATION_SPEED = 65;
+    selectedGridSize = mediumGrid;
+    console.log(widthInNodes, heightInNodes);
+    console.log("?");
+    throw "HI";
 } else {
     // for bigger screens
     const someMagicNumber = 0.045;
-    const widthMagic = 0.015; // TODO: cast widthMagic based on divWidth
-    // FIXME: just do "getDivWidth" here in this block, and in the < 330 block. why not?
+    const widthMagic = 0.015;
     widthInNodes = Math.floor(mainWidth * widthMagic);
     const heightAdjustmentMagic = 1.0; // previously 2.6 for the ascii version
     heightInNodes = Math.floor(widthInNodes / heightAdjustmentMagic);
     ANIMATION_SPEED = 80;
+    selectedGridSize = largeGrid;
     console.log(widthInNodes, heightInNodes);
 }
 
@@ -130,7 +142,7 @@ for (let j = 0; j < numOfColumns; j++) {
     for (let k = 0; k < numOfRows; k++) {
         const divToAssign = document.createElement("div");
         divToAssign.id = "row-" + k;
-        divToAssign.innerHTML = largeGrid;
+        divToAssign.innerHTML = selectedGridSize;
         // TODO: make grid size dependent on screen width. smaller screen = smaller blocks.
         // min 35px, max 75px.use browserWidthInPixels
         targetDiv.appendChild(divToAssign);
@@ -235,7 +247,7 @@ function rerenderGrid() {
             // OLD:
             // targetDiv.innerHTML = grid[i][j];
             // NEW:
-            targetDiv.innerHTML = largeGrid;
+            targetDiv.innerHTML = selectedGridSize;
             if (grid[i][j] === WALL_SEGMENT) {
                 targetDiv.childNodes[1].childNodes[1].childNodes[1].classList.add(
                     "wallNode"

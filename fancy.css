@@ -200,10 +200,21 @@ h1 {
 
 .animatePath {
     background-color: pink;
+    animation-name: pathTransition;
+    animation-duration: 3s;
 }
 
 .animateScan {
     background-color: blue;
+}
+
+@keyframes pathTransition {
+    0% {
+        background-color: blue;
+    }
+    100% {
+        background-color: pink;
+    }
 }
 
 .button {

@@ -64,7 +64,7 @@ const smallGrid = `
 // let browserWidthInPixels = getBrowserWidth();
 // const eightyPercentOfScreen = Math.floor(browserWidthInPixels * 0.8);
 let mainWidth = document.getElementById("main").offsetWidth;
-console.log(mainWidth);
+let mainHeight = document.body.clientHeight;
 
 // TODO: Adjust code so that the # of boxes works w/ mid-size browsers
 // TODO: Adjust code for mobile --> make boxes smaller, and fit to screen
@@ -80,37 +80,38 @@ console.log(mainWidth);
 let widthInNodes;
 let heightInNodes;
 let selectedGridSize;
-if (mainWidth < 330) {
+console.log(mainWidth, mainHeight);
+if (mainWidth < 440) {
     // for smaller screens, use the whole width of the screen, no whitespace left or right
-    const someMagicNumber = 0.065;
-    widthInNodes = Math.floor(mainWidth * someMagicNumber);
-    const heightAdjustmentMagic = 1.2; // prev 1.2 for the ascii ver
-    heightInNodes = Math.floor(widthInNodes / heightAdjustmentMagic); // use a taller board on smaller screens
+    widthMagic = 0.04;
+    widthInNodes = Math.floor(mainWidth * widthMagic);
+    const heightPerNode = 30;
+    heightInNodes = Math.floor(mainHeight / heightPerNode); // use a taller board on smaller screens
     ANIMATION_SPEED = 50;
     selectedGridSize = smallGrid;
     console.log(widthInNodes, heightInNodes);
-} else if (mainWidth >= 330 && mainWidth < 550) {
-    const someMagicNumber = 0.055;
-    widthInNodes = Math.floor(mainWidth * someMagicNumber);
-    const heightAdjustmentMagic = 1.1; // prev 1.2 for the ascii ver
-    heightInNodes = Math.floor(widthInNodes / heightAdjustmentMagic);
+} else if (mainWidth >= 440 && mainWidth < 800) {
+    widthMagic = 0.03;
+    widthInNodes = Math.floor(mainWidth * widthMagic);
+    const heightPerNode = 40;
+    console.log(mainHeight, heightPerNode);
+    heightInNodes = Math.floor(mainHeight / heightPerNode) + 3;
     ANIMATION_SPEED = 65;
     selectedGridSize = mediumGrid;
     console.log(widthInNodes, heightInNodes);
-    console.log("?");
-    throw "HI";
+    // TODO-NEXT: Adjust # of boxes and box size based on screen width.
 } else {
     // for bigger screens
-    const someMagicNumber = 0.045;
-    const widthMagic = 0.015;
+    const widthMagic = 0.02;
     widthInNodes = Math.floor(mainWidth * widthMagic);
-    const heightAdjustmentMagic = 1.0; // previously 2.6 for the ascii version
-    heightInNodes = Math.floor(widthInNodes / heightAdjustmentMagic);
+    const heightPerNode = 60;
+    heightInNodes = Math.floor(mainHeight / heightPerNode);
     ANIMATION_SPEED = 80;
     selectedGridSize = largeGrid;
     console.log(widthInNodes, heightInNodes);
 }
 
+console.log(widthInNodes, heightInNodes);
 // generate a n by m grid of .'s
 const grid = [];
 for (let m = 0; m < heightInNodes; m++) {

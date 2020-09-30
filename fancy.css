@@ -347,3 +347,15 @@ h1 {
 .spacer {
     width: 40px;
 }
+
+@media screen and (max-width: 1080px) {
+    #buttons {
+        flex-wrap: wrap;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    #legendContainer {
+        display: none;
+    }
+}

@@ -229,7 +229,7 @@ h1 {
     z-index: 0;
     position: absolute;
     top: 20px;
-    left: 40px;
+    left: 5%;
     /* border: 2px solid red; */
 }
 
@@ -239,6 +239,7 @@ h1 {
     border-radius: 20px;
     display: flex;
     flex-direction: row;
+    border: 1px solid black;
 }
 
 #gradient {
@@ -267,6 +268,7 @@ h1 {
 }
 
 #singleLink {
+    padding: 1px 6px;
     color: black;
     text-decoration: none;
 }

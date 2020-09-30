@@ -4,6 +4,8 @@
 // ### startup... render the page
 const mainDiv = document.getElementById("main");
 
+const grid = [];
+
 const START_NODE = "*";
 const EMPTY_SPACE = ".";
 const WALL_SEGMENT = "#";
@@ -60,20 +62,13 @@ const smallGrid = `
     </div>
 `;
 
-// get browser width so script can calculate width of the grid
-// let browserWidthInPixels = getBrowserWidth();
-// const eightyPercentOfScreen = Math.floor(browserWidthInPixels * 0.8);
+// TODO: when screen is resized, re-calculate # of boxes
+window.onresize = () => {
+    console.log("rezized!");
+};
+
 let mainWidth = document.getElementById("main").offsetWidth;
 let mainHeight = document.body.clientHeight;
-
-// TODO: Adjust code so that the # of boxes works w/ mid-size browsers
-// TODO: Adjust code for mobile --> make boxes smaller, and fit to screen
-// TODO: mk grid box borders thinner;
-// TODO: At origin, make the play.png appear.
-// TODO: At target, make bullseye.png appear.
-// FIXME: make pathing mechanism work.
-
-// FIXME: Make grid always be 1 square smaller than browser width and height allows. So Recursive Div looks good.
 
 let widthInNodes;
 let heightInNodes;
@@ -98,7 +93,6 @@ if (mainWidth < 440) {
     selectedGridSize = mediumGrid;
 
     console.log(widthInNodes, heightInNodes);
-    // TODO-NEXT: Adjust # of boxes and box size based on screen width.
 } else {
     // for bigger screens
     const nodeSize = 60;
@@ -113,7 +107,6 @@ if (mainWidth < 440) {
 
 console.log(widthInNodes, heightInNodes);
 // generate a n by m grid of .'s
-const grid = [];
 for (let m = 0; m < heightInNodes; m++) {
     // formerly "m < 20"
     const row = [];
@@ -142,8 +135,6 @@ for (let j = 0; j < numOfColumns; j++) {
         const divToAssign = document.createElement("div");
         divToAssign.id = "row-" + k;
         divToAssign.innerHTML = selectedGridSize;
-        // TODO: make grid size dependent on screen width. smaller screen = smaller blocks.
-        // min 35px, max 75px.use browserWidthInPixels
         targetDiv.appendChild(divToAssign);
     }
 }
@@ -162,12 +153,6 @@ const moveTargetBtn = document.getElementById("moveTargetBtn");
 moveTargetBtn.addEventListener("click", () => {
     nextClickMovesTarget();
 });
-
-// // ### Let user add a Bomb
-// const moveBombBtn = document.getElementById("moveBombBtn");
-// moveBombBtn.addEventListener("click", () => {
-// 	nextClickMovesBomb();
-// });
 
 // ### Let user remove a wall segment
 const removeWallBtn = document.getElementById("removeWallBtn");
@@ -211,9 +196,7 @@ binaryTreeBtn.addEventListener("click", () => {
 // todo: Add "Speed" selector
 
 // FIXME: add a "reset Grid and board" func and call it before animateMaze() for every "create maze" button *IMPORTANT*
-
-// TODO: animate grid with CSS transitions (colors, KISS)
-// TODO: Style the page...
+// ??? why is this FIXME here, is it important? question raised on 2020/09/30, deelete it if still here past oct 31st.
 
 // *** ********* *** ********* *** ********* *** ********* *** ********* *** ********* ***
 // *** FUNCTIONS *** FUNCTIONS *** FUNCTIONS *** FUNCTIONS *** FUNCTIONS *** FUNCTIONS ***

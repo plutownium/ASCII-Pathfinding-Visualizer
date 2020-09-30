@@ -23,7 +23,7 @@ const targetBox = `
 `;
 
 const largeGrid = `
-	<div class="grid-container-lg">
+	<div class="grid-container">
         <div class="grid-tp-lg">
             <div class="grid-tp-box-lg"></div>
 			<div class="grid-tp-border-lg"></div>
@@ -49,13 +49,13 @@ const mediumGrid = `
 
 const smallGrid = `
 	<div class="grid-container">
-        <div class="grid-top-part">
-            <div class="grid-tp-box"></div>
-			<div class="grid-tp-border"></div>
+        <div class="grid-tp-sml">
+            <div class="grid-tp-box-sml"></div>
+			<div class="grid-tp-border-sml"></div>
         </div>
-        <div class="grid-bp">
-			<div class="grid-bp-border"></div>
-            <div class="grid-dot"></div>
+        <div class="grid-bp-sml">
+			<div class="grid-bp-border-sml"></div>
+            <div class="grid-dot-sml"></div>
         </div>
     </div>
 `;
@@ -75,39 +75,39 @@ let mainHeight = document.body.clientHeight;
 
 // FIXME: Make grid always be 1 square smaller than browser width and height allows. So Recursive Div looks good.
 
-// TODO: Test what it's like setting box properties using javascript. Sth like "calc browser dimensions, lightMath(), set dimensions"
-
 let widthInNodes;
 let heightInNodes;
 let selectedGridSize;
 console.log(mainWidth, mainHeight);
 if (mainWidth < 440) {
     // for smaller screens, use the whole width of the screen, no whitespace left or right
-    widthMagic = 0.04;
-    widthInNodes = Math.floor(mainWidth * widthMagic);
-    const heightPerNode = 30;
-    heightInNodes = Math.floor(mainHeight / heightPerNode); // use a taller board on smaller screens
+    const nodeSize = 30;
+    widthInNodes = Math.floor(mainWidth / nodeSize);
+    heightInNodes = Math.floor(mainHeight / nodeSize); // use a taller board on smaller screens
+
     ANIMATION_SPEED = 50;
     selectedGridSize = smallGrid;
+
     console.log(widthInNodes, heightInNodes);
 } else if (mainWidth >= 440 && mainWidth < 800) {
-    widthMagic = 0.03;
-    widthInNodes = Math.floor(mainWidth * widthMagic);
-    const heightPerNode = 40;
-    console.log(mainHeight, heightPerNode);
-    heightInNodes = Math.floor(mainHeight / heightPerNode) + 3;
+    const nodeSize = 40;
+    widthInNodes = Math.floor(mainWidth / nodeSize);
+    heightInNodes = Math.floor(mainHeight / nodeSize);
+
     ANIMATION_SPEED = 65;
     selectedGridSize = mediumGrid;
+
     console.log(widthInNodes, heightInNodes);
     // TODO-NEXT: Adjust # of boxes and box size based on screen width.
 } else {
     // for bigger screens
-    const widthMagic = 0.02;
-    widthInNodes = Math.floor(mainWidth * widthMagic);
-    const heightPerNode = 60;
-    heightInNodes = Math.floor(mainHeight / heightPerNode);
+    const nodeSize = 60;
+    widthInNodes = Math.floor(mainWidth / nodeSize);
+    heightInNodes = Math.floor(mainHeight / nodeSize);
+
     ANIMATION_SPEED = 80;
     selectedGridSize = largeGrid;
+
     console.log(widthInNodes, heightInNodes);
 }
 
@@ -133,8 +133,6 @@ for (let i = 0; i < numOfColumns; i++) {
     divToAssign.classList.add("column");
     mainDiv.appendChild(divToAssign);
 }
-
-// FIXME: Make "Generate Maze" buttons work with new grid system.
 
 // iterate over every Column div, inserting numOfRows number of Row divs
 const columnDivs = mainDiv.querySelectorAll("div");

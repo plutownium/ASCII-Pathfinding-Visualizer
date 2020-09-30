@@ -92,6 +92,47 @@
 /* Small grid box  *** */
 /* *** *** *** *** *** */
 
+.grid-dot-sml {
+    background-color: rgb(230, 241, 252);
+    width: 3px;
+    height: 3px;
+}
+
+.grid-bp-border-sml {
+    width: 30px;
+    height: 3px;
+    background-color: rgb(230, 241, 252);
+}
+
+.grid-bp-sml {
+    /* bottom part, main container */
+    width: 30px;
+    height: 3px;
+    display: flex;
+    flex-direction: row;
+}
+
+.grid-tp-border-sml {
+    /* right wall */
+    width: 3px;
+    height: 30px;
+    background-color: rgb(230, 241, 252);
+}
+
+.grid-tp-box-sml {
+    width: 27px;
+    height: 27px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.grid-tp-sml {
+    width: 30px;
+    height: 27px;
+    display: flex;
+}
+
 /* *** *** *** *** */
 /* Dropdown code */
 /* *** *** *** *** */

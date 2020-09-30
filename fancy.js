@@ -16,6 +16,10 @@ const VISITED_AFTER_BOMB = "O";
 const SHORTEST_PATH_NODE = "+";
 let ANIMATION_SPEED;
 
+window.onresize = () => {
+    console.log("Refresh the page to resize the grid.");
+};
+
 const startBox = `
 	<img src="./icons8-play-26.png"/>
 `;
@@ -62,10 +66,7 @@ const smallGrid = `
     </div>
 `;
 
-// TODO: when screen is resized, re-calculate # of boxes
-window.onresize = () => {
-    console.log("rezized!");
-};
+// TODO: when screen is resized, re-calculate # of boxes (Low importance)
 
 let mainWidth = document.getElementById("main").offsetWidth;
 let mainHeight = document.body.clientHeight;

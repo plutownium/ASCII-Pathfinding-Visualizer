@@ -1,8 +1,13 @@
 // <^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^>
 // <^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^>
 // <^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^><^> <^>
-// ### startup... render the page
+// ### render the page
 const mainDiv = document.getElementById("main");
+
+function goToFancyVersion() {
+    window.location =
+        "https://plutownium.github.io/ASCII-Pathfinding-Visualizer/ascii.html";
+}
 
 const grid = [];
 

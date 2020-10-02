@@ -1,148 +1,189 @@
 span {
-	font-family: "Lucida Console", Courier, monospace;
-	font-size: 18px;
+    font-family: "Lucida Console", Courier, monospace;
+    font-size: 18px;
 }
 
 #buttons {
-	background: #DDD;
-	margin: 10px;
-	padding: 10px;
+    background: #ddd;
+    margin: 10px;
+    padding: 10px;
 }
 
 #buttons button {
-	padding: 4px 12px;
+    padding: 4px 12px;
 }
 
 #jumbotron {
-	width: 100%;
-	padding: 30px;
-	display: flex;
-	justify-content: center;
+    width: 100%;
+    padding: 30px;
+    display: flex;
+    justify-content: center;
 }
 
 #legend {
-	/* border: 3px solid red; */
-	background: #DDD;
-	margin: 10px;
-	padding: 10px;
+    /* border: 3px solid red; */
+    background: #ddd;
+    margin: 10px;
+    padding: 10px;
 }
 
 #main {
-	display: flex;
+    display: flex;
 }
 
 #main div {
-	height: 20px;
-	width: 20px;
+    height: 20px;
+    width: 20px;
 }
 
 #main div div {
-	font-family: "Lucida Console", Courier, monospace;
-	font-size: 18px;
+    font-family: "Lucida Console", Courier, monospace;
+    font-size: 18px;
 }
 
 .container {
-	width: 100%;
-	/* border: 3px solid blue; */
-	text-align: center;
+    width: 100%;
+    /* border: 3px solid blue; */
+    text-align: center;
 }
 
 .animateScan {
-	animation-name: scan;
-  	animation-duration: 3s;
+    animation-name: scan;
+    animation-duration: 3s;
 }
 
 @keyframes scan {
-  0%   {background-color: rgb(4, 177, 246);}
-  100% {background-color: rgb(4, 246, 36);}
+    0% {
+        background-color: rgb(4, 177, 246);
+    }
+    100% {
+        background-color: rgb(4, 246, 36);
+    }
 }
 
 .animatePath {
-	font-weight: bold;
-	background-color: rgb(242, 246, 4);
-	animation-name: path;
-	animation-duration: 3s;
+    font-weight: bold;
+    background-color: rgb(242, 246, 4);
+    animation-name: path;
+    animation-duration: 3s;
 }
 
 @keyframes path {
-  0%   {background-color: rgb(4, 246, 36);}
-  100% {background-color: rgb(242, 246, 4);}
+    0% {
+        background-color: rgb(4, 246, 36);
+    }
+    100% {
+        background-color: rgb(242, 246, 4);
+    }
 }
 
 .startNodeColor {
-	background-color: rgb(255, 175, 1);
-	font-weight: bold;
+    background-color: rgb(255, 175, 1);
+    font-weight: bold;
 }
 
 .targetNodeColor {
-	background-color: red;
-	font-weight: bold
+    background-color: red;
+    font-weight: bold;
 }
 
 .wallColor {
-	font-weight: bold;
-	background-color: #DDD;
+    font-weight: bold;
+    background-color: #ddd;
+}
+
+.test {
+    background-color: brown;
+    font-size: 20px;
 }
 
 /*                                       */
 /* from a site w/ simple button stylings */
 /*                                       */
 
-.button.green, .button.red, .button.blue {
-  color: #fff;
-  text-shadow: 0 1px 0 rgba(0,0,0,.2);
-  
-  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.3)), to(rgba(255,255,255,0)));
-  background-image: -webkit-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
-  background-image: -moz-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
-  background-image: -ms-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
-  background-image: -o-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
-  background-image: linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
+.button.green,
+.button.red,
+.button.blue {
+    color: #fff;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+
+    background-image: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        from(rgba(255, 255, 255, 0.3)),
+        to(rgba(255, 255, 255, 0))
+    );
+    background-image: -webkit-linear-gradient(
+        top,
+        rgba(255, 255, 255, 0.3),
+        rgba(255, 255, 255, 0)
+    );
+    background-image: -moz-linear-gradient(
+        top,
+        rgba(255, 255, 255, 0.3),
+        rgba(255, 255, 255, 0)
+    );
+    background-image: -ms-linear-gradient(
+        top,
+        rgba(255, 255, 255, 0.3),
+        rgba(255, 255, 255, 0)
+    );
+    background-image: -o-linear-gradient(
+        top,
+        rgba(255, 255, 255, 0.3),
+        rgba(255, 255, 255, 0)
+    );
+    background-image: linear-gradient(
+        top,
+        rgba(255, 255, 255, 0.3),
+        rgba(255, 255, 255, 0)
+    );
 }
 
 /* */
 
-.button.green{
-  background-color: #57a957;
-  border-color: #57a957;
+.button.green {
+    background-color: #57a957;
+    border-color: #57a957;
 }
 
-.button.green:hover{
-  background-color: #62c462;
+.button.green:hover {
+    background-color: #62c462;
 }
 
-.button.green:active{
-  background: #57a957;
-}
-
-/* */
-
-.button.red{
-  background-color: #ca3535;
-  border-color: #c43c35;
-}
-
-.button.red:hover{
-  background-color: #ee5f5b;
-}
-
-.button.red:active{
-  background: #c43c35;
+.button.green:active {
+    background: #57a957;
 }
 
 /* */
 
-.button.blue{
-  background-color: #269CE9;
-  border-color: #269CE9;
+.button.red {
+    background-color: #ca3535;
+    border-color: #c43c35;
 }
 
-.button.blue:hover{
-  background-color: #70B9E8;
+.button.red:hover {
+    background-color: #ee5f5b;
 }
 
-.button.blue:active{
-  background: #269CE9;
+.button.red:active {
+    background: #c43c35;
+}
+
+/* */
+
+.button.blue {
+    background-color: #269ce9;
+    border-color: #269ce9;
+}
+
+.button.blue:hover {
+    background-color: #70b9e8;
+}
+
+.button.blue:active {
+    background: #269ce9;
 }
 
 /* */

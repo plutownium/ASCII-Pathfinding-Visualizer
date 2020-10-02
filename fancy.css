@@ -370,6 +370,14 @@ h2 {
 }
 
 @media screen and (max-width: 600px) {
+    #btnContainer {
+        top: 5px;
+    }
+
+    #buttons {
+        padding: 5px;
+    }
+
     #legendContainer {
         display: none;
     }
@@ -378,5 +386,9 @@ h2 {
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+
+    .legendText {
+        font-size: 12px;
     }
 }

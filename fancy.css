@@ -219,6 +219,12 @@ h1 {
     color: rgb(0, 129, 255);
 }
 
+h2 {
+    font-family: "QuicksandRegular";
+    font-size: 22px;
+    color: rgb(0, 129, 255);
+}
+
 #board {
     width: 100%;
     position: relative;
@@ -230,7 +236,6 @@ h1 {
     position: absolute;
     top: 20px;
     left: 5%;
-    /* border: 2px solid red; */
 }
 
 #buttons {
@@ -239,7 +244,6 @@ h1 {
     border-radius: 20px;
     display: flex;
     flex-direction: row;
-    /* border: 1px solid black; */
 }
 
 #gradient {
@@ -247,10 +251,6 @@ h1 {
     height: 50px;
     background: linear-gradient(rgb(238, 245, 253), white);
     opacity: 0.8;
-}
-
-#main {
-    display: flex;
 }
 
 #headlineContainer {
@@ -267,6 +267,14 @@ h1 {
     float: left;
 }
 
+#main {
+    display: flex;
+}
+
+#rightContainer {
+    width: 100%;
+}
+
 #singleLink {
     padding: 1px 6px;
     color: black;
@@ -274,6 +282,7 @@ h1 {
 }
 
 #welcomeTitle {
+    height: 46px;
     display: none;
 }
 
@@ -366,6 +375,8 @@ h1 {
     }
 
     #welcomeTitle {
-        display: block;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 }

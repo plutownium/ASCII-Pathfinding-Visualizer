@@ -69,105 +69,107 @@
                 </div>
             </div>
         </div>
-        <div id="welcomeTitle"><h2>Pathfinding Visualizer</h2></div>
-        <div id="board">
-            <div id="btnContainer">
-                <!-- TODO: fix this container above the board, as in the drawing -->
-                <div id="buttons">
-                    <div class="buttonDiv">
-                        <button
-                            id="moveStartBtn"
-                            class="button green legendText"
-                        >
-                            Place Start Node
-                        </button>
-                    </div>
-                    <div class="buttonDiv">
-                        <button
-                            id="moveTargetBtn"
-                            class="button green legendText"
-                        >
-                            Place Target Node
-                        </button>
-                    </div>
-
-                    <!-- <button id="moveBombBtn">Place Bomb Node</button> -->
-                    <div class="buttonDiv">
-                        <button
-                            id="removeWallBtn"
-                            class="button red legendText"
-                        >
-                            Remove Wall Segment
-                        </button>
-                    </div>
-                    <div class="buttonDiv">
-                        <button
-                            id="clearBoardBtn"
-                            class="button red legendText"
-                        >
-                            Clear Board
-                        </button>
-                    </div>
-
-                    <div class="buttonDiv">
-                        <div class="dropdown">
-                            <button class="dropBtn button legendText">
-                                Generate Maze
-                                <i class="fa fa-caret-down"></i>
+        <div id="rightContainer">
+            <div id="welcomeTitle"><h2>Pathfinding Visualizer</h2></div>
+            <div id="board">
+                <div id="btnContainer">
+                    <!-- TODO: fix this container above the board, as in the drawing -->
+                    <div id="buttons">
+                        <div class="buttonDiv">
+                            <button
+                                id="moveStartBtn"
+                                class="button green legendText"
+                            >
+                                Place Start Node
                             </button>
-                            <div class="dropdown-content">
-                                <button
-                                    id="randomMazeBtn"
-                                    class="button blue legendText"
-                                >
-                                    Random
+                        </div>
+                        <div class="buttonDiv">
+                            <button
+                                id="moveTargetBtn"
+                                class="button green legendText"
+                            >
+                                Place Target Node
+                            </button>
+                        </div>
+
+                        <!-- <button id="moveBombBtn">Place Bomb Node</button> -->
+                        <div class="buttonDiv">
+                            <button
+                                id="removeWallBtn"
+                                class="button red legendText"
+                            >
+                                Remove Wall Segment
+                            </button>
+                        </div>
+                        <div class="buttonDiv">
+                            <button
+                                id="clearBoardBtn"
+                                class="button red legendText"
+                            >
+                                Clear Board
+                            </button>
+                        </div>
+
+                        <div class="buttonDiv">
+                            <div class="dropdown">
+                                <button class="dropBtn button legendText">
+                                    Generate Maze
+                                    <i class="fa fa-caret-down"></i>
                                 </button>
-                                <button
-                                    id="recursiveDivisonBtn"
-                                    class="button blue legendText"
-                                >
-                                    Recursive Division
-                                </button>
-                                <button
-                                    id="binaryTreeBtn"
-                                    class="button blue legendText"
-                                >
-                                    Binary Tree
-                                </button>
+                                <div class="dropdown-content">
+                                    <button
+                                        id="randomMazeBtn"
+                                        class="button blue legendText"
+                                    >
+                                        Random
+                                    </button>
+                                    <button
+                                        id="recursiveDivisonBtn"
+                                        class="button blue legendText"
+                                    >
+                                        Recursive Division
+                                    </button>
+                                    <button
+                                        id="binaryTreeBtn"
+                                        class="button blue legendText"
+                                    >
+                                        Binary Tree
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="buttonDiv">
-                        <button id="go" class="button green legendText">
-                            Visualize Dijkstra's
-                        </button>
+                        <div class="buttonDiv">
+                            <button id="go" class="button green legendText">
+                                Visualize Dijkstra's
+                            </button>
+                        </div>
+                        <div class="buttonDiv">
+                            <a
+                                href="C:\Users\Roland\2020-Coding-Projects\Ascii Pathfinding Visualizer\ascii.html"
+                                id="singleLink"
+                                class="legendText"
+                            >
+                                View Ascii Version</a
+                            >
+                        </div>
                     </div>
-                    <div class="buttonDiv">
-                        <a
-                            href="C:\Users\Roland\2020-Coding-Projects\Ascii Pathfinding Visualizer\ascii.html"
-                            id="singleLink"
-                            class="legendText"
-                        >
-                            View Ascii Version</a
-                        >
-                    </div>
+                    <!-- <div id="gradient"></div> -->
                 </div>
-                <!-- <div id="gradient"></div> -->
-            </div>
-            <!-- <div class="container">
+                <!-- <div class="container">
                 <div id="messageBar">
                     <p>
                         Add a Start Node and a Target Node. Get creative adding
                         some Wall Segments!
                     </p>
                 </div> -->
-            <!-- TODO: Invent a new way of getting error messages to the user. 
+                <!-- TODO: Invent a new way of getting error messages to the user. 
 			Maybe a div that pops into view for 4 sec, fades out? -->
-            <!-- </div> -->
+                <!-- </div> -->
 
-            <div id="jumbotron">
-                <div id="main"></div>
+                <div id="jumbotron">
+                    <div id="main"></div>
+                </div>
             </div>
         </div>
     </body>

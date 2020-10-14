@@ -4,6 +4,8 @@
 // ### startup... render the page
 const mainDiv = document.getElementById("main");
 
+const grid = [];
+
 const START_NODE = "*";
 const EMPTY_SPACE = ".";
 const WALL_SEGMENT = "#";
@@ -14,6 +16,10 @@ const VISITED_AFTER_BOMB = "O";
 const SHORTEST_PATH_NODE = "+";
 let ANIMATION_SPEED;
 
+window.onresize = () => {
+    console.log("Refresh the page to resize the grid.");
+};
+
 const startBox = `
 	<img src="./images/icons8-play-26.png"/>
 `;
@@ -23,84 +29,85 @@ const targetBox = `
 `;
 
 const largeGrid = `
-	<div class="grid-container-lg">
+	<div class="grid-container">
         <div class="grid-tp-lg">
             <div class="grid-tp-box-lg"></div>
 			<div class="grid-tp-border-lg"></div>
         </div>
         <div class="grid-bp-lg">
 			<div class="grid-bp-border-lg"></div>
-            <div class="grid-dot"></div>
+            <div class="grid-dot-lg"></div>
         </div>
     </div>
 `;
 const mediumGrid = `
 	<div class="grid-container">
-        <div class="grid-top-part">
-            <div class="grid-tp-box"></div>
-			<div class="grid-tp-border"></div>
+        <div class="grid-tp-med">
+            <div class="grid-tp-box-med"></div>
+			<div class="grid-tp-border-med"></div>
         </div>
-        <div class="grid-bp">
-			<div class="grid-bp-border"></div>
-            <div class="grid-dot"></div>
+        <div class="grid-bp-med">
+			<div class="grid-bp-border-med"></div>
+            <div class="grid-dot-med"></div>
         </div>
     </div>
 `;
 
 const smallGrid = `
 	<div class="grid-container">
-        <div class="grid-top-part">
-            <div class="grid-tp-box"></div>
-			<div class="grid-tp-border"></div>
+        <div class="grid-tp-sml">
+            <div class="grid-tp-box-sml"></div>
+			<div class="grid-tp-border-sml"></div>
         </div>
-        <div class="grid-bp">
-			<div class="grid-bp-border"></div>
-            <div class="grid-dot"></div>
+        <div class="grid-bp-sml">
+			<div class="grid-bp-border-sml"></div>
+            <div class="grid-dot-sml"></div>
         </div>
     </div>
 `;
 
-// get browser width so script can calculate width of the grid
-// let browserWidthInPixels = getBrowserWidth();
-// const eightyPercentOfScreen = Math.floor(browserWidthInPixels * 0.8);
+// TODO: when screen is resized, re-calculate # of boxes (Low importance)
+
 let mainWidth = document.getElementById("main").offsetWidth;
-console.log(mainWidth);
-
-// TODO: Adjust code so that the # of boxes works w/ mid-size browsers
-// TODO: Adjust code for mobile --> make boxes smaller, and fit to screen
-// TODO: mk grid box borders thinner;
-// TODO: At origin, make the play.png appear.
-// TODO: At target, make bullseye.png appear.
-// FIXME: make pathing mechanism work.
-
-// FIXME: Make grid always be 1 square smaller than browser width and height allows. So Recursive Div looks good.
-
-// TODO: Test what it's like setting box properties using javascript. Sth like "calc browser dimensions, lightMath(), set dimensions"
+let mainHeight = document.body.clientHeight;
 
 let widthInNodes;
 let heightInNodes;
-if (mainWidth < 330) {
+let selectedGridSize;
+console.log(mainWidth, mainHeight);
+if (mainWidth < 440) {
     // for smaller screens, use the whole width of the screen, no whitespace left or right
-    const someMagicNumber = 0.065;
-    widthInNodes = Math.floor(mainWidth * someMagicNumber);
-    const heightAdjustmentMagic = 1.2; // prev 1.2 for the ascii ver
-    heightInNodes = Math.floor(widthInNodes / heightAdjustmentMagic); // use a taller board on smaller screens
+    const nodeSize = 30;
+    widthInNodes = Math.floor(mainWidth / nodeSize);
+    heightInNodes = Math.floor(mainHeight / nodeSize); // use a taller board on smaller screens
+
     ANIMATION_SPEED = 50;
+    selectedGridSize = smallGrid;
+
+    console.log(widthInNodes, heightInNodes);
+} else if (mainWidth >= 440 && mainWidth < 800) {
+    const nodeSize = 40;
+    widthInNodes = Math.floor(mainWidth / nodeSize);
+    heightInNodes = Math.floor(mainHeight / nodeSize);
+
+    ANIMATION_SPEED = 65;
+    selectedGridSize = mediumGrid;
+
     console.log(widthInNodes, heightInNodes);
 } else {
     // for bigger screens
-    const someMagicNumber = 0.045;
-    const widthMagic = 0.015; // TODO: cast widthMagic based on divWidth
-    // FIXME: just do "getDivWidth" here in this block, and in the < 330 block. why not?
-    widthInNodes = Math.floor(mainWidth * widthMagic);
-    const heightAdjustmentMagic = 1.0; // previously 2.6 for the ascii version
-    heightInNodes = Math.floor(widthInNodes / heightAdjustmentMagic);
+    const nodeSize = 60;
+    widthInNodes = Math.floor(mainWidth / nodeSize);
+    heightInNodes = Math.floor(mainHeight / nodeSize);
+
     ANIMATION_SPEED = 80;
+    selectedGridSize = largeGrid;
+
     console.log(widthInNodes, heightInNodes);
 }
 
+console.log(widthInNodes, heightInNodes);
 // generate a n by m grid of .'s
-const grid = [];
 for (let m = 0; m < heightInNodes; m++) {
     // formerly "m < 20"
     const row = [];
@@ -121,8 +128,6 @@ for (let i = 0; i < numOfColumns; i++) {
     mainDiv.appendChild(divToAssign);
 }
 
-// FIXME: Make "Generate Maze" buttons work with new grid system.
-
 // iterate over every Column div, inserting numOfRows number of Row divs
 const columnDivs = mainDiv.querySelectorAll("div");
 for (let j = 0; j < numOfColumns; j++) {
@@ -130,9 +135,7 @@ for (let j = 0; j < numOfColumns; j++) {
     for (let k = 0; k < numOfRows; k++) {
         const divToAssign = document.createElement("div");
         divToAssign.id = "row-" + k;
-        divToAssign.innerHTML = largeGrid;
-        // TODO: make grid size dependent on screen width. smaller screen = smaller blocks.
-        // min 35px, max 75px.use browserWidthInPixels
+        divToAssign.innerHTML = selectedGridSize;
         targetDiv.appendChild(divToAssign);
     }
 }
@@ -151,12 +154,6 @@ const moveTargetBtn = document.getElementById("moveTargetBtn");
 moveTargetBtn.addEventListener("click", () => {
     nextClickMovesTarget();
 });
-
-// // ### Let user add a Bomb
-// const moveBombBtn = document.getElementById("moveBombBtn");
-// moveBombBtn.addEventListener("click", () => {
-// 	nextClickMovesBomb();
-// });
 
 // ### Let user remove a wall segment
 const removeWallBtn = document.getElementById("removeWallBtn");
@@ -200,9 +197,7 @@ binaryTreeBtn.addEventListener("click", () => {
 // todo: Add "Speed" selector
 
 // FIXME: add a "reset Grid and board" func and call it before animateMaze() for every "create maze" button *IMPORTANT*
-
-// TODO: animate grid with CSS transitions (colors, KISS)
-// TODO: Style the page...
+// ??? why is this FIXME here, is it important? question raised on 2020/09/30, deelete it if still here past oct 31st.
 
 // *** ********* *** ********* *** ********* *** ********* *** ********* *** ********* ***
 // *** FUNCTIONS *** FUNCTIONS *** FUNCTIONS *** FUNCTIONS *** FUNCTIONS *** FUNCTIONS ***
@@ -235,7 +230,7 @@ function rerenderGrid() {
             // OLD:
             // targetDiv.innerHTML = grid[i][j];
             // NEW:
-            targetDiv.innerHTML = largeGrid;
+            targetDiv.innerHTML = selectedGridSize;
             if (grid[i][j] === WALL_SEGMENT) {
                 targetDiv.childNodes[1].childNodes[1].childNodes[1].classList.add(
                     "wallNode"

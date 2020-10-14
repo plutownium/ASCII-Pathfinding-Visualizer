@@ -1,142 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Pathfinding Visualizer</title>
+        <link rel="stylesheet" href="fancy.css" />
+        <script src="classes.js"></script>
+        <script src="dijkstras.js"></script>
+        <script src="mazes.js"></script>
+        <script src="fancy.js" defer></script>
+    </head>
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pathfinding Visualizer</title>
-    <link rel="stylesheet" href="fancy.css" />
-    <script src="classes.js"></script>
-    <script src="dijkstras.js"></script>
-    <script src="mazes.js"></script>
-    <script src="fancy.js" defer></script>
-</head>
-
-<body>
-    <div id="legendContainer" class="container">
-        <div id="leftSpacer"></div>
-        <div id="leftBorder">
-            <div id="headlineContainer">
-                <div class="spacer"></div>
-                <h1>Pathfinding Visualizer</h1>
-            </div>
-            <div id="hrContainer">
-                <hr width="260px" />
-            </div>
-            <div id="legend">
-                <div class="legendLineContainer">
+    <body>
+        <div id="legendContainer">
+            <div id="leftSpacer"></div>
+            <div id="leftBorder">
+                <div id="headlineContainer">
                     <div class="spacer"></div>
-                    <div class="imgContainer">
-                        <img src="./icons8-play-26.png" />
-                    </div>
-                    <span class="legendText">Start Node</span><br />
+                    <h1>Pathfinding Visualizer</h1>
                 </div>
-                <div class="legendLineContainer">
-                    <div class="spacer"></div>
-                    <div class="imgContainer">
-                        <img src="./bullseye.png" width="25px" />
-                    </div>
-                    <span class="legendText">Target Node</span><br />
+                <div id="hrContainer">
+                    <hr width="260px" />
                 </div>
-                <!-- <span>% Bomb Node</span> -->
-                <div class="legendLineContainer">
-                    <div class="spacer"></div>
-                    <div class="imgContainer">
-                        <img src="./unvisited.png" width="25px" />
+                <div id="legend">
+                    <div class="legendLineContainer">
+                        <div class="spacer"></div>
+                        <div class="imgContainer">
+                            <img src="./icons8-play-26.png" />
+                        </div>
+                        <span class="legendText">Start Node</span><br />
                     </div>
-                    <span class="legendText">Unvisited Node</span><br />
-                </div>
-                <div class="legendLineContainer">
-                    <div class="spacer"></div>
-                    <div class="imgContainer">
-                        <img src="./pink-blue.png" />
+                    <div class="legendLineContainer">
+                        <div class="spacer"></div>
+                        <div class="imgContainer">
+                            <img src="./bullseye.png" width="25px" />
+                        </div>
+                        <span class="legendText">Target Node</span><br />
                     </div>
-                    <span class="legendText">Visited Nodes</span><br />
-                </div>
-                <div class="legendLineContainer">
-                    <div class="spacer"></div>
-                    <div class="imgContainer">
-                        <img src="./orange.png" />
+                    <!-- <span>% Bomb Node</span> -->
+                    <div class="legendLineContainer">
+                        <div class="spacer"></div>
+                        <div class="imgContainer">
+                            <img src="./unvisited.png" width="25px" />
+                        </div>
+                        <span class="legendText">Unvisited Node</span><br />
                     </div>
-                    <span class="legendText">Shortest Path Node</span><br />
-                </div>
-                <div class="legendLineContainer">
-                    <div class="spacer"></div>
-                    <div class="imgContainer">
-                        <img src="./mango.png" />
+                    <div class="legendLineContainer">
+                        <div class="spacer"></div>
+                        <div class="imgContainer">
+                            <img src="./pink-blue.png" />
+                        </div>
+                        <span class="legendText">Visited Nodes</span><br />
                     </div>
-                    <span class="legendText">Wall Node</span>
+                    <div class="legendLineContainer">
+                        <div class="spacer"></div>
+                        <div class="imgContainer">
+                            <img src="./orange.png" />
+                        </div>
+                        <span class="legendText">Shortest Path Node</span><br />
+                    </div>
+                    <div class="legendLineContainer">
+                        <div class="spacer"></div>
+                        <div class="imgContainer">
+                            <img src="./mango.png" />
+                        </div>
+                        <span class="legendText">Wall Node</span>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div id="board">
-        <div id="btnContainer" class="container">
-            <!-- TODO: fix this container above the board, as in the drawing -->
-            <div id="buttons">
-                <div class="buttonDiv">
-                    <button id="moveStartBtn" class="button green legendText">
-                        Place Start Node
-                    </button>
-                </div>
-                <div class="buttonDiv">
-                    <button id="moveTargetBtn" class="button green legendText">
-                        Place Target Node</button>
-                </div>
+        <div id="rightContainer">
+            <div id="welcomeTitle"><h2>Pathfinding Visualizer</h2></div>
+            <div id="board">
+                <div id="btnContainer">
+                    <!-- TODO: fix this container above the board, as in the drawing -->
+                    <div id="buttons">
+                        <div class="buttonDiv">
+                            <button
+                                id="moveStartBtn"
+                                class="button green legendText"
+                            >
+                                Place Start Node
+                            </button>
+                        </div>
+                        <div class="buttonDiv">
+                            <button
+                                id="moveTargetBtn"
+                                class="button green legendText"
+                            >
+                                Place Target Node
+                            </button>
+                        </div>
 
-                <!-- <button id="moveBombBtn">Place Bomb Node</button> -->
-                <div class="buttonDiv">
-                    <button id="removeWallBtn" class="button red legendText">
-                        Remove Wall Segment
-                    </button>
-                </div>
-                <div class="buttonDiv">
-                    <button id="clearBoardBtn" class="button red legendText">
-                        Clear Board</button>
-                </div>
+                        <!-- <button id="moveBombBtn">Place Bomb Node</button> -->
+                        <div class="buttonDiv">
+                            <button
+                                id="removeWallBtn"
+                                class="button red legendText"
+                            >
+                                Remove Wall Segment
+                            </button>
+                        </div>
+                        <div class="buttonDiv">
+                            <button
+                                id="clearBoardBtn"
+                                class="button red legendText"
+                            >
+                                Clear Board
+                            </button>
+                        </div>
 
-                <div class="dropdown">
-                    <button class="dropBtn button legendText">Generate Maze
-                        <i class="fa fa-caret-down"></i>
-                    </button>
-                    <div class="dropdown-content">
-                        <button id="randomMazeBtn" class="button blue legendText">
-                            Random
-                        </button>
-                        <button id="recursiveDivisonBtn" class="button blue legendText">
-                            Recursive Division
-                        </button>
-                        <button id="binaryTreeBtn" class="button blue legendText">
-                            Binary Tree</button>
+                        <div class="buttonDiv">
+                            <div class="dropdown">
+                                <button class="dropBtn button legendText">
+                                    Generate Maze
+                                    <i class="fa fa-caret-down"></i>
+                                </button>
+                                <div class="dropdown-content">
+                                    <button
+                                        id="randomMazeBtn"
+                                        class="button blue legendText"
+                                    >
+                                        Random
+                                    </button>
+                                    <button
+                                        id="recursiveDivisonBtn"
+                                        class="button blue legendText"
+                                    >
+                                        Recursive Division
+                                    </button>
+                                    <button
+                                        id="binaryTreeBtn"
+                                        class="button blue legendText"
+                                    >
+                                        Binary Tree
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="buttonDiv">
+                            <button id="go" class="button green legendText">
+                                Visualize Dijkstra's
+                            </button>
+                        </div>
+                        <div class="buttonDiv">
+                            <a
+                                href="C:\Users\Roland\2020-Coding-Projects\Ascii Pathfinding Visualizer\ascii.html"
+                                id="singleLink"
+                                class="legendText"
+                            >
+                                View Ascii Version</a
+                            >
+                        </div>
                     </div>
+                    <!-- <div id="gradient"></div> -->
                 </div>
-
-                <div class="buttonDiv">
-                    <button id="go" class="button green legendText">
-                        Visualize Dijkstra's
-                    </button>
-                </div>
-                <a href="C:\Users\Roland\2020-Coding-Projects\Ascii Pathfinding Visualizer\ascii.html" id="singleLink"
-                    class="legendText">
-                    View Ascii Version</a>
-            </div>
-            <div id="gradient"></div>
-        </div>
-        <!-- <div class="container">
+                <!-- <div class="container">
                 <div id="messageBar">
                     <p>
                         Add a Start Node and a Target Node. Get creative adding
                         some Wall Segments!
                     </p>
                 </div> -->
-        <!-- TODO: Invent a new way of getting error messages to the user. 
+                <!-- TODO: Invent a new way of getting error messages to the user. 
 			Maybe a div that pops into view for 4 sec, fades out? -->
-        <!-- </div> -->
+                <!-- </div> -->
 
-        <div id="jumbotron">
-            <div id="main"></div>
+                <div id="jumbotron">
+                    <div id="main"></div>
+                </div>
+            </div>
         </div>
-    </div>
-</body>
-
+    </body>
 </html>

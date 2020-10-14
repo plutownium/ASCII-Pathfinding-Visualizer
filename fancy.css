@@ -1,28 +1,22 @@
 /* *** *** *** *** *** */
-/* Same across all grids */
+/* Large grid box  *** */
 /* *** *** *** *** *** */
 
-.grid-dot {
+.grid-dot-lg {
     background-color: rgb(230, 241, 252);
-    /* background-color: black; */
     width: 5px;
     height: 5px;
 }
 
-/* *** *** *** *** *** */
-/* Large grid box  *** */
-/* *** *** *** *** *** */
-
 .grid-bp-border-lg {
-    width: 70px;
+    width: 60px;
     height: 5px;
     background-color: rgb(230, 241, 252);
-    /* background-color: black; */
 }
 
 .grid-bp-lg {
     /* bottom part, main container */
-    width: 70px;
+    width: 60px;
     height: 5px;
     display: flex;
     flex-direction: row;
@@ -31,24 +25,21 @@
 .grid-tp-border-lg {
     /* right wall */
     width: 5px;
-    height: 70px;
+    height: 60px;
     background-color: rgb(230, 241, 252);
-    /* background-color: black; */
 }
 
 .grid-tp-box-lg {
-    width: 65px;
-    height: 65px;
+    width: 55px;
+    height: 55px;
     display: flex;
     justify-content: center;
     align-items: center;
-    /* background-color: black; */
 }
 
 .grid-tp-lg {
-    width: 70px;
-    height: 65px;
-    /* border: 1px solid pink; */
+    width: 60px;
+    height: 55px;
     display: flex;
 }
 
@@ -56,9 +47,91 @@
 /* Medium grid box *** */
 /* *** *** *** *** *** */
 
+.grid-dot-med {
+    background-color: rgb(230, 241, 252);
+    width: 4px;
+    height: 4px;
+}
+
+.grid-bp-border-med {
+    width: 40px;
+    height: 4px;
+    background-color: rgb(230, 241, 252);
+}
+
+.grid-bp-med {
+    /* bottom part, main container */
+    width: 40px;
+    height: 4px;
+    display: flex;
+    flex-direction: row;
+}
+
+.grid-tp-border-med {
+    /* right wall */
+    width: 4px;
+    height: 40px;
+    background-color: rgb(230, 241, 252);
+}
+
+.grid-tp-box-med {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.grid-tp-med {
+    width: 40px;
+    height: 36px;
+    display: flex;
+}
+
 /* *** *** *** *** *** */
 /* Small grid box  *** */
 /* *** *** *** *** *** */
+
+.grid-dot-sml {
+    background-color: rgb(230, 241, 252);
+    width: 3px;
+    height: 3px;
+}
+
+.grid-bp-border-sml {
+    width: 30px;
+    height: 3px;
+    background-color: rgb(230, 241, 252);
+}
+
+.grid-bp-sml {
+    /* bottom part, main container */
+    width: 30px;
+    height: 3px;
+    display: flex;
+    flex-direction: row;
+}
+
+.grid-tp-border-sml {
+    /* right wall */
+    width: 3px;
+    height: 30px;
+    background-color: rgb(230, 241, 252);
+}
+
+.grid-tp-box-sml {
+    width: 27px;
+    height: 27px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.grid-tp-sml {
+    width: 30px;
+    height: 27px;
+    display: flex;
+}
 
 /* *** *** *** *** */
 /* Dropdown code */
@@ -146,6 +219,12 @@ h1 {
     color: rgb(0, 129, 255);
 }
 
+h2 {
+    font-family: "QuicksandRegular";
+    font-size: 22px;
+    color: rgb(0, 129, 255);
+}
+
 #board {
     width: 100%;
     position: relative;
@@ -156,8 +235,7 @@ h1 {
     z-index: 0;
     position: absolute;
     top: 20px;
-    left: 40px;
-    /* border: 2px solid red; */
+    left: 5%;
 }
 
 #buttons {
@@ -175,10 +253,6 @@ h1 {
     opacity: 0.8;
 }
 
-#main {
-    display: flex;
-}
-
 #headlineContainer {
     display: flex;
 }
@@ -193,17 +267,53 @@ h1 {
     float: left;
 }
 
+#main {
+    display: flex;
+}
+
+#rightContainer {
+    width: 100%;
+}
+
 #singleLink {
+    padding: 1px 6px;
     color: black;
     text-decoration: none;
 }
 
-.animatePath {
-    background-color: pink;
+#welcomeTitle {
+    height: 46px;
+    display: none;
 }
 
 .animateScan {
-    background-color: blue;
+    background-color: rgb(254, 134, 254);
+    animation-name: scan;
+    animation-duration: 3s;
+}
+
+@keyframes scan {
+    0% {
+        background-color: rgb(92, 150, 249);
+    }
+    100% {
+        background-color: rgb(254, 134, 254);
+    }
+}
+
+.animatePath {
+    background-color: rgb(249, 181, 92);
+    animation-name: path;
+    animation-duration: 1.9s;
+}
+
+@keyframes path {
+    0% {
+        background-color: rgb(254, 134, 254);
+    }
+    100% {
+        background-color: rgb(249, 181, 92);
+    }
 }
 
 .button {
@@ -213,6 +323,10 @@ h1 {
 
 .button:focus {
     outline: none;
+}
+
+.button:hover {
+    background-color: rgb(231, 231, 231);
 }
 
 .buttonDiv {
@@ -247,4 +361,22 @@ h1 {
 
 .spacer {
     width: 40px;
+}
+
+@media screen and (max-width: 1080px) {
+    #buttons {
+        flex-wrap: wrap;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    #legendContainer {
+        display: none;
+    }
+
+    #welcomeTitle {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 }

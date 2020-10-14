@@ -70,6 +70,8 @@ function dijkstras(finishedGrid) {
                 messageBarParagraphTag.innerHTML =
                     "No path available! Remove a Wall Segment and try again!";
                 return false;
+                // TODO: while noPathAvailable, removeRandomWall, until finally tryPathAgain
+                // (this todo is here because Recursive Divison Maze sometimes has no path available)
             }
             // try {
             // 	startCoordinates = nextVisitsList[index]

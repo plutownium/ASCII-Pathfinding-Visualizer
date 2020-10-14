@@ -15,11 +15,11 @@ const SHORTEST_PATH_NODE = "+";
 let ANIMATION_SPEED;
 
 const startBox = `
-	<img src="./icons8-play-26.png"/>
+	<img src="./images/icons8-play-26.png"/>
 `;
 
 const targetBox = `
-	<img src="./bullseye.png"/>
+	<img src="./images/bullseye.png"/>
 `;
 
 const largeGrid = `
